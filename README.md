@@ -14,6 +14,8 @@
 * [Unity でキャラクタに Rigid Body を付けると転ぶ問題への対応 - Qiita](http://qiita.com/_meki/items/5c1df1804d009ec1393e)
 * [Playerに追従するカメラ - Qiita](http://qiita.com/valbeat/items/bab5cb649fe0cf6756d4)
 * [3.カメラを動かす · unity3d-jp/FirstTutorial Wiki](https://github.com/unity3d-jp/FirstTutorial/wiki/3.%E3%82%AB%E3%83%A1%E3%83%A9%E3%82%92%E5%8B%95%E3%81%8B%E3%81%99)
+* [水面GIFをUnityで作ろう！ - Onoty3D](http://onoty3d.hatenablog.com/entry/2015/11/25/190833)
+* [unity_script_get_resources_object - FreeStyleWiki](http://ft-lab.ne.jp/cgi-bin-unity/wiki.cgi?page=unity%5Fscript%5Fget%5Fresources%5Fobject)
 
 ### Algorithm
 

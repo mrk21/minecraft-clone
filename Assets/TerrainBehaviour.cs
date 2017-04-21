@@ -26,34 +26,23 @@ public class Block {
 	public const int BlockSize = 1;
 	public GameObject obj;
 
+	public Block(GameObject parent, Vector3 position, Material material) {
+		init (parent, position);
+		obj.GetComponent<Renderer> ().material = material;
+	}
+
 	public Block(GameObject parent, Vector3 position, HSV color) {
-		this.init (parent, position, color.ToRGB ());
+		init (parent, position);
+		setColor (color.ToRGB ());
 	}
 
 	public Block(GameObject parent, Vector3 position, Color color) {
-		this.init (parent, position, color);
+		init (parent, position);
+		setColor (color);
 	}
 
-	private void init(GameObject parent, Vector3 position, Color color) {
-		this.obj = GameObject.CreatePrimitive (PrimitiveType.Cube);
-		this.obj.transform.parent = parent.transform;
-		this.obj.name = string.Format ("Block({0},{1},{2})",
-			position.x,
-			position.y,
-			position.z
-		);
-		this.obj.transform.position = new Vector3 (
-			position.x * BlockSize,
-			position.y * BlockSize,
-			position.z * BlockSize
-		);
-		this.obj.transform.localScale = new Vector3 (
-			BlockSize,
-			BlockSize,
-			BlockSize
-		);
-
-		var renderer = this.obj.GetComponent<Renderer> ();
+	private void setColor(Color color) {
+		var renderer = obj.GetComponent<Renderer> ();
 		renderer.material.color = color;
 
 		if (color.a < 1.0f) {
@@ -66,6 +55,26 @@ public class Block {
 			renderer.material.EnableKeyword ("_ALPHAPREMULTIPLY_ON");
 			renderer.material.renderQueue = 3000;
 		}
+	}
+
+	private void init(GameObject parent, Vector3 position) {
+		obj = GameObject.CreatePrimitive (PrimitiveType.Cube);
+		obj.transform.parent = parent.transform;
+		obj.name = string.Format ("Block({0},{1},{2})",
+			position.x,
+			position.y,
+			position.z
+		);
+		obj.transform.position = new Vector3 (
+			position.x * BlockSize,
+			position.y * BlockSize,
+			position.z * BlockSize
+		);
+		obj.transform.localScale = new Vector3 (
+			BlockSize,
+			BlockSize,
+			BlockSize
+		);
 	}
 }
 
@@ -93,8 +102,7 @@ public class Map {
 		foreach ( Transform c in target.transform ) {
 			GameObject.Destroy(c.gameObject);
 		}
-
-		var r = new System.Random ();
+		System.Random r = new System.Random ();
 
 		for (int x = 0; x < this.size; x += resolution) {
 			for (int y = 0; y < this.size; y += resolution) {
@@ -104,18 +112,16 @@ public class Map {
 					var zMaxHeightValue = NormalizeHeight(zMaxHeight.Value);
 
 					for (int z = zMaxHeightValue - 1; z <= zMaxHeightValue; z++) { 
-						var h = r.Next (50, 150);
+						string type;
+						var HeightRand = r.Next (-1, 1);
+						if (z > waterHeight + 10 + HeightRand) type = "Materials/StoneBlock";
+						else if (z > waterHeight + 3 + HeightRand) type = "Materials/GrassBlock";
+						else type = "Materials/SandBlock";
+
 						new Block (
 							target,
 							new Vector3 (NormalizePoint(x), z, NormalizePoint(y)),
-							new HSV (h, 150, 255)
-						);
-					}
-					for (int z = zMaxHeightValue + 1; z <= waterHeight; z++) {
-						new Block (
-							target,
-							new Vector3 (NormalizePoint(x), z, NormalizePoint(y)),
-							new Color (0f, 0f, 255f, 0.2f)
+							Resources.Load (type, typeof(Material)) as Material
 						);
 					}
 				}
@@ -207,15 +213,18 @@ public class Map {
 
 public class TerrainBehaviour : MonoBehaviour {
 	public Map map;
+	public GameObject waterLevel;
 	public GameObject player;
 
 	// Use this for initialization
 	void Start () {
-		map = new Map (size: 2500, resolution: 25, minHeight: 0, maxHeight: 35, waterHeight: 17);
+		map = new Map (size: 2000, resolution: 20, minHeight: 0, maxHeight: 50, waterHeight: 30);
 		map.Generate ();
 		map.Draw (gameObject);
 		player = GameObject.Find ("Player");
-		player.transform.position = new Vector3 (30, 100, 30);
+		waterLevel = GameObject.Find ("WaterLevel");
+		setPlayer();
+		setWaterLevel ();
 	}
 
 	// Update is called once per frame
@@ -223,7 +232,20 @@ public class TerrainBehaviour : MonoBehaviour {
 		if (Input.GetKeyDown ("r")) {
 			map.Generate ();
 			map.Draw (gameObject);
-			player.transform.position = new Vector3 (30, 100, 30);
+			setPlayer();
 		}
+	}
+
+	private void setPlayer() {
+		player.transform.position = new Vector3 (30, map.maxHeight, 30);
+	}
+
+	private void setWaterLevel() {
+		var size = 1f * map.size / map.resolution;
+		var center = Mathf.RoundToInt(size / 2);
+		var scale = Mathf.RoundToInt(size / 100);
+
+		waterLevel.transform.position = new Vector3 (center, map.waterHeight, center);
+		waterLevel.transform.localScale = new Vector3 (scale, 1, scale);
 	}
 }

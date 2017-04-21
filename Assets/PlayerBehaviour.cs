@@ -46,9 +46,9 @@ public class PlayerBehaviour : MonoBehaviour {
 		}
 
 		if (Input.GetKey (KeyCode.RightArrow)) {
-			transform.Rotate (new Vector3 (0, 2, 0));
+			transform.Rotate (new Vector3 (0, 4, 0));
 		} else if (Input.GetKey (KeyCode.LeftArrow)) {
-			transform.Rotate (new Vector3 (0, -2, 0));
+			transform.Rotate (new Vector3 (0, -4, 0));
 		}
 	}
 }
