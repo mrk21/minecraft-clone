@@ -9,13 +9,13 @@ public class PlayerBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey (KeyCode.D)) {
+		if (Input.GetKey (KeyCode.W)) {
 			GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
 				5,
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).z
 			));
-		} else if (Input.GetKey (KeyCode.A)) {
+		} else if (Input.GetKey (KeyCode.S)) {
 			GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
 				-5,
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
@@ -23,13 +23,13 @@ public class PlayerBehaviour : MonoBehaviour {
 			));
 		}
 
-		if (Input.GetKey (KeyCode.W)) {
+		if (Input.GetKey (KeyCode.A)) {
 			GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).x,
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
 				5
 			));
-		} else if (Input.GetKey (KeyCode.S)) {
+		} else if (Input.GetKey (KeyCode.D)) {
 			GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).x,
 				transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,

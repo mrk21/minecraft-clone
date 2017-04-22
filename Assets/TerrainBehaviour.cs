@@ -112,8 +112,12 @@ public class Map {
 					var zMaxHeightValue = NormalizeHeight(zMaxHeight.Value);
 
 					for (int z = zMaxHeightValue - 1; z <= zMaxHeightValue; z++) { 
+						var HeightRand = r.Next (0, 10);
+						if (HeightRand < 2) HeightRand = -1;
+						if (HeightRand > 8) HeightRand = 1;
+						else HeightRand = 0;
+
 						string type;
-						var HeightRand = r.Next (-1, 1);
 						if (z > waterHeight + 10 + HeightRand) type = "Materials/StoneBlock";
 						else if (z > waterHeight + 3 + HeightRand) type = "Materials/GrassBlock";
 						else type = "Materials/SandBlock";
@@ -142,7 +146,7 @@ public class Map {
 	}
 
 	public int GenerateHeight() {
-		return r.Next (0, RandMax);
+		return r.Next (Mathf.RoundToInt(RandMax * 0.3f), Mathf.RoundToInt(RandMax * 0.8f));
 	}
 
 	public int NormalizePoint(int value) {
@@ -158,7 +162,7 @@ public class Map {
 
 	public int GenerateHeightRand(int size) {
 		int value = (int)(1f * RandMax * size / this.size);
-		return (int)r.Next (-value / 2, value / 2);
+		return (int)r.Next (-Mathf.RoundToInt(value * 0.5f), Mathf.RoundToInt(value * 0.5f));
 	}
 
 	private void GenerateImpl(Vector2 v1, Vector2 v2, int size) {
@@ -242,8 +246,8 @@ public class TerrainBehaviour : MonoBehaviour {
 
 	private void setWaterLevel() {
 		var size = 1f * map.size / map.resolution;
-		var center = Mathf.RoundToInt(size / 2);
-		var scale = Mathf.RoundToInt(size / 100);
+		var center = size / 2;
+		var scale = size / 100;
 
 		waterLevel.transform.position = new Vector3 (center, map.waterHeight, center);
 		waterLevel.transform.localScale = new Vector3 (scale, 1, scale);
