@@ -1,35 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MinecraftClone.Domain;
+﻿using UnityEngine;
+using MinecraftClone.Domain.Map;
 
 namespace MinecraftClone.Application.Behaviour {
 	class TerrainBehaviour : MonoBehaviour {
-		MapService mapService;
+		Map map;
 		public GameObject waterLevel = null; // set by Inspector
 		public GameObject player = null; // set by Inspector
 
 		void Start () {
-			mapService = new MapService(gameObject, waterLevel);
-			mapService.Init ();
-			mapService.Draw (new Vector3 (0,0,0));
-			setPlayer();
+			Init ();
 		}
 
 		void Update () {
-			if (Input.GetKey(KeyCode.R)) {
-				mapService = new MapService(gameObject, waterLevel);
-				setPlayer();
-			}
+			if (Input.GetKey(KeyCode.R)) Init ();
 			DrawWorld ();
 		}
 
-		void setPlayer() {
-			player.transform.position = new Vector3 (30, 50, 30);
+		void Init() {
+			map = new Map(gameObject, waterLevel);
+			map.Init ();
+			player.transform.position = new Vector3 (60, 50, 60);
 		}
 
 		void DrawWorld() {
-			mapService.Draw (player.transform.position);
+			map.Draw (player.transform.position);
 		}
 	}
 }
