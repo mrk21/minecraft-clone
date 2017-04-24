@@ -4,8 +4,8 @@ using MinecraftClone.Domain.Map;
 namespace MinecraftClone.Application.Behaviour {
 	class TerrainBehaviour : MonoBehaviour {
 		Map map;
-		public GameObject waterLevel = null; // set by Inspector
-		public GameObject player = null; // set by Inspector
+		public GameObject waterLevel = null; // set by the inspector
+		public GameObject player = null; // set by the inspector
 
 		void Start () {
 			Init ();
@@ -19,7 +19,7 @@ namespace MinecraftClone.Application.Behaviour {
 		void Init() {
 			map = new Map(gameObject, waterLevel);
 			map.Init ();
-			player.transform.position = new Vector3 (60, 50, 60);
+			player.transform.position = new Vector3 (60, ChunkFactory.MaxHeight, 60);
 		}
 
 		void DrawWorld() {

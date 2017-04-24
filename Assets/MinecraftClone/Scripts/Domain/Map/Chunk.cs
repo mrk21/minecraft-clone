@@ -1,8 +1,9 @@
 using UnityEngine;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Map {
-	class Chunk {
+	class Chunk : IEntity<ChunkAddress> {
 		public static readonly int Size = 100;
 		public static readonly int Depth = 50;
 
@@ -10,6 +11,10 @@ namespace MinecraftClone.Domain.Map {
 		private ChunkAddress address;
 		private ChunkFactory factory;
 		private BaseBlock[,,] blocks;
+
+		public ChunkAddress Id {
+			get { return address; }
+		}
 
 		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
 			this.map = map;

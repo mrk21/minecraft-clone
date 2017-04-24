@@ -1,16 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
-using MinecraftClone.Domain.Block;
+using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Map {
-	class Map {
+	class Map : IEntity<int> {
 		public static readonly int WaterHeight = 30;
 
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private GameObject target;
 		private GameObject waterLevel;
+		private int id;
 
 		public Map(GameObject target, GameObject waterLevel) {
+			this.id = GetHashCode();
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
 			this.target = target;
 			this.waterLevel = waterLevel;
@@ -22,6 +24,10 @@ namespace MinecraftClone.Domain.Map {
 
 		public GameObject Target {
 			get { return target; }
+		}
+
+		public int Id {
+			get { return id; }
 		}
 
 		public void Init() {

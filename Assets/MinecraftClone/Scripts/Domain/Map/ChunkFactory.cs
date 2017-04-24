@@ -28,7 +28,7 @@ namespace MinecraftClone.Domain.Map {
 		public ChunkFactory(Map map, ChunkAddress address) {
 			this.map = map;
 			this.address = address;
-			this.r = new System.Random();
+			this.r = new System.Random(map.Id);
 		}
 
 		public Chunk Create() {
@@ -38,18 +38,23 @@ namespace MinecraftClone.Domain.Map {
 
 			for (int x = 0; x < Size; x++) {
 				for (int z = 0; z < Size; z++) {
-					var yMax = this.heightMap [x, z];
+					var yMax = heightMap [x, z];
 
 					if (yMax.HasValue) {
 						var yMaxValue = Mathf.RoundToInt(yMax.Value);
+						if (yMaxValue > MaxHeight) yMaxValue = MaxHeight;
 
-						for (int y = yMaxValue - 1; y <= yMaxValue; y++) { 
+						var yMinValue = yMaxValue - 1;
+						if (yMinValue < 0) yMinValue = 0;
+
+						for (int y = yMinValue; y <= yMaxValue; y++) {
 							var HeightRand = GenerateHeightRand();
 
 							BaseBlock block;
 							if (y > Map.WaterHeight + 10 + HeightRand) block = new StoneBlock ();
 							else if (y > Map.WaterHeight + 0 + HeightRand) block = new GrassBlock ();
 							else block = new SandBlock ();
+
 							chunk [x, y, z] = block;
 						}
 					}
@@ -61,44 +66,46 @@ namespace MinecraftClone.Domain.Map {
 
 		private void GenerateHightMap() {
 			heightMap = new HeightMap ();
-			var v1 = new Vector3 (0, 0, 0);
-			var v2 = new Vector3 (Size - 1, 0, Size - 1);
+
 			Chunk chunk;
 
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.x + 1, address.z), out chunk)) {
+			if (map.Chunks.TryGetValue (new ChunkAddress (address.X + 1, address.Z), out chunk)) {
 				for (int z = 0; z < Size; z++) {
 					heightMap [Size - 1, z] = chunk.Factory.heightMap [0, z].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.x - 1, address.z), out chunk)) {
+			if (map.Chunks.TryGetValue (new ChunkAddress (address.X - 1, address.Z), out chunk)) {
 				for (int z = 0; z < Size; z++) {
 					heightMap [0, z] = chunk.Factory.heightMap [Size - 1, z].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.x, address.z + 1), out chunk)) {
+			if (map.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z + 1), out chunk)) {
 				for (int x = 0; x < Size; x++) {
 					heightMap [x, Size - 1] = chunk.Factory.heightMap [x, 0].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.x, address.z - 1), out chunk)) {
+			if (map.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z - 1), out chunk)) {
 				for (int x = 0; x < Size; x++) {
 					heightMap [x, 0] = chunk.Factory.heightMap [x, Size - 1].Value + GenerateHeightRand();
 				}
 			}
+
+			var v1 = new Vector3 (0, 0, 0);
+			var v2 = new Vector3 (Size - 1, 0, Size - 1);
 
 			if (!heightMap [v1.x, v1.z].HasValue) heightMap [v1.x, v1.z] = GenerateEndHeight();
 			if (!heightMap [v1.x, v2.z].HasValue) heightMap [v1.x, v2.z] = GenerateEndHeight();
 			if (!heightMap [v2.x, v1.z].HasValue) heightMap [v2.x, v1.z] = GenerateEndHeight();
 			if (!heightMap [v2.x, v2.z].HasValue) heightMap [v2.x, v2.z] = GenerateEndHeight();
 
-			GenerateHightMapImpl (v1, v2, Size);
+			GeneratePartialHightMap (v1, v2, Size);
 		}
 
-		private void GenerateHightMapImpl(Vector3 v1, Vector3 v2, int size) {
+		private void GeneratePartialHightMap(Vector3 v1, Vector3 v2, int size) {
 			if (size <= 0) return;
 			var mid = (v1 + v2) / 2f;
 
-			if (!this.heightMap [mid.x, mid.z].HasValue) {
+			if (!heightMap [mid.x, mid.z].HasValue) {
 				var value =
 					heightMap [v1.x, v1.z].Value +
 					heightMap [v1.x, v2.z].Value +
@@ -107,40 +114,40 @@ namespace MinecraftClone.Domain.Map {
 				value /= 4f;
 				value += GenerateMidHeightRand (size);
 				if (value > MaxHeight) value = MaxHeight;
-				if (value < 0) value = 0;
-				this.heightMap [mid.x, mid.z] = value;
+				if (value < 0) value = 0f;
+				heightMap [mid.x, mid.z] = value;
 			}
 
 			if (!heightMap [mid.x, v1.z].HasValue) {
 				heightMap [mid.x, v1.z] = (
 					heightMap [v1.x, v1.z] +
 					heightMap [v2.x, v1.z]
-				) / 2;
+				) / 2f;
 			}
 			if (!heightMap [v2.x, mid.z].HasValue) {
 				heightMap [v2.x, mid.z] = (
 					heightMap [v2.x, v1.z] +
 					heightMap [v2.x, v2.z]
-				) / 2;
+				) / 2f;
 			}
 			if (!heightMap [mid.x, v2.z].HasValue) {
 				heightMap [mid.x, v2.z] = (
 					heightMap [v1.x, v2.z] +
 					heightMap [v2.x, v2.z]
-				) / 2;
+				) / 2f;
 			}
 			if (!heightMap [v1.x, mid.z].HasValue) {
 				heightMap [v1.x, mid.z] = (
 					heightMap [v1.x, v1.z] +
 					heightMap [v1.x, v2.z]
-				) / 2;
+				) / 2f;
 			}
 
 			size /= 2;
-			GenerateHightMapImpl (new Vector3 (v1.x, 0, v1.z), new Vector3 (mid.x, 0, mid.z), size);
-			GenerateHightMapImpl (new Vector3 (mid.x, 0, v1.z), new Vector3 (v2.x, 0, mid.z), size);
-			GenerateHightMapImpl (new Vector3 (v1.x, 0, mid.z), new Vector3 (mid.x, 0, v2.z), size);
-			GenerateHightMapImpl (new Vector3 (mid.x, 0, mid.z), new Vector3 (v2.x, 0, v2.z), size);
+			GeneratePartialHightMap (new Vector3 (v1.x, 0, v1.z), new Vector3 (mid.x, 0, mid.z), size);
+			GeneratePartialHightMap (new Vector3 (mid.x, 0, v1.z), new Vector3 (v2.x, 0, mid.z), size);
+			GeneratePartialHightMap (new Vector3 (v1.x, 0, mid.z), new Vector3 (mid.x, 0, v2.z), size);
+			GeneratePartialHightMap (new Vector3 (mid.x, 0, mid.z), new Vector3 (v2.x, 0, v2.z), size);
 		}
 
 		private float GenerateEndHeight() {
