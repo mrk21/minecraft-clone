@@ -2,7 +2,7 @@
 using MinecraftClone.Domain.Block;
 
 namespace MinecraftClone.Application.Behaviour {
-	class BlockBehavior : MonoBehaviour {
+	class BlockBehaviour : MonoBehaviour {
 		public BaseBlock block;
 
 		public void Remove() {

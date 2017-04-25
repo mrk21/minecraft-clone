@@ -23,26 +23,14 @@ namespace MinecraftClone.Domain.Block {
 			get { return obj.transform.position; }
 		}
 
-		public virtual void Draw(GameObject parent, Vector3 position) {
-			obj = GameObject.CreatePrimitive (PrimitiveType.Cube);
+		public virtual GameObject GetPrefab() {
+			return null;
+		}
 
-			var behavior = obj.AddComponent<BlockBehavior> ();
+		public void Draw(GameObject parent, Vector3 position) {
+			obj = GameObject.Instantiate (GetPrefab (), position, Quaternion.identity, parent.transform);
+			var behavior = obj.GetComponent<BlockBehaviour> ();
 			behavior.block = this;
-
-			obj.transform.parent = parent.transform;
-			obj.name = string.Format ("{0}#{1}({2},{3},{4})",
-				GetType().FullName.Replace("MinecraftClone.Domain.Block.", ""),
-				id,
-				position.x,
-				position.y,
-				position.z
-			);
-
-			obj.transform.position = new Vector3 (
-				position.x,
-				position.y,
-				position.z
-			);
 		}
 
 		public void RemoveFromTerrain() {

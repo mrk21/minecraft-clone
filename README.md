@@ -25,6 +25,8 @@
 * [Unityフォルダ構成のルールについて - Qiita](http://qiita.com/takish/items/8608ba9070755da3ae6d)
 * [[Unity]プロジェクトのフォルダ構成を考える。 : nicolet blog](http://nicoco.blog.jp/archives/2348774.html)
 * [クリックしたオブジェクトの名前を取得 - Qiita](http://qiita.com/valbeat/items/799a18da3174a6af0b89)
+* [複製が簡単にできる！Unityでプレハブ（Prefabs）を作る方法【初心者向け】 | TechAcademyマガジン](https://techacademy.jp/magazine/2553)
+* [【Unity】スクリプトからPrefabのインスタンスを作る方法 - Qiita](http://qiita.com/2dgames_jp/items/8a28fd9cf625681faf87)
 
 ### Algorithm
 

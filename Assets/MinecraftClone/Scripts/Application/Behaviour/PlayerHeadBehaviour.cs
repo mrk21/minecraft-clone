@@ -26,7 +26,7 @@ namespace MinecraftClone.Application.Behaviour {
 				if (Physics.Raycast(ray, out hit, distance)) {
 					var gameObject = hit.collider.gameObject;
 
-					if (gameObject.GetComponent<BlockBehavior> () != null) {
+					if (gameObject.GetComponent<BlockBehaviour> () != null) {
 						var position = gameObject.transform.position;
 						position += new Vector3 (0, 1, 0);
 						mapService.PutBlock (new GrassBlock (), position);
@@ -42,7 +42,7 @@ namespace MinecraftClone.Application.Behaviour {
 
 				if (Physics.Raycast(ray, out hit, distance)) {
 					var gameObject = hit.collider.gameObject;
-					var behavior = gameObject.GetComponent<BlockBehavior> ();
+					var behavior = gameObject.GetComponent<BlockBehaviour> ();
 					if (behavior != null) {
 						behavior.Remove ();
 					}
