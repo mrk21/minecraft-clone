@@ -15,6 +15,7 @@ namespace MinecraftClone.Application.Behaviour {
 
 		void Update () {
 			if (Input.GetKey(KeyCode.R)) Start ();
+			if (Input.GetKey (KeyCode.P)) mapService.Redraw ();
 			mapService.DrawAroundPlayer ();
 		}
 	}

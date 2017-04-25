@@ -45,16 +45,24 @@ namespace MinecraftClone.Domain.Map {
 			waterLevel.transform.localScale = new Vector3 (scale, 1, scale);
 		}
 
+		public bool IsGenerated(Vector3 position) {
+			return IsGenerated (ChunkAddress.FromPosition (position));
+		}
+
+		public bool IsGenerated(ChunkAddress address) {
+			return chunks.ContainsKey (address);
+		}
+
 		public void Draw(Vector3 position) {
 			Draw (ChunkAddress.FromPosition (position));
 		}
 
 		public void Draw(ChunkAddress address) {
-			if (!chunks.ContainsKey (address)) {
+			if (!IsGenerated (address)) {
 				var factory = new ChunkFactory (this, address, rand);
 				chunks [address] = factory.Create ();
-				chunks [address].Draw ();
 			}
+			chunks [address].Draw ();
 		}
 	}
 }

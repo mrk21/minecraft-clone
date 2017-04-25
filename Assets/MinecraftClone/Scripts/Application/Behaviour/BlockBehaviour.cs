@@ -5,8 +5,9 @@ namespace MinecraftClone.Application.Behaviour {
 	class BlockBehavior : MonoBehaviour {
 		public BaseBlock block;
 
-		void OnDestroy() {
+		public void Remove() {
 			block.RemoveFromTerrain ();
+			Destroy (gameObject);
 		}
 	}
 }

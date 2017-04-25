@@ -7,7 +7,7 @@ namespace MinecraftClone.Domain.Map {
 		public static readonly int Size = 100;
 		public static readonly int Depth = 50;
 
-		private struct BlockHolder {
+		private class BlockHolder {
 			private BaseBlock block;
 
 			public BaseBlock Block {
@@ -29,15 +29,23 @@ namespace MinecraftClone.Domain.Map {
 		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
 
-		public ChunkAddress Id {
-			get { return address; }
-		}
-
 		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
 			this.map = map;
 			this.address = address;
 			this.factory = factory;
 			this.blocks = new BlockHolder[Size, Depth, Size];
+
+			for (int x = 0; x < Size; x++) {
+				for (int z = 0; z < Size; z++) {
+					for (int y = 0; y < Depth; y++) { 
+						this.blocks [x, y, z] = new BlockHolder ();
+					}
+				}
+			}
+		}
+
+		public ChunkAddress Id {
+			get { return address; }
 		}
 
 		public ChunkFactory Factory {
@@ -54,8 +62,8 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public BaseBlock this[Vector3 position] {
-			get { return blocks [(int)position.x, (int)position.y, (int)position.z].Block; }
-			set { blocks [(int)position.x, (int)position.y, (int)position.z].Block = value; }
+			get { return this [(int)position.x, (int)position.y, (int)position.z]; }
+			set { this [(int)position.x, (int)position.y, (int)position.z] = value; }
 		}
 
 		public Vector3 GetLocalPosition(Vector3 position) {

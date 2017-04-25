@@ -21,6 +21,12 @@ namespace MinecraftClone.Application {
 		}
 
 		public void DrawAroundPlayer() {
+			var position = player.transform.position;
+			if (!map.IsGenerated (position)) map.Draw (position);
+		}
+
+		public void Redraw() {
+			map.Init ();
 			map.Draw (player.transform.position);
 		}
 

@@ -42,8 +42,9 @@ namespace MinecraftClone.Application.Behaviour {
 
 				if (Physics.Raycast(ray, out hit, distance)) {
 					var gameObject = hit.collider.gameObject;
-					if (gameObject.GetComponent<BlockBehavior> () != null) {
-						Destroy (gameObject);
+					var behavior = gameObject.GetComponent<BlockBehavior> ();
+					if (behavior != null) {
+						behavior.Remove ();
 					}
 				}
 			}
