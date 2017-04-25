@@ -33,8 +33,8 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public void Init() {
-			foreach ( Transform c in target.transform ) {
-				GameObject.Destroy(c.gameObject);
+			foreach ( Chunk chunk in chunks.Values ) {
+				chunk.Unload();
 			}
 
 			var realSize = 100f;
@@ -51,6 +51,14 @@ namespace MinecraftClone.Domain.Map {
 
 		public bool IsGenerated(ChunkAddress address) {
 			return chunks.ContainsKey (address);
+		}
+
+		public bool IsDrawed(Vector3 position) {
+			return IsDrawed (ChunkAddress.FromPosition (position));;
+		}
+
+		public bool IsDrawed(ChunkAddress address) {
+			return IsGenerated (address) && chunks [address].IsDrawed ();
 		}
 
 		public void Draw(Vector3 position) {

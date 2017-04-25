@@ -28,16 +28,18 @@ namespace MinecraftClone.Domain.Map {
 		private ChunkAddress address;
 		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
+		private bool isDrawed;
 
 		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
 			this.map = map;
 			this.address = address;
 			this.factory = factory;
+			this.isDrawed = false;
 			this.blocks = new BlockHolder[Size, Depth, Size];
 
 			for (int x = 0; x < Size; x++) {
 				for (int z = 0; z < Size; z++) {
-					for (int y = 0; y < Depth; y++) { 
+					for (int y = 0; y < Depth; y++) {
 						this.blocks [x, y, z] = new BlockHolder ();
 					}
 				}
@@ -70,7 +72,26 @@ namespace MinecraftClone.Domain.Map {
 			return position - address.ToPosition ();
 		}
 
+		public bool IsDrawed() {
+			return isDrawed;
+		}
+
+		public void Unload () {
+			for (int x = 0; x < Size; x++) {
+				for (int z = 0; z < Size; z++) {
+					for (int y = 0; y < Depth; y++) {
+						BaseBlock block = this[x, y, z];
+
+						if (block != null) block.Unload();
+					}
+				}
+			}
+			isDrawed = false;
+		}
+
 		public void Draw() {
+			if (IsDrawed ()) return;
+
 			var basePosition = Address.ToPosition();
 
 			for (int x = 0; x < Size; x++) {
@@ -86,6 +107,8 @@ namespace MinecraftClone.Domain.Map {
 					}
 				}
 			}
+
+			isDrawed = true;
 		}
 	}
 }
