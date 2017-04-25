@@ -9,13 +9,15 @@ namespace MinecraftClone.Domain.Map {
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private GameObject target;
 		private GameObject waterLevel;
-		private int id;
+		private int seed;
+		private System.Random rand;
 
 		public Map(GameObject target, GameObject waterLevel) {
-			this.id = GetHashCode();
+			this.seed = GetHashCode();
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
 			this.target = target;
 			this.waterLevel = waterLevel;
+			this.rand = new System.Random (Id);
 		}
 
 		public Dictionary<ChunkAddress, Chunk> Chunks {
@@ -27,7 +29,7 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public int Id {
-			get { return id; }
+			get { return seed; }
 		}
 
 		public void Init() {
@@ -44,13 +46,14 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public void Draw(Vector3 position) {
-			var addr = ChunkAddress.FromPosition (position);
-			Chunk chunk;
-			if (!chunks.TryGetValue(addr, out chunk)) {
-				var factory = new ChunkFactory (this, addr);
-				chunk = factory.Create ();
-				chunks [addr] = chunk;
-				chunk.Draw ();
+			Draw (ChunkAddress.FromPosition (position));
+		}
+
+		public void Draw(ChunkAddress address) {
+			if (!chunks.ContainsKey (address)) {
+				var factory = new ChunkFactory (this, address, rand);
+				chunks [address] = factory.Create ();
+				chunks [address].Draw ();
 			}
 		}
 	}

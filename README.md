@@ -24,6 +24,7 @@
 * [unity_script_get_resources_object - FreeStyleWiki](http://ft-lab.ne.jp/cgi-bin-unity/wiki.cgi?page=unity%5Fscript%5Fget%5Fresources%5Fobject)
 * [Unityフォルダ構成のルールについて - Qiita](http://qiita.com/takish/items/8608ba9070755da3ae6d)
 * [[Unity]プロジェクトのフォルダ構成を考える。 : nicolet blog](http://nicoco.blog.jp/archives/2348774.html)
+* [クリックしたオブジェクトの名前を取得 - Qiita](http://qiita.com/valbeat/items/799a18da3174a6af0b89)
 
 ### Algorithm
 

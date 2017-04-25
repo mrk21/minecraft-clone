@@ -23,12 +23,12 @@ namespace MinecraftClone.Domain.Map {
 		private Map map;
 		private ChunkAddress address;
 		private HeightMap heightMap;
-		private System.Random r;
+		private System.Random rand;
 
-		public ChunkFactory(Map map, ChunkAddress address) {
+		public ChunkFactory(Map map, ChunkAddress address, System.Random rand) {
 			this.map = map;
 			this.address = address;
-			this.r = new System.Random(map.Id);
+			this.rand = rand;
 		}
 
 		public Chunk Create() {
@@ -151,16 +151,16 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		private float GenerateEndHeight() {
-			return 1f * r.Next (0, RandMax) / RandMax * MaxHeight;
+			return 1f * rand.Next (0, RandMax) / RandMax * MaxHeight;
 		}
 
 		private float GenerateMidHeightRand(int size) {
 			var value = Mathf.RoundToInt (RandMax / 3f);
-			return 1f * r.Next (-value, value) / (2f * value) * MaxHeight * size / Size;
+			return 1f * rand.Next (-value, value) / (2f * value) * MaxHeight * size / Size;
 		}
 
 		private float GenerateHeightRand() {
-			var result = r.Next (0, 10);
+			var result = rand.Next (0, 10);
 			if (result < 2) return -1;
 			if (result > 8) return 1;
 			else return 0;

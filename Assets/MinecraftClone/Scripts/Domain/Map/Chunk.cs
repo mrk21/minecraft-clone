@@ -7,10 +7,27 @@ namespace MinecraftClone.Domain.Map {
 		public static readonly int Size = 100;
 		public static readonly int Depth = 50;
 
+		private struct BlockHolder {
+			private BaseBlock block;
+
+			public BaseBlock Block {
+				get { return block; }
+				set {
+					block = value;
+					block.OnRemoveFromTerrain += OnRemove;
+				}
+			}
+
+			private void OnRemove(BaseBlock _) {
+				block.OnRemoveFromTerrain -= OnRemove;
+				block = null;
+			}
+		}
+
 		private Map map;
 		private ChunkAddress address;
 		private ChunkFactory factory;
-		private BaseBlock[,,] blocks;
+		private BlockHolder[,,] blocks;
 
 		public ChunkAddress Id {
 			get { return address; }
@@ -20,7 +37,7 @@ namespace MinecraftClone.Domain.Map {
 			this.map = map;
 			this.address = address;
 			this.factory = factory;
-			this.blocks = new BaseBlock[Size, Depth, Size];
+			this.blocks = new BlockHolder[Size, Depth, Size];
 		}
 
 		public ChunkFactory Factory {
@@ -32,8 +49,17 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public BaseBlock this[int x, int y, int z] {
-			get { return blocks [x, y, z]; }
-			set { blocks [x, y, z] = value; }
+			get { return blocks [x, y, z].Block; }
+			set { blocks [x, y, z].Block = value; }
+		}
+
+		public BaseBlock this[Vector3 position] {
+			get { return blocks [(int)position.x, (int)position.y, (int)position.z].Block; }
+			set { blocks [(int)position.x, (int)position.y, (int)position.z].Block = value; }
+		}
+
+		public Vector3 GetLocalPosition(Vector3 position) {
+			return position - address.ToPosition ();
 		}
 
 		public void Draw() {
