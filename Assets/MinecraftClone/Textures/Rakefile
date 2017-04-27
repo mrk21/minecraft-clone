@@ -1,0 +1,33 @@
+require 'pathname'
+
+SIZE = '5x5'
+GEOMETRY = '64x64'
+
+CURRENT_DIR = Pathname.new(__dir__)
+ROOT_DIR = CURRENT_DIR.dirname.dirname.dirname
+ASSETS_DIR = ROOT_DIR.join('Assets')
+SOURCE_DIR = ASSETS_DIR.join('Standard Assets/Environment/TerrainAssets/SurfaceTextures')
+TEMP_DIR = ROOT_DIR.join('Temp/Block')
+
+RAKEFILE = CURRENT_DIR.join('Rakefile')
+DIST = CURRENT_DIR.join('Block.png')
+SOURCE_IMAGES = Dir[SOURCE_DIR.join('*.psd')]
+DIST_IMAGES = SOURCE_IMAGES.map { |f| f.pathmap TEMP_DIR.join('%n.png').to_s }
+
+task :default => DIST
+
+task :clean do
+  TEMP_DIR.rmtree
+end
+
+file DIST => [RAKEFILE, TEMP_DIR, *DIST_IMAGES] do
+  sh "montage #{TEMP_DIR.join('*.png')} -background 'rgb(0,0,0)' -tile #{SIZE} -geometry #{GEOMETRY} #{DIST}"
+end
+
+DIST_IMAGES.each_with_index do |dist, i|
+  file dist => [RAKEFILE, SOURCE_IMAGES[i]] do |t|
+    sh "convert -background 'rgb(0,0,0)' '#{t.prerequisites[-1]}' '#{t.name}'"
+  end
+end
+
+directory TEMP_DIR

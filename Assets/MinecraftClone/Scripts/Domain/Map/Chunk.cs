@@ -1,11 +1,12 @@
 using UnityEngine;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Domain.Renderer;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Map {
 	class Chunk : IEntity<ChunkAddress> {
-		public static readonly int Size = 100;
-		public static readonly int Depth = 50;
+		public static readonly int Size = 50;
+		public static readonly int Depth = 30;
 
 		private class BlockHolder {
 			private BaseBlock block;
@@ -28,14 +29,14 @@ namespace MinecraftClone.Domain.Map {
 		private ChunkAddress address;
 		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
-		private bool isDrawed;
+		private GameObject gameObject;
 
 		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
 			this.map = map;
 			this.address = address;
 			this.factory = factory;
-			this.isDrawed = false;
 			this.blocks = new BlockHolder[Size, Depth, Size];
+			this.gameObject = null;
 
 			for (int x = 0; x < Size; x++) {
 				for (int z = 0; z < Size; z++) {
@@ -48,6 +49,10 @@ namespace MinecraftClone.Domain.Map {
 
 		public ChunkAddress Id {
 			get { return address; }
+		}
+
+		public Map Map {
+			get { return map; }
 		}
 
 		public ChunkFactory Factory {
@@ -72,43 +77,9 @@ namespace MinecraftClone.Domain.Map {
 			return position - address.ToPosition ();
 		}
 
-		public bool IsDrawed() {
-			return isDrawed;
-		}
-
-		public void Unload () {
-			for (int x = 0; x < Size; x++) {
-				for (int z = 0; z < Size; z++) {
-					for (int y = 0; y < Depth; y++) {
-						BaseBlock block = this[x, y, z];
-
-						if (block != null) block.Unload();
-					}
-				}
-			}
-			isDrawed = false;
-		}
-
-		public void Draw() {
-			if (IsDrawed ()) return;
-
-			var basePosition = Address.ToPosition();
-
-			for (int x = 0; x < Size; x++) {
-				for (int z = 0; z < Size; z++) {
-					for (int y = 0; y < Depth; y++) { 
-						BaseBlock block = this[x, y, z];
-
-						if (block != null) {
-							var position = new Vector3 (x, y, z);
-							position += basePosition;
-							block.Draw (map.Target, position);
-						}
-					}
-				}
-			}
-
-			isDrawed = true;
+		public GameObject GameObject {
+			get { return gameObject; }
+			set { gameObject = value; }
 		}
 	}
 }

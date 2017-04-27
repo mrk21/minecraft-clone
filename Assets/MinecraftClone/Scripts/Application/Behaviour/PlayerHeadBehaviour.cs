@@ -17,37 +17,44 @@ namespace MinecraftClone.Application.Behaviour {
 				transform.Rotate (new Vector3 (4, 0, 0));
 			}
 
-			if (Input.GetMouseButtonDown(1)) {
-				var distance = 100f;
+			if (Input.GetMouseButtonDown (0)) {
+				var chunk = mapService.CurrentChunk;
+				var address = GetBlockAddress();
 
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit = new RaycastHit();
-
-				if (Physics.Raycast(ray, out hit, distance)) {
-					var gameObject = hit.collider.gameObject;
-
-					if (gameObject.GetComponent<BlockBehaviour> () != null) {
-						var position = gameObject.transform.position;
-						position += new Vector3 (0, 1, 0);
-						mapService.PutBlock (new GrassBlock (), position);
+				if (address.HasValue) {
+					if (chunk [address.Value + Vector3.down] != null) {
+						chunk [address.Value + Vector3.down].RemoveFromTerrain();
+						mapService.RedrawCurrentChunk ();
+					}
+					else if (chunk [address.Value + Vector3.down] == null && chunk [address.Value] != null) {
+						chunk [address.Value] = null;
+						mapService.RedrawCurrentChunk ();
 					}
 				}
 			}
 
-			if (Input.GetMouseButtonDown(0)) {
-				var distance = 100f;
+			if (Input.GetMouseButtonDown (1)) {
+				var chunk = mapService.CurrentChunk;
+				var address = GetBlockAddress();
 
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit = new RaycastHit();
-
-				if (Physics.Raycast(ray, out hit, distance)) {
-					var gameObject = hit.collider.gameObject;
-					var behavior = gameObject.GetComponent<BlockBehaviour> ();
-					if (behavior != null) {
-						behavior.Remove ();
+				if (address.HasValue) {
+					if (chunk [address.Value] == null) {
+						chunk [address.Value] = new GrassBlock ();
+						mapService.RedrawCurrentChunk ();
 					}
 				}
 			}
+		}
+
+		Vector3? GetBlockAddress() {
+			var distance = 100f;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit hit = new RaycastHit ();
+
+			if (Physics.Raycast (ray, out hit, distance)) {
+				return mapService.CurrentChunk.GetLocalPosition (hit.point);
+			}
+			return new Vector3?();
 		}
 	}
 }

@@ -44,10 +44,7 @@ namespace MinecraftClone.Domain.Map {
 						var yMaxValue = Mathf.RoundToInt(yMax.Value);
 						if (yMaxValue > MaxHeight) yMaxValue = MaxHeight;
 
-						var yMinValue = yMaxValue - 1;
-						if (yMinValue < 0) yMinValue = 0;
-
-						for (int y = yMinValue; y <= yMaxValue; y++) {
+						for (int y = 0; y <= yMaxValue; y++) {
 							var HeightRand = GenerateHeightRand();
 
 							BaseBlock block;

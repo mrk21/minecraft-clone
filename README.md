@@ -1,10 +1,17 @@
 # Minecraft Clone
 
-## Dependencies
+## Preparing
 
 ### UnityPackages
 
+Please import the following packages:
+
 * Standard Assets
+
+### Block texture generation
+
+1. Move `Assets/MinecraftClone/Textures` directory
+2. Enter `rake` command
 
 ## Refer to
 
