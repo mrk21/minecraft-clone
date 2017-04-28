@@ -54,6 +54,13 @@ namespace MinecraftClone.Domain.Map {
 
 							chunk [x, y, z] = block;
 						}
+
+						for (int y = yMaxValue + 1; y < Chunk.Depth; y++) {
+							BaseBlock block;
+							if (y <= Map.WaterHeight) block = new WaterBlock ();
+							else block = new AirBlock ();
+							chunk [x, y, z] = block;
+						}
 					}
 				}
 			}

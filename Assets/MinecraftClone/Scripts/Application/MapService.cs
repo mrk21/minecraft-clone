@@ -26,6 +26,11 @@ namespace MinecraftClone.Application {
 			this.player.transform.position = new Vector3 (60, ChunkFactory.MaxHeight, 60);
 		}
 
+		public BaseBlock BlockUnderPlayer(Vector3? offset = null) {
+			offset = offset ?? Vector3.zero;
+			return CurrentChunk [CurrentChunk.GetLocalPosition (player.transform.position) + Vector3.down + offset.Value];
+		}
+
 		public Chunk CurrentChunk {
 			get { return map [player.transform.position]; }
 		}

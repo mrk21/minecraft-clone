@@ -7,6 +7,7 @@ namespace MinecraftClone.Domain.Map {
 	class Chunk : IEntity<ChunkAddress> {
 		public static readonly int Size = 50;
 		public static readonly int Depth = 30;
+		private static readonly BaseBlock AirBlockForOutOfRange = new AirBlock ();
 
 		private class BlockHolder {
 			private BaseBlock block;
@@ -21,7 +22,7 @@ namespace MinecraftClone.Domain.Map {
 
 			private void OnRemove(BaseBlock _) {
 				block.OnRemoveFromTerrain -= OnRemove;
-				block = null;
+				block = new AirBlock ();
 			}
 		}
 
@@ -64,7 +65,10 @@ namespace MinecraftClone.Domain.Map {
 		}
 
 		public BaseBlock this[int x, int y, int z] {
-			get { return blocks [x, y, z].Block; }
+			get {
+				if (y < 0 || y >= Depth) return AirBlockForOutOfRange;
+				return blocks [x, y, z].Block;
+			}
 			set { blocks [x, y, z].Block = value; }
 		}
 

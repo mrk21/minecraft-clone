@@ -20,18 +20,18 @@ namespace MinecraftClone.Domain.Renderer {
 				for (int x=0; x < Chunk.Size; x++) {
 					for (int z=0; z < Chunk.Size; z++) {
 						var block = chunk [x, y, z];
-						if (block == null) continue;
+						if (block.IsVoid) continue;
 
 						var position = new Vector3 (x, y, z);
 						var texture = textureFactory.Create (block);
 						builder.AddBlockMesh (position, texture);
 						 
-						if ((y >= Chunk.Size - 1) || (y + 1 <    Chunk.Depth && chunk [x, y + 1, z] == null)) builder.AddXZ2Plane ();
-						if (                         (y - 1 >= 0             && chunk [x, y - 1, z] == null)) builder.AddXZPlane ();
-						if ((z == Chunk.Size - 1) || (z + 1 <    Chunk.Size  && chunk [x, y, z + 1] == null)) builder.AddXY2Plane ();
-						if ((z == 0             ) || (z - 1 >= 0             && chunk [x, y, z - 1] == null)) builder.AddXYPlane ();
-						if ((x == Chunk.Size - 1) || (x + 1 <    Chunk.Size  && chunk [x + 1, y, z] == null)) builder.AddYZ2Plane ();
-						if ((x == 0             ) || (x - 1 >= 0             && chunk [x - 1, y, z] == null)) builder.AddYZPlane ();
+						if ((y == Chunk.Depth - 1) || (y + 1 <    Chunk.Depth && chunk [x, y + 1, z].IsTransparent)) builder.AddXZ2Plane ();
+						if (                          (y - 1 >= 0             && chunk [x, y - 1, z].IsTransparent)) builder.AddXZPlane ();
+						if ((z == Chunk.Size - 1)  || (z + 1 <    Chunk.Size  && chunk [x, y, z + 1].IsTransparent)) builder.AddXY2Plane ();
+						if ((z == 0             )  || (z - 1 >= 0             && chunk [x, y, z - 1].IsTransparent)) builder.AddXYPlane ();
+						if ((x == Chunk.Size - 1)  || (x + 1 <    Chunk.Size  && chunk [x + 1, y, z].IsTransparent)) builder.AddYZ2Plane ();
+						if ((x == 0             )  || (x - 1 >= 0             && chunk [x - 1, y, z].IsTransparent)) builder.AddYZPlane ();
 					}
 				}
 			}

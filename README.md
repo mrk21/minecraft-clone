@@ -13,6 +13,8 @@ Please import the following packages:
 1. Move `Assets/MinecraftClone/Textures` directory
 2. Enter `rake` command
 
+**NOTICE**: _This command dependencies to ImageMagick_
+
 ## Refer to
 
 ### Unity
@@ -34,6 +36,7 @@ Please import the following packages:
 * [クリックしたオブジェクトの名前を取得 - Qiita](http://qiita.com/valbeat/items/799a18da3174a6af0b89)
 * [複製が簡単にできる！Unityでプレハブ（Prefabs）を作る方法【初心者向け】 | TechAcademyマガジン](https://techacademy.jp/magazine/2553)
 * [【Unity】スクリプトからPrefabのインスタンスを作る方法 - Qiita](http://qiita.com/2dgames_jp/items/8a28fd9cf625681faf87)
+* [【Unity】スプライト端の謎の線/ゴミ/ちらつきの修正方法 - エフアンダーバー](http://www.f-sp.com/entry/2016/11/24/152957)
 
 ### Algorithm
 

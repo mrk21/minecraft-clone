@@ -22,6 +22,14 @@ namespace MinecraftClone.Domain.Block {
 			get { return id; }
 		}
 
+		public virtual bool IsTransparent {
+			get { return false; }
+		}
+
+		public virtual bool IsVoid {
+			get { return false; }
+		}
+
 		public void RemoveFromTerrain() {
 			OnRemoveFromTerrain (this);
 		}

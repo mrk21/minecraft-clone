@@ -4,7 +4,7 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Map {
 	class Map : IEntity<int> {
-		public static readonly int WaterHeight = Chunk.Depth / 2;
+		public static readonly int WaterHeight = (int)(Chunk.Depth / 1.3f);
 
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private int seed;
