@@ -22,12 +22,12 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (chunk [address.Value + Vector3.down] != null) {
-						chunk [address.Value + Vector3.down].RemoveFromTerrain();
+					if (!chunk [address.Value + Vector3.down].IsVoid) {
+						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
 					}
-					else if (chunk [address.Value + Vector3.down] == null && chunk [address.Value] != null) {
-						chunk [address.Value] = null;
+					else if (chunk [address.Value + Vector3.down].IsVoid && !chunk [address.Value].IsVoid) {
+						chunk [address.Value].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
 					}
 				}
@@ -38,7 +38,7 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (chunk [address.Value] == null) {
+					if (chunk [address.Value].IsVoid) {
 						chunk [address.Value] = new GrassBlock ();
 						mapService.RedrawCurrentChunk ();
 					}

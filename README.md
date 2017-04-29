@@ -13,7 +13,7 @@ Please import the following packages:
 1. Move `Assets/MinecraftClone/Textures` directory
 2. Enter `rake` command
 
-**NOTICE**: _This command dependencies to ImageMagick_
+**NOTICE**: _This command requires ImageMagick!_
 
 ## Refer to
 
