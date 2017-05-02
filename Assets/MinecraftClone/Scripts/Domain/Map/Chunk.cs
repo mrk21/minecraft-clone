@@ -14,16 +14,21 @@ namespace MinecraftClone.Domain.Map {
 			private BaseBlock block;
 
 			public BaseBlock Block {
-				get { return block; }
-				set {
-					block = value;
-					block.OnRemoveFromTerrain += OnRemove;
+				get {
+					if (block == null) Set (new AirBlock ());
+					return block;
 				}
+				set { Set (value); }
+			}
+
+			private void Set(BaseBlock block) {
+				this.block = block;
+				this.block.OnRemoveFromTerrain += OnRemove;
 			}
 
 			private void OnRemove(BaseBlock _) {
 				block.OnRemoveFromTerrain -= OnRemove;
-				block = new AirBlock ();
+				Set (new AirBlock ());
 			}
 		}
 
@@ -68,6 +73,7 @@ namespace MinecraftClone.Domain.Map {
 		public BaseBlock this[int x, int y, int z] {
 			get {
 				if (y < 0 || y >= Depth) return AirBlockForOutOfRange;
+				if (x < 0 || x >= Size || z < 0 || z >= Size) return null;
 				return blocks [x, y, z].Block;
 			}
 			set { blocks [x, y, z].Block = value; }

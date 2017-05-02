@@ -30,7 +30,7 @@ namespace MinecraftClone.Domain.Block {
 		}
 
 		public void RemoveFromTerrain() {
-			OnRemoveFromTerrain (this);
+			if (OnRemoveFromTerrain != null) OnRemoveFromTerrain (this);
 		}
 
 		public override string ToString () {

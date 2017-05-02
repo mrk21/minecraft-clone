@@ -85,12 +85,12 @@ namespace MinecraftClone.Domain.Renderer {
 				return block.Traits.MatterType != BlockTraits.MatterTypeEnum.Fluid
 					&& block.Traits.IsTransparent();
 			};
-			if (y + 1 <    Chunk.Depth && isValidBlock (chunk [x, y + 1, z])) builder.AddXZ2Plane ();
-			if (y - 1 >= 0             && isValidBlock (chunk [x, y - 1, z])) builder.AddXZPlane ();
-			if (z + 1 <    Chunk.Size  && isValidBlock (chunk [x, y, z + 1])) builder.AddXY2Plane ();
-			if (z - 1 >= 0             && isValidBlock (chunk [x, y, z - 1])) builder.AddXYPlane ();
-			if (x + 1 <    Chunk.Size  && isValidBlock (chunk [x + 1, y, z])) builder.AddYZ2Plane ();
-			if (x - 1 >= 0             && isValidBlock (chunk [x - 1, y, z])) builder.AddYZPlane ();
+			if ((y == Chunk.Depth - 1) || (y + 1 <    Chunk.Depth && isValidBlock (chunk [x, y + 1, z]))) builder.AddXZ2Plane ();
+			if (                          (y - 1 >= 0             && isValidBlock (chunk [x, y - 1, z]))) builder.AddXZPlane ();
+			if (                          (z + 1 <    Chunk.Size  && isValidBlock (chunk [x, y, z + 1]))) builder.AddXY2Plane ();
+			if (                          (z - 1 >= 0             && isValidBlock (chunk [x, y, z - 1]))) builder.AddXYPlane ();
+			if (                          (x + 1 <    Chunk.Size  && isValidBlock (chunk [x + 1, y, z]))) builder.AddYZ2Plane ();
+			if (                          (x - 1 >= 0             && isValidBlock (chunk [x - 1, y, z]))) builder.AddYZPlane ();
 		}
 	}
 }

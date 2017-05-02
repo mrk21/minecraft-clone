@@ -67,7 +67,7 @@ namespace MinecraftClone.Domain.Block {
 		public static readonly BlockTraits FluidBlock = new BlockTraits(
 			matterType: MatterTypeEnum.Fluid,
 			transparencyType: TransparencyTypeEnum.Translucent,
-			collisionType: CollisionTypeEnum.Collision
+			collisionType: CollisionTypeEnum.NonCollision
 		);
 
 		public static readonly BlockTraits VoidBlock = new BlockTraits(

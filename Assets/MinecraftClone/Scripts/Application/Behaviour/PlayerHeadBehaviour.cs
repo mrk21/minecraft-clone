@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Domain.Map;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.Behaviour {
@@ -25,10 +27,12 @@ namespace MinecraftClone.Application.Behaviour {
 					if (chunk [address.Value + Vector3.down].Traits.IsBreakable()) {
 						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, address.Value + Vector3.down));
 					}
 					else if (chunk [address.Value + Vector3.down].Traits.IsReplaceable() && chunk [address.Value].Traits.IsBreakable()) {
 						chunk [address.Value].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, address.Value));
 					}
 				}
 			}
@@ -39,10 +43,27 @@ namespace MinecraftClone.Application.Behaviour {
 
 				if (address.HasValue) {
 					if (chunk [address.Value].Traits.IsReplaceable()) {
-						chunk [address.Value] = new GlassBlock ();
+						var block = new WaterBlock ();
+						var position = address.Value;
+						chunk [position] = block;
 						mapService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, position, block));
 					}
 				}
+			}
+		}
+
+		IEnumerator DrawFluid(FluidBehaviour behaviour) {
+			yield return new WaitForSeconds (0.5f);
+
+			while (true) {
+				var items = behaviour.Next ();
+				if (items.Count == 0) break;
+				foreach (var item in items) {
+					mapService.CurrentChunk [item.position] = item.block;
+				}
+				mapService.RedrawCurrentChunk ();
+				yield return new WaitForSeconds (0.5f);
 			}
 		}
 
