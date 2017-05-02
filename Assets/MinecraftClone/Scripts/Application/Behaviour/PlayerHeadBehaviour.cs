@@ -39,7 +39,7 @@ namespace MinecraftClone.Application.Behaviour {
 
 				if (address.HasValue) {
 					if (chunk [address.Value].Traits.IsReplaceable()) {
-						chunk [address.Value] = new GrassBlock ();
+						chunk [address.Value] = new GlassBlock ();
 						mapService.RedrawCurrentChunk ();
 					}
 				}
