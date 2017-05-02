@@ -1,7 +1,8 @@
 using UnityEngine;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Domain.Block.Fluid;
 
-namespace MinecraftClone.Domain.Map {
+namespace MinecraftClone.Domain.Terrain {
 	class ChunkFactory {
 		public static readonly int Size = Chunk.Size;
 		public static readonly int MaxHeight = Chunk.Depth - 1;
@@ -20,13 +21,13 @@ namespace MinecraftClone.Domain.Map {
 			}
 		}
 
-		private Map map;
+		private World world;
 		private ChunkAddress address;
 		private HeightMap heightMap;
 		private System.Random rand;
 
-		public ChunkFactory(Map map, ChunkAddress address, System.Random rand) {
-			this.map = map;
+		public ChunkFactory(World world, ChunkAddress address, System.Random rand) {
+			this.world = world;
 			this.address = address;
 			this.rand = rand;
 		}
@@ -34,7 +35,7 @@ namespace MinecraftClone.Domain.Map {
 		public Chunk Create() {
 			GenerateHightMap ();
 
-			var chunk = new Chunk (map, address, this);
+			var chunk = new Chunk (world, address, this);
 
 			for (int x = 0; x < Size; x++) {
 				for (int z = 0; z < Size; z++) {
@@ -48,8 +49,8 @@ namespace MinecraftClone.Domain.Map {
 							var HeightRand = GenerateHeightRand();
 
 							BaseBlock block;
-							if (y > Map.WaterHeight + 10 + HeightRand) block = new StoneBlock ();
-							else if (y > Map.WaterHeight + 0 + HeightRand) block = new GrassBlock ();
+							if (y > World.WaterHeight + 10 + HeightRand) block = new StoneBlock ();
+							else if (y > World.WaterHeight + 0 + HeightRand) block = new GrassBlock ();
 							else block = new SandBlock ();
 
 							chunk [x, y, z] = block;
@@ -57,7 +58,7 @@ namespace MinecraftClone.Domain.Map {
 
 						for (int y = yMaxValue + 1; y < Chunk.Depth; y++) {
 							BaseBlock block;
-							if (y < Map.WaterHeight) block = new WaterBlock ();
+							if (y < World.WaterHeight) block = new WaterBlock ();
 							else block = new AirBlock ();
 							chunk [x, y, z] = block;
 						}
@@ -73,22 +74,22 @@ namespace MinecraftClone.Domain.Map {
 
 			Chunk chunk;
 
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.X + 1, address.Z), out chunk)) {
+			if (world.Chunks.TryGetValue (new ChunkAddress (address.X + 1, address.Z), out chunk)) {
 				for (int z = 0; z < Size; z++) {
 					heightMap [Size - 1, z] = chunk.Factory.heightMap [0, z].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.X - 1, address.Z), out chunk)) {
+			if (world.Chunks.TryGetValue (new ChunkAddress (address.X - 1, address.Z), out chunk)) {
 				for (int z = 0; z < Size; z++) {
 					heightMap [0, z] = chunk.Factory.heightMap [Size - 1, z].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z + 1), out chunk)) {
+			if (world.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z + 1), out chunk)) {
 				for (int x = 0; x < Size; x++) {
 					heightMap [x, Size - 1] = chunk.Factory.heightMap [x, 0].Value + GenerateHeightRand();
 				}
 			}
-			if (map.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z - 1), out chunk)) {
+			if (world.Chunks.TryGetValue (new ChunkAddress (address.X, address.Z - 1), out chunk)) {
 				for (int x = 0; x < Size; x++) {
 					heightMap [x, 0] = chunk.Factory.heightMap [x, Size - 1].Value + GenerateHeightRand();
 				}

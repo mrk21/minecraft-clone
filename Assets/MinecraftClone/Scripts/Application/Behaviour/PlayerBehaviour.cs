@@ -1,19 +1,20 @@
 ﻿using UnityEngine;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Domain.Block.Fluid;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.Behaviour {
 	class PlayerBehaviour : MonoBehaviour {
-		public MapService mapService;
+		public TerrainService terrainService;
 
 		void Start() {
-			if (mapService == null) mapService = Singleton<MapService>.Instance;
+			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
 		}
 
 		void Update () {
 			float velocityScale = 1f;
 
-			if (mapService.BlockUnderPlayer () is WaterBlock || mapService.BlockUnderPlayer (Vector3.up) is WaterBlock) {
+			if (terrainService.BlockUnderPlayer () is FluidBlock || terrainService.BlockUnderPlayer (Vector3.up) is FluidBlock) {
 				GetComponent<Rigidbody> ().drag = 3f;
 				velocityScale = 0.5f;
 			} else {

@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Infrastructure;
 
-namespace MinecraftClone.Domain.Map {
-	class Map : IEntity<int> {
+namespace MinecraftClone.Domain.Terrain {
+	class World : IEntity<int> {
 		public static readonly int WaterHeight = Chunk.Depth / 2;
 
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private int seed;
 		private System.Random rand;
 
-		public Map() {
+		public World() {
 			this.seed = GetHashCode();
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
 			this.rand = new System.Random (Id);

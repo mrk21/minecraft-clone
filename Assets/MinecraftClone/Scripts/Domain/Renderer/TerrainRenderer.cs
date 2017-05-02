@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MinecraftClone.Domain.Map;
+using MinecraftClone.Domain.Terrain;
 
 namespace MinecraftClone.Domain.Renderer {
-	class MapRenderer {
-		private Map.Map map;
+	class TerrainRenderer {
+		private World world;
 
 		private GameObject chunkPrefab;
 		private GameObject chunkTransparentPrefab;
 
 		private GameObject target;
 
-		public MapRenderer(Map.Map map, GameObject target) {
-			this.map = map;
+		public TerrainRenderer(World world, GameObject target) {
+			this.world = world;
 			this.target = target;
 			this.chunkPrefab = Resources.Load("Prefabs/Chunk") as GameObject;
 			this.chunkTransparentPrefab = Resources.Load("Prefabs/ChunkTransparent") as GameObject;
@@ -24,7 +24,7 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public void Unload() {
-			foreach (var chunk in map.Chunks.Values) {
+			foreach (var chunk in world.Chunks.Values) {
 				foreach (var obj in chunk.GameObjects.Values) {
 					GameObject.Destroy (obj);
 				}
@@ -37,7 +37,7 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public bool IsDrawed(ChunkAddress address) {
-			return map.IsGenerated (address) && map [address].GameObjects.Count > 0;
+			return world.IsGenerated (address) && world [address].GameObjects.Count > 0;
 		}
 
 		public void Redraw(Vector3 position) {
@@ -45,7 +45,7 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public void Redraw(ChunkAddress address) {
-			var chunk = map [address];
+			var chunk = world [address];
 			SetMesh (chunk);
 		}
 
@@ -54,7 +54,7 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public void Draw(ChunkAddress address) {
-			var chunk = map [address];
+			var chunk = world [address];
 
 			if (!IsDrawed (address)) {
 				chunk.GameObjects ["Collider"] = CreateGameObject (chunk, chunkPrefab);

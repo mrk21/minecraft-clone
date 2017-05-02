@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MinecraftClone.Domain.Map;
+using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Block;
 
 namespace MinecraftClone.Domain.Renderer {

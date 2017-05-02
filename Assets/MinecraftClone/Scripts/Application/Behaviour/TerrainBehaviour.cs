@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
-using MinecraftClone.Domain.Map;
+using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.Behaviour {
 	class TerrainBehaviour : MonoBehaviour {
 		public GameObject player = null; // set by the inspector
-		public MapService mapService;
+		public TerrainService terrainService;
 
 		void Start () {
-			if (mapService == null) mapService = Singleton<MapService>.Instance;
-			mapService.Init(
+			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
+			terrainService.Init(
 				terrain: gameObject,
 				player: player
 			);
@@ -18,8 +18,8 @@ namespace MinecraftClone.Application.Behaviour {
 
 		void Update () {
 			if (Input.GetKey(KeyCode.R)) Start ();
-			if (Input.GetKey (KeyCode.P)) mapService.Redraw ();
-			mapService.DrawAroundPlayer ();
+			if (Input.GetKey (KeyCode.P)) terrainService.Redraw ();
+			terrainService.DrawAroundPlayer ();
 		}
 	}
 }

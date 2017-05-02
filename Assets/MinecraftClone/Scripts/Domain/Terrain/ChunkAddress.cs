@@ -1,7 +1,7 @@
 using UnityEngine;
 using MinecraftClone.Infrastructure;
 
-namespace MinecraftClone.Domain.Map {
+namespace MinecraftClone.Domain.Terrain {
 	struct ChunkAddress : IValueObject<ChunkAddress> {
 		private int x;
 		private int z;

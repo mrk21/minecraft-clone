@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using UnityEngine;
 using MinecraftClone.Domain.Block;
-using MinecraftClone.Domain.Map;
+using MinecraftClone.Domain.Block.Fluid;
+using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.Behaviour {
 	class PlayerHeadBehaviour : MonoBehaviour {
-		public MapService mapService;
+		public TerrainService terrainService;
 
 		void Start() {
-			if (mapService == null) mapService = Singleton<MapService>.Instance;
+			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
 		}
 
 		void Update () {
@@ -20,25 +21,25 @@ namespace MinecraftClone.Application.Behaviour {
 			}
 
 			if (Input.GetMouseButtonDown (0)) {
-				var chunk = mapService.CurrentChunk;
+				var chunk = terrainService.CurrentChunk;
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
 					if (chunk [address.Value + Vector3.down].Traits.IsBreakable()) {
 						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
-						mapService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, address.Value + Vector3.down));
+						terrainService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, address.Value + Vector3.down));
 					}
 					else if (chunk [address.Value + Vector3.down].Traits.IsReplaceable() && chunk [address.Value].Traits.IsBreakable()) {
 						chunk [address.Value].RemoveFromTerrain ();
-						mapService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, address.Value));
+						terrainService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, address.Value));
 					}
 				}
 			}
 
 			if (Input.GetMouseButtonDown (1)) {
-				var chunk = mapService.CurrentChunk;
+				var chunk = terrainService.CurrentChunk;
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
@@ -46,8 +47,8 @@ namespace MinecraftClone.Application.Behaviour {
 						var block = new WaterBlock ();
 						var position = address.Value;
 						chunk [position] = block;
-						mapService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (mapService.CurrentChunk, position, block));
+						terrainService.RedrawCurrentChunk ();
+						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, position, block));
 					}
 				}
 			}
@@ -60,9 +61,9 @@ namespace MinecraftClone.Application.Behaviour {
 				var items = behaviour.Next ();
 				if (items.Count == 0) break;
 				foreach (var item in items) {
-					mapService.CurrentChunk [item.position] = item.block;
+					terrainService.CurrentChunk [item.Position] = item.Block;
 				}
-				mapService.RedrawCurrentChunk ();
+				terrainService.RedrawCurrentChunk ();
 				yield return new WaitForSeconds (0.5f);
 			}
 		}
@@ -73,7 +74,7 @@ namespace MinecraftClone.Application.Behaviour {
 			RaycastHit hit = new RaycastHit ();
 
 			if (Physics.Raycast (ray, out hit, distance)) {
-				return mapService.CurrentChunk.GetLocalPosition (hit.point);
+				return terrainService.CurrentChunk.GetLocalPosition (hit.point);
 			}
 			return new Vector3?();
 		}

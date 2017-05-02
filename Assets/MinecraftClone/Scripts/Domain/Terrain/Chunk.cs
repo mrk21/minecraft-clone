@@ -4,7 +4,7 @@ using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Renderer;
 using MinecraftClone.Infrastructure;
 
-namespace MinecraftClone.Domain.Map {
+namespace MinecraftClone.Domain.Terrain {
 	class Chunk : IEntity<ChunkAddress> {
 		public static readonly int Size = 50;
 		public static readonly int Depth = 30;
@@ -32,14 +32,14 @@ namespace MinecraftClone.Domain.Map {
 			}
 		}
 
-		private Map map;
+		private World world;
 		private ChunkAddress address;
 		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
 		private Dictionary<string, GameObject> gameObjects;
 
-		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
-			this.map = map;
+		public Chunk(World world, ChunkAddress address, ChunkFactory factory) {
+			this.world = world;
 			this.address = address;
 			this.factory = factory;
 			this.blocks = new BlockHolder[Size, Depth, Size];
@@ -58,8 +58,8 @@ namespace MinecraftClone.Domain.Map {
 			get { return address; }
 		}
 
-		public Map Map {
-			get { return map; }
+		public World World {
+			get { return world; }
 		}
 
 		public ChunkFactory Factory {
