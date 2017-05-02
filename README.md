@@ -38,6 +38,26 @@ Please import the following packages:
 * [【Unity】スクリプトからPrefabのインスタンスを作る方法 - Qiita](http://qiita.com/2dgames_jp/items/8a28fd9cf625681faf87)
 * [【Unity】スプライト端の謎の線/ゴミ/ちらつきの修正方法 - エフアンダーバー](http://www.f-sp.com/entry/2016/11/24/152957)
 
+#### shader
+
+* [Unity : マテリアル、メッシュ、シェーダの関係まとめ - いんでぃーづ](http://indie-du.com/entry/2016/12/24/000541)
+* [Unity シェーダーチュートリアル　　アルファとアルファテスト – Tsumiki Tech Times|積木製作](http://tsumikiseisaku.com/blog/shader-tutorial-transparent/)
+* [Unity シェーダーチュートリアル　　両面描画 – Tsumiki Tech Times|積木製作](http://tsumikiseisaku.com/blog/shader-tutorial-doublesided/)
+* [Unity Unlit/Transparent でアルファ値を外から設定したいシェーダー - Qiita](http://qiita.com/beinteractive/items/2dd81a9221cbc6cff754)
+* [内蔵シェーダのコード解説(2) - Unlit/Transparent - 強火で進め](http://d.hatena.ne.jp/nakamura001/20130205/1360083263)
+* [Unity - マニュアル: ShaderLab ： SubShader 内の Tags](https://docs.unity3d.com/ja/540/Manual/SL-SubShaderTags.html)
+* [Unity で Transparent/Diffuse で描画順が崩れてしまう際の対処法 - 凹みTips](http://tips.hecomi.com/entry/2014/03/07/005743)
+* [【Unityシェーダ入門】透明なシェーダを作る - おもちゃラボ](http://nn-hokuson.hatenablog.com/entry/2016/10/05/201022)
+* [安井のブログ: [Unity]Shader上で深度値を取得する方法](http://yasuiyasuo.blogspot.jp/2013/03/unityshader.html)
+* [snake21jpnさんのツイート: "[箱]＜ざぶざぶ Unityビルトインの水面シェーダーだと水中がものすごく悲しいことになるのですが やっぱり水中を真面目に描写しようとするゲームはあまりないのかしら 苦手なポストエフェクトシェーダー描かねば… http://t.co/st42jDPxE5"](https://twitter.com/snake21jpn/status/589364748275220481)
+* [Unity Shader まとめ - ゆにてく備忘録](http://unitech.hatenablog.com/entry/2015/03/11/001953)
+* [Unity - マニュアル: シェーダーリファレンス](https://docs.unity3d.com/jp/540/Manual/SL-Reference.html)
+* [【Unityシェーダ入門】透明なシェーダを作る - おもちゃラボ](http://nn-hokuson.hatenablog.com/entry/2016/10/05/201022)
+* [【Unityシェーダ入門】氷のような半透明シェーダを作る - おもちゃラボ](http://nn-hokuson.hatenablog.com/entry/2016/10/07/221724)
+* [Unity - Shaderを勉強する - Qiita](http://qiita.com/ShirakawaYoshimaru/items/5d6d8bad041c835f858a)
+* [Unity のシェーダの基礎を勉強してみたのでやる気出してまとめてみた - 凹みTips](http://tips.hecomi.com/entry/2014/03/16/233943)
+* [【Unityシェーダ入門】uvスクロールで水面を動かす - おもちゃラボ](http://nn-hokuson.hatenablog.com/entry/2016/10/20/201111)
+
 ### Algorithm
 
 * [フラクタル地形自動生成 - Qiita](http://qiita.com/keny30827/items/f4e29a4a90779cf94da6#%E4%B8%AD%E7%82%B9%E5%A4%89%E4%BD%8D%E6%B3%95)

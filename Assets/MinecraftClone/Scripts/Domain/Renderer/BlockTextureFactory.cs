@@ -13,7 +13,7 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public TextureItem Create(BaseBlock block) {
-			var x = block.BlockId % map.Size - 1;
+			var x = block.BlockId % map.Size;
 			var y = map.Size - block.BlockId / map.Size - 1;
 			return map.GetItem (offset: new Vector2 (x, y));
 		}

@@ -7,27 +7,26 @@ using MinecraftClone.Application.Behaviour;
 namespace MinecraftClone.Domain.Block {
 	abstract class BaseBlock : IEntity<int> {
 		protected int id;
+		protected int blockId;
+		protected BlockTraits traits;
 
 		public event Action<BaseBlock> OnRemoveFromTerrain;
 
 		public BaseBlock() {
 			this.id = GetHashCode();
+			this.blockId = 0;
 		}
 
-		public virtual int BlockId {
-			get { return 0; }
+		public int BlockId {
+			get { return blockId; }
 		}
 
 		public int Id {
 			get { return id; }
 		}
 
-		public virtual bool IsTransparent {
-			get { return false; }
-		}
-
-		public virtual bool IsVoid {
-			get { return false; }
+		public BlockTraits Traits {
+			get { return traits; }
 		}
 
 		public void RemoveFromTerrain() {

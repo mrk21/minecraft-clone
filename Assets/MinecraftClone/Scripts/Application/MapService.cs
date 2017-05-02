@@ -7,21 +7,17 @@ using MinecraftClone.Application.Behaviour;
 namespace MinecraftClone.Application {
 	class MapService {
 		private GameObject terrain;
-		private GameObject waterLevel;
 		private GameObject player;
-		private GameObject chunkPrefab;
 		private Map map;
 		private MapRenderer mapRenderer;
 
-		public void Init(GameObject terrain, GameObject waterLevel, GameObject player, GameObject chunkPrefab) {
+		public void Init(GameObject terrain, GameObject player) {
 			this.terrain = terrain;
-			this.waterLevel = waterLevel;
-			this.chunkPrefab = chunkPrefab;
 			this.player = player;
 
 			if (mapRenderer != null) mapRenderer.Unload ();
 			map = new Map ();
-			mapRenderer = new MapRenderer (map, this.terrain, this.waterLevel, this.chunkPrefab);
+			mapRenderer = new MapRenderer (map, this.terrain);
 			mapRenderer.Init ();
 			this.player.transform.position = new Vector3 (60, ChunkFactory.MaxHeight, 60);
 		}

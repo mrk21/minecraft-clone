@@ -22,11 +22,11 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (!chunk [address.Value + Vector3.down].IsVoid) {
+					if (chunk [address.Value + Vector3.down].Traits.IsBreakable()) {
 						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
 					}
-					else if (chunk [address.Value + Vector3.down].IsVoid && !chunk [address.Value].IsVoid) {
+					else if (chunk [address.Value + Vector3.down].Traits.IsReplaceable() && chunk [address.Value].Traits.IsBreakable()) {
 						chunk [address.Value].RemoveFromTerrain ();
 						mapService.RedrawCurrentChunk ();
 					}
@@ -38,7 +38,7 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (chunk [address.Value].IsVoid) {
+					if (chunk [address.Value].Traits.IsReplaceable()) {
 						chunk [address.Value] = new GrassBlock ();
 						mapService.RedrawCurrentChunk ();
 					}

@@ -6,7 +6,7 @@ GEOMETRY = '64x64'
 CURRENT_DIR = Pathname.new(__dir__)
 ROOT_DIR = CURRENT_DIR.dirname.dirname.dirname
 ASSETS_DIR = ROOT_DIR.join('Assets')
-SOURCE_DIR = ASSETS_DIR.join('Standard Assets/Environment/TerrainAssets/SurfaceTextures')
+SOURCE_DIR = CURRENT_DIR.join('Block')
 TEMP_DIR = ROOT_DIR.join('Temp/Block')
 
 RAKEFILE = CURRENT_DIR.join('Rakefile')
@@ -18,15 +18,18 @@ task :default => DIST
 
 task :clean do
   TEMP_DIR.rmtree
+  DIST.delete
 end
 
 file DIST => [RAKEFILE, TEMP_DIR, *DIST_IMAGES] do
-  sh "montage #{TEMP_DIR.join('*.png')} -background 'rgb(0,0,0)' -tile #{SIZE} -geometry #{GEOMETRY} #{DIST}"
+  sh "montage #{TEMP_DIR.join('*.png')} -background 'transparent' -tile #{SIZE} -geometry #{GEOMETRY} #{DIST}"
 end
 
 DIST_IMAGES.each_with_index do |dist, i|
   file dist => [RAKEFILE, SOURCE_IMAGES[i]] do |t|
-    sh "convert -background 'rgb(0,0,0)' '#{t.prerequisites[-1]}' '#{t.name}'"
+    # @see http://paranoid360.blogspot.jp/2011/04/imagemagickpsd.html
+    src = t.prerequisites[-1]
+    sh "convert '#{src}[0]' '#{t.name}'"
   end
 end
 

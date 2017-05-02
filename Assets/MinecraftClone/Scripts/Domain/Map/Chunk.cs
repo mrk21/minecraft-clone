@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Renderer;
@@ -30,14 +31,14 @@ namespace MinecraftClone.Domain.Map {
 		private ChunkAddress address;
 		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
-		private GameObject gameObject;
+		private Dictionary<string, GameObject> gameObjects;
 
 		public Chunk(Map map, ChunkAddress address, ChunkFactory factory) {
 			this.map = map;
 			this.address = address;
 			this.factory = factory;
 			this.blocks = new BlockHolder[Size, Depth, Size];
-			this.gameObject = null;
+			this.gameObjects = new Dictionary<string, GameObject> ();
 
 			for (int x = 0; x < Size; x++) {
 				for (int z = 0; z < Size; z++) {
@@ -81,9 +82,8 @@ namespace MinecraftClone.Domain.Map {
 			return position - address.ToPosition ();
 		}
 
-		public GameObject GameObject {
-			get { return gameObject; }
-			set { gameObject = value; }
+		public Dictionary<string, GameObject> GameObjects {
+			get { return gameObjects; }
 		}
 	}
 }

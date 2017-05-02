@@ -3,8 +3,9 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Block {
 	class StoneBlock : BaseBlock {
-		public override int BlockId {
-			get { return 3; }
+		public StoneBlock() {
+			this.blockId = 3;
+			this.traits = BlockTraits.SolidBlock;
 		}
 	}
 }
