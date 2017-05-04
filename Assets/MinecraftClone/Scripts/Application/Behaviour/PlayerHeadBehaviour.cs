@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Block.Fluid;
@@ -28,12 +29,14 @@ namespace MinecraftClone.Application.Behaviour {
 					if (chunk [address.Value + Vector3.down].Traits.IsBreakable()) {
 						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, address.Value + Vector3.down));
+						var factory = new FluidPropagatorFactory ();
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.CurrentChunk, address.Value + Vector3.down));
 					}
 					else if (chunk [address.Value + Vector3.down].Traits.IsReplaceable() && chunk [address.Value].Traits.IsBreakable()) {
 						chunk [address.Value].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, address.Value));
+						var factory = new FluidPropagatorFactory ();
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.CurrentChunk, address.Value));
 					}
 				}
 			}
@@ -48,20 +51,19 @@ namespace MinecraftClone.Application.Behaviour {
 						var position = address.Value;
 						chunk [position] = block;
 						terrainService.RedrawCurrentChunk ();
-						StartCoroutine ("DrawFluid", new FluidBehaviour (terrainService.CurrentChunk, position, block));
+						var factory = new FluidPropagatorFactory ();
+						StartCoroutine ("DrawFluid", factory.CreateFromSource (terrainService.CurrentChunk, block, position));
 					}
 				}
 			}
 		}
 
-		IEnumerator DrawFluid(FluidBehaviour behaviour) {
+		IEnumerator DrawFluid(FluidPropagator propagator) {
 			yield return new WaitForSeconds (0.5f);
 
-			while (true) {
-				var items = behaviour.Next ();
-				if (items.Count == 0) break;
+			foreach (var items in propagator.Start ()) {
 				foreach (var item in items) {
-					terrainService.CurrentChunk [item.Position] = item.Block;
+					propagator.Chunk [item.Position] = item.Block;
 				}
 				terrainService.RedrawCurrentChunk ();
 				yield return new WaitForSeconds (0.5f);

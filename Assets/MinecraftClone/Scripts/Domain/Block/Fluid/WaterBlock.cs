@@ -11,7 +11,7 @@ namespace MinecraftClone.Domain.Block.Fluid {
 			this.blockId = 4;
 		}
 
-		public override FluidBlock MakeStream (int volume) {
+		public override FluidBlock CreateStream (int volume) {
 			return new WaterBlock (volume);
 		}
 	}

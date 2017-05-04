@@ -26,6 +26,6 @@ namespace MinecraftClone.Domain.Block.Fluid {
 			get { return isStream; }
 		}
 
-		public abstract FluidBlock MakeStream (int volume);
+		public abstract FluidBlock CreateStream (int volume);
 	}
 }
