@@ -7,21 +7,29 @@ using MinecraftClone.Infrastructure;
 namespace MinecraftClone.Domain.Renderer {
 	class BlockMeshBuilder {
 		private List<Vector3> vertices;
-		private List<int> triangles;
+		private List<List<int>> triangles;
 		private List<Vector2> uv;
+		private int subMeshCount;
 
 		private Vector3 position;
 		private TextureItem texture;
+		private int subMeshIndex;
 
-		public BlockMeshBuilder() {
+		public BlockMeshBuilder(int subMeshCount) {
 			this.vertices = new List<Vector3> ();
-			this.triangles = new List<int> ();
+			this.triangles = new List<List<int>> ();
 			this.uv = new List<Vector2> ();
+			this.subMeshCount = subMeshCount;
+
+			for (var i = 0; i < this.subMeshCount; i++) {
+				this.triangles.Add (new List<int> ());
+			}
 		}
 
-		public BlockMeshBuilder AddBlockMesh(Vector3 position, TextureItem texture) {
+		public BlockMeshBuilder AddBlockMesh(Vector3 position, TextureItem texture, int subMeshIndex) {
 			this.position = position;
 			this.texture = texture;
+			this.subMeshIndex = subMeshIndex;
 			return this;
 		}
 
@@ -34,9 +42,14 @@ namespace MinecraftClone.Domain.Renderer {
 
 		public Mesh ToMesh() {
 			var mesh = new Mesh();
-			mesh.vertices = vertices.ToArray ();
-			mesh.triangles = triangles.ToArray ();
-			mesh.uv = uv.ToArray ();
+			mesh.subMeshCount = triangles.Count;
+			mesh.SetVertices (vertices);
+
+			for (var i=0; i < triangles.Count; i++) {
+				mesh.SetTriangles (triangles[i], i);
+			}
+
+			mesh.SetUVs (0, uv);
 			mesh.RecalculateBounds();
 			mesh.RecalculateNormals();
 			return mesh;
@@ -78,7 +91,7 @@ namespace MinecraftClone.Domain.Renderer {
 
 		private BlockMeshBuilder AddTriangles(int[] value) {
 			var c = vertices.Count;
-			triangles.AddRange (value.Select (v => v + c).ToArray ());
+			triangles[subMeshIndex].AddRange (value.Select (v => v + c).ToArray ());
 			return this;
 		}
 

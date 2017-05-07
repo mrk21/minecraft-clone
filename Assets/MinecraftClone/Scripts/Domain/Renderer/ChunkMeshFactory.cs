@@ -6,12 +6,14 @@ using MinecraftClone.Domain.Block;
 
 namespace MinecraftClone.Domain.Renderer {
 	class ChunkMesh {
+		public Mesh renderer;
 		public Mesh collider;
-		public Mesh opaque;
-		public Mesh transparent;
 	}
 
 	class ChunkMeshFactory {
+		private static readonly int OpaqueSubMeshIndex = 0;
+		private static readonly int TransparentSubMeshIndex = 1;
+
 		private Chunk chunk;
 
 		public ChunkMeshFactory(Chunk chunk) {
@@ -19,9 +21,8 @@ namespace MinecraftClone.Domain.Renderer {
 		}
 
 		public ChunkMesh Create() {
-			var transparentBuilder = new BlockMeshBuilder ();
-			var opaqueBuilder = new BlockMeshBuilder ();
-			var colliderBuilder = new BlockMeshBuilder ();
+			var builderForRenderer = new BlockMeshBuilder (subMeshCount: 2);
+			var builderForCollider = new BlockMeshBuilder (subMeshCount: 1);
 
 			var textureFactory = new BlockTextureFactory ();
 
@@ -35,26 +36,26 @@ namespace MinecraftClone.Domain.Renderer {
 						var texture = textureFactory.Create (block);
 
 						if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid) {
-							colliderBuilder.AddBlockMesh (position, texture);
+							builderForCollider.AddBlockMesh (position, texture, 0);
 
-							BuildSolidMesh (colliderBuilder, x, y, z);
+							BuildSolidMesh (builderForCollider, x, y, z);
 						}
 
 						if (block.Traits.IsTransparent ()) {
-							transparentBuilder.AddBlockMesh (position, texture);
+							builderForRenderer.AddBlockMesh (position, texture, TransparentSubMeshIndex);
 
 							if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid) {
-								BuildSolidMesh (transparentBuilder, x, y, z);
+								BuildSolidMesh (builderForRenderer, x, y, z);
 							} else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid) {
-								BuildFluidMesh (transparentBuilder, x, y, z);
+								BuildFluidMesh (builderForRenderer, x, y, z);
 							}
 						} else {
-							opaqueBuilder.AddBlockMesh (position, texture);
+							builderForRenderer.AddBlockMesh (position, texture, OpaqueSubMeshIndex);
 
 							if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid) {
-								BuildSolidMesh (opaqueBuilder, x, y, z);
+								BuildSolidMesh (builderForRenderer, x, y, z);
 							} else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid) {
-								BuildFluidMesh (opaqueBuilder, x, y, z);
+								BuildFluidMesh (builderForRenderer, x, y, z);
 							}
 						}
 					}
@@ -62,9 +63,8 @@ namespace MinecraftClone.Domain.Renderer {
 			}
 
 			var mesh = new ChunkMesh ();
-			mesh.collider = colliderBuilder.ToMesh ();
-			mesh.opaque = opaqueBuilder.ToMesh ();
-			mesh.transparent = transparentBuilder.ToMesh ();
+			mesh.renderer = builderForRenderer.ToMesh ();
+			mesh.collider = builderForCollider.ToMesh ();
 			return mesh;
 		}
 

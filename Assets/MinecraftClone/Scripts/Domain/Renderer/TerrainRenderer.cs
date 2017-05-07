@@ -8,7 +8,6 @@ namespace MinecraftClone.Domain.Renderer {
 		private World world;
 
 		private GameObject chunkPrefab;
-		private GameObject chunkTransparentPrefab;
 
 		private GameObject target;
 
@@ -16,7 +15,6 @@ namespace MinecraftClone.Domain.Renderer {
 			this.world = world;
 			this.target = target;
 			this.chunkPrefab = Resources.Load("Prefabs/Chunk") as GameObject;
-			this.chunkTransparentPrefab = Resources.Load("Prefabs/ChunkTransparent") as GameObject;
 		}
 
 		public void Init() {
@@ -57,15 +55,11 @@ namespace MinecraftClone.Domain.Renderer {
 			var chunk = world [address];
 
 			if (!IsDrawed (address)) {
-				chunk.GameObjects ["Collider"] = CreateGameObject (chunk, chunkPrefab);
-				chunk.GameObjects ["OpaqueBlock"] = CreateGameObject (chunk, chunkPrefab);
-				chunk.GameObjects ["TransparentBlock"] = CreateGameObject (chunk, chunkTransparentPrefab);
+				chunk.GameObjects ["Chunk"] = CreateGameObject (chunk, chunkPrefab);
 
 				SetMesh (chunk);
 
-				chunk.GameObjects ["Collider"].SetActive (true);
-				chunk.GameObjects ["OpaqueBlock"].SetActive (true);
-				chunk.GameObjects ["TransparentBlock"].SetActive (true);
+				chunk.GameObjects ["Chunk"].SetActive (true);
 			}
 		}
 
@@ -73,9 +67,8 @@ namespace MinecraftClone.Domain.Renderer {
 			var factory = new ChunkMeshFactory (chunk);
 			var mesh = factory.Create ();
 
-			chunk.GameObjects ["Collider"].GetComponent<MeshCollider> ().sharedMesh = mesh.collider;
-			chunk.GameObjects ["OpaqueBlock"].GetComponent<MeshFilter> ().mesh = mesh.opaque;
-			chunk.GameObjects ["TransparentBlock"].GetComponent<MeshFilter> ().mesh = mesh.transparent;
+			chunk.GameObjects ["Chunk"].GetComponent<MeshCollider> ().sharedMesh = mesh.collider;
+			chunk.GameObjects ["Chunk"].GetComponent<MeshFilter> ().mesh = mesh.renderer;
 		}
 
 		private GameObject CreateGameObject (Chunk chunk, GameObject prefab) {
