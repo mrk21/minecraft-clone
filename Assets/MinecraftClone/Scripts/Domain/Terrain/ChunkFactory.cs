@@ -18,9 +18,7 @@ namespace MinecraftClone.Domain.Terrain {
 			}
 
 			public int this [int x] {
-				get {
-					return values [x & 0xfff];
-				}
+				get { return values [x & 0xfff]; }
 			}
 		}
 
@@ -36,9 +34,9 @@ namespace MinecraftClone.Domain.Terrain {
 
 		public float this [float x, float y, float z] {
 			get {
-				int xi = (int)x & 0xf;
-				int yi = (int)y & 0xf;
-				int zi = (int)z & 0xf;
+				int xi = (int)x;
+				int yi = (int)y;
+				int zi = (int)z;
 
 				float xf = x - (int)x;
 				float yf = y - (int)y;
@@ -56,7 +54,6 @@ namespace MinecraftClone.Domain.Terrain {
 				int bba = p [p [p [xi + 1] + yi + 1] + zi    ];
 				int bab = p [p [p [xi + 1] + yi    ] + zi + 1];
 				int bbb = p [p [p [xi + 1] + yi + 1] + zi + 1];
-
 
 				float g1 = Grad (aaa, xf    , yf    , zf);
 				float g2 = Grad (baa, xf - 1, yf    , zf);
@@ -114,7 +111,7 @@ namespace MinecraftClone.Domain.Terrain {
 
 	class HeightMap {
 		private static readonly int UnitSize = 128;
-		private static readonly int MapSize = 4096;
+		private static readonly int MapSize = 65536;
 
 		private PerlinNoise noise;
 		private float[,] map;
@@ -151,31 +148,28 @@ namespace MinecraftClone.Domain.Terrain {
 		}
 
 		public void Generate () {
-			for (var x = 0; x < Chunk.Size; x++) {
-				for (var z = 0; z < Chunk.Size; z++) {
-					map [x, z] = GetValue (x, z);
-				}
-			}
-		}
-
-		private float GetValue (float x, float z) {
-			float result = 0;
 			var offset = address.ToPosition ();
-			float u = (x + offset.x + MapSize / 2f) / (1f * UnitSize);
-			float w = (z + offset.z + MapSize / 2f) / (1f * UnitSize);
+			float frequency = baseFrequency;
+			float amplitude = baseAmplitude;
 
 			for (var i = 0; i < octaves; i++) {
-				float frequency = baseFrequency * Mathf.Pow (2, i);
-				float amplitude = baseAmplitude * Mathf.Pow (persistence, i);
-
-				result += amplitude * noise [
-					frequency * u,
-					0f,
-					frequency * w
-				];
+				for (var x = 0; x < Chunk.Size; x++) {
+					for (var z = 0; z < Chunk.Size; z++) {
+						float u = frequency * (x + offset.x + MapSize / 2f) / UnitSize;
+						float w = frequency * (z + offset.z + MapSize / 2f) / UnitSize;
+						map [x, z] += amplitude * noise [u, 0f, w];
+					}
+				}
+				frequency *= 2f;
+				amplitude *= persistence;
 			}
-			result = result / maxAmplitude * maxHeight;
-			return result;
+
+			for (var x = 0; x < Chunk.Size; x++) {
+				for (var z = 0; z < Chunk.Size; z++) {
+					map [x, z] /= maxAmplitude;
+					map [x, z] *= maxHeight;
+				}
+			}
 		}
 	}
 
