@@ -6,8 +6,8 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Terrain {
 	class Chunk : IEntity<ChunkAddress> {
-		public static readonly int Size = 50;
-		public static readonly int Depth = 30;
+		public static readonly int Size = 16;
+		public static readonly int Depth = 128;
 		private static readonly BaseBlock AirBlockForOutOfRange = new AirBlock ();
 
 		private class BlockHolder {
@@ -34,14 +34,12 @@ namespace MinecraftClone.Domain.Terrain {
 
 		private World world;
 		private ChunkAddress address;
-		private ChunkFactory factory;
 		private BlockHolder[,,] blocks;
 		private Dictionary<string, GameObject> gameObjects;
 
-		public Chunk(World world, ChunkAddress address, ChunkFactory factory) {
+		public Chunk(World world, ChunkAddress address) {
 			this.world = world;
 			this.address = address;
-			this.factory = factory;
 			this.blocks = new BlockHolder[Size, Depth, Size];
 			this.gameObjects = new Dictionary<string, GameObject> ();
 
@@ -60,10 +58,6 @@ namespace MinecraftClone.Domain.Terrain {
 
 		public World World {
 			get { return world; }
-		}
-
-		public ChunkFactory Factory {
-			get { return factory; }
 		}
 
 		public ChunkAddress Address {

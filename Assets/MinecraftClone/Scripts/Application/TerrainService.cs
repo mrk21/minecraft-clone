@@ -31,8 +31,10 @@ namespace MinecraftClone.Application {
 			get { return world [player.transform.position]; }
 		}
 
-		public void DrawAroundPlayer() {
-			terrainRenderer.Draw (player.transform.position);
+		public void DrawAroundPlayer(int xOffset = 0, int zOffset = 0) {
+			var baseAddress = ChunkAddress.FromPosition (player.transform.position);
+			var address = new ChunkAddress (baseAddress.X + xOffset, baseAddress.Z + zOffset);
+			terrainRenderer.Draw (address);
 		}
 
 		public void RedrawCurrentChunk() {

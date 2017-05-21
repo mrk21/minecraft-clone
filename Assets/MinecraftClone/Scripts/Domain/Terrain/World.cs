@@ -4,16 +4,12 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Terrain {
 	class World : IEntity<int> {
-		public static readonly int WaterHeight = Chunk.Depth / 2;
-
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private int seed;
-		private System.Random rand;
 
 		public World() {
 			this.seed = GetHashCode();
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
-			this.rand = new System.Random (Id);
 		}
 
 		public int Id {
@@ -29,7 +25,7 @@ namespace MinecraftClone.Domain.Terrain {
 		public Chunk this [ChunkAddress address] {
 			get {
 				if (!IsGenerated (address)) {
-					var factory = new ChunkFactory (this, address, rand);
+					var factory = new ChunkFactory (this, address);
 					chunks [address] = factory.Create ();
 				}
 				return chunks [address];

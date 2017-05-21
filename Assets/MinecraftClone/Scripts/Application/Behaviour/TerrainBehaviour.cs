@@ -14,12 +14,18 @@ namespace MinecraftClone.Application.Behaviour {
 				terrain: gameObject,
 				player: player
 			);
+			terrainService.DrawAroundPlayer ();
 		}
 
 		void Update () {
 			if (Input.GetKey(KeyCode.R)) Start ();
 			if (Input.GetKey (KeyCode.P)) terrainService.Redraw ();
-			terrainService.DrawAroundPlayer ();
+
+			for (int x = -1; x <= 1; x++) {
+				for (int z = -1; z <= 1; z++) {
+					terrainService.DrawAroundPlayer (x, z);
+				}
+			}
 		}
 	}
 }
