@@ -10,18 +10,27 @@ namespace MinecraftClone.Application.Behaviour {
 	class PlayerHeadBehaviour : MonoBehaviour {
 		public TerrainService terrainService;
 
+		private bool isLookingUp = false;
+		private bool isLookingDown = false;
+		private bool isPuttingBlock = false;
+		private bool isRemovingBlock = false;
+
 		void Start() {
 			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
 		}
 
 		void Update () {
-			if (Input.GetKey (KeyCode.UpArrow)) {
-				transform.Rotate (new Vector3 (-4, 0, 0));
-			} else if (Input.GetKey (KeyCode.DownArrow)) {
-				transform.Rotate (new Vector3 (4, 0, 0));
-			}
+			isLookingUp = Input.GetKey (KeyCode.UpArrow);
+			isLookingDown = Input.GetKey (KeyCode.DownArrow);
+			isPuttingBlock = Input.GetMouseButtonDown (0);
+			isRemovingBlock = Input.GetMouseButtonDown (1);
+		}
 
-			if (Input.GetMouseButtonDown (0)) {
+		void FixedUpdate () {
+			if (isLookingUp) transform.Rotate (new Vector3 (-4, 0, 0));
+			if (isLookingDown) transform.Rotate (new Vector3 (4, 0, 0));
+
+			if (isPuttingBlock) {
 				var chunk = terrainService.CurrentChunk;
 				var address = GetBlockAddress();
 
@@ -41,7 +50,7 @@ namespace MinecraftClone.Application.Behaviour {
 				}
 			}
 
-			if (Input.GetMouseButtonDown (1)) {
+			if (isRemovingBlock) {
 				var chunk = terrainService.CurrentChunk;
 				var address = GetBlockAddress();
 
