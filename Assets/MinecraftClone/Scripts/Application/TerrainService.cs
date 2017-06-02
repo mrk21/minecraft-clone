@@ -27,8 +27,20 @@ namespace MinecraftClone.Application {
 			return CurrentChunk [CurrentChunk.GetLocalPosition (player.transform.position) + Vector3.down + offset.Value];
 		}
 
+		public World.BlockAccessProxy Blocks {
+			get { return world.Blocks; }
+		}
+
+		public World World {
+			get { return world; }
+		}
+
 		public Chunk CurrentChunk {
 			get { return world [player.transform.position]; }
+		}
+
+		public void RedrawChunk(ChunkAddress address) {
+			terrainRenderer.Redraw(address);
 		}
 
 		public void DrawAroundPlayer(int xOffset = 0, int zOffset = 0) {

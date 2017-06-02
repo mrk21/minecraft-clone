@@ -9,12 +9,12 @@ namespace MinecraftClone.Domain.Terrain {
 	using MatterTypeEnum = BlockTraits.MatterTypeEnum;
 
 	class FluidPropagatorFactory {
-		public FluidPropagator CreateFromSource(Chunk chunk, FluidBlock source, Vector3 position) {
-			return new FluidPropagator(chunk, source, position);
+		public FluidPropagator CreateFromSource(World world, FluidBlock source, Vector3 position) {
+			return new FluidPropagator(world, source, position);
 		}
 
-		public FluidPropagator CreateFromRemovingAdjoiningBlock(Chunk chunk, Vector3 basePosition) {
-			return new FluidPropagator(chunk, basePosition);
+		public FluidPropagator CreateFromRemovingAdjoiningBlock(World world, Vector3 basePosition) {
+			return new FluidPropagator(world, basePosition);
 		}
 	}
 
@@ -47,26 +47,26 @@ namespace MinecraftClone.Domain.Terrain {
 			public FluidBlock Block { get { return block; } }
 		}
 
-		private Chunk chunk;
+		private World world;
 		private List<Item> edgeBlocks;
 		private Dictionary<Vector3, FluidBlock> flowedBlocks;
 
-		public FluidPropagator(Chunk chunk, FluidBlock source, Vector3 position) {
-			this.chunk = chunk;
+		public FluidPropagator(World world, FluidBlock source, Vector3 position) {
+			this.world = world;
 			flowedBlocks = new Dictionary<Vector3, FluidBlock> ();
 			edgeBlocks = new List<Item> ();
 			flowedBlocks [position] = source;
 			edgeBlocks.Add (new Item(position, source));
 		}
 
-		public FluidPropagator(Chunk chunk, Vector3 basePosition) {
-			this.chunk = chunk;
+		public FluidPropagator(World world, Vector3 basePosition) {
+			this.world = world;
 			flowedBlocks = new Dictionary<Vector3, FluidBlock> ();
 			edgeBlocks = new List<Item> ();
 
 			foreach (var direction in AdjoiningDirections) {
 				var position = basePosition + direction;
-				var block = chunk [position];
+				var block = world.Blocks [position];
 				if (!(block is FluidBlock)) continue;
 				edgeBlocks.Add (new Item (position, block as FluidBlock));
 			}
@@ -102,13 +102,11 @@ namespace MinecraftClone.Domain.Terrain {
 			}
 		}
 
-		public Chunk Chunk { get { return chunk; } }
-
 		private bool IsFlowable(Item item, Vector3 direction) {
 			var position = item.Position + direction;
 			if (flowedBlocks.ContainsKey (position)) return false;
 
-			var block = chunk [position];
+			var block = world.Blocks [position];
 			if (block == null || block.Traits.MatterType != MatterTypeEnum.Void) return false;
 
 			if (direction != Vector3.down) {
@@ -118,10 +116,10 @@ namespace MinecraftClone.Domain.Terrain {
 				var obliquelyDownwardPosition = downwardPosition + direction;
 				if (flowedBlocks.ContainsKey (obliquelyDownwardPosition)) return false;
 
-				var downwardBlock = chunk [downwardPosition];
+				var downwardBlock = world.Blocks [downwardPosition];
 				if (downwardBlock == null) return false;
 
-				var obliquelyDownwardBlock = chunk [obliquelyDownwardPosition];
+				var obliquelyDownwardBlock = world.Blocks [obliquelyDownwardPosition];
 				if (obliquelyDownwardBlock == null) return false;
 
 				if (downwardBlock.Traits.MatterType != MatterTypeEnum.Solid &&

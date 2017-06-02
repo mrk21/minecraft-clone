@@ -22,46 +22,44 @@ namespace MinecraftClone.Application.Behaviour {
 		void Update () {
 			isLookingUp = Input.GetKey (KeyCode.UpArrow);
 			isLookingDown = Input.GetKey (KeyCode.DownArrow);
-			isPuttingBlock = Input.GetMouseButtonDown (0);
-			isRemovingBlock = Input.GetMouseButtonDown (1);
+			isRemovingBlock = Input.GetMouseButtonDown (0);
+			isPuttingBlock = Input.GetMouseButtonDown (1);
 		}
 
 		void FixedUpdate () {
 			if (isLookingUp) transform.Rotate (new Vector3 (-4, 0, 0));
 			if (isLookingDown) transform.Rotate (new Vector3 (4, 0, 0));
 
-			if (isPuttingBlock) {
-				var chunk = terrainService.CurrentChunk;
+			if (isRemovingBlock) {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (chunk [address.Value + Vector3.down].Traits.IsBreakable()) {
-						chunk [address.Value + Vector3.down].RemoveFromTerrain ();
+					if (terrainService.Blocks [address.Value + Vector3.down].Traits.IsBreakable()) {
+						terrainService.Blocks [address.Value + Vector3.down].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
 						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.CurrentChunk, address.Value + Vector3.down));
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, address.Value + Vector3.down));
 					}
-					else if (chunk [address.Value + Vector3.down].Traits.IsReplaceable() && chunk [address.Value].Traits.IsBreakable()) {
-						chunk [address.Value].RemoveFromTerrain ();
+					else if (terrainService.Blocks [address.Value + Vector3.down].Traits.IsReplaceable() && terrainService.Blocks [address.Value].Traits.IsBreakable()) {
+						terrainService.Blocks [address.Value].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
 						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.CurrentChunk, address.Value));
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.World, address.Value));
 					}
 				}
 			}
 
-			if (isRemovingBlock) {
-				var chunk = terrainService.CurrentChunk;
+			if (isPuttingBlock) {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (chunk [address.Value].Traits.IsReplaceable()) {
+					if (terrainService.Blocks [address.Value].Traits.IsReplaceable()) {
 						var block = new WaterBlock ();
 						var position = address.Value;
-						chunk [position] = block;
+						terrainService.Blocks [position] = block;
 						terrainService.RedrawCurrentChunk ();
 						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromSource (terrainService.CurrentChunk, block, position));
+						StartCoroutine ("DrawFluid", factory.CreateFromSource (terrainService.World, block, position));
 					}
 				}
 			}
@@ -71,10 +69,14 @@ namespace MinecraftClone.Application.Behaviour {
 			yield return new WaitForSeconds (0.5f);
 
 			foreach (var items in propagator.Start ()) {
+				var chunkAddresses = new HashSet<ChunkAddress> ();
 				foreach (var item in items) {
-					propagator.Chunk [item.Position] = item.Block;
+					terrainService.World.Blocks [item.Position] = item.Block;
+					chunkAddresses.Add (ChunkAddress.FromPosition (item.Position));
 				}
-				terrainService.RedrawCurrentChunk ();
+				foreach (var address in chunkAddresses) {
+					terrainService.RedrawChunk (address);
+				}
 				yield return new WaitForSeconds (0.5f);
 			}
 		}
@@ -85,7 +87,7 @@ namespace MinecraftClone.Application.Behaviour {
 			RaycastHit hit = new RaycastHit ();
 
 			if (Physics.Raycast (ray, out hit, distance)) {
-				return terrainService.CurrentChunk.GetLocalPosition (hit.point);
+				return hit.point;
 			}
 			return new Vector3?();
 		}
