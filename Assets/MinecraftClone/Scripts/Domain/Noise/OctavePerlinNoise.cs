@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MinecraftClone.Domain.Terrain {
+namespace MinecraftClone.Domain.Noise {
 	class OctavePerlinNoise {
 		private PerlinNoise noise;
 		private int octave;

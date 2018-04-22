@@ -1,4 +1,5 @@
 using UnityEngine;
+using MinecraftClone.Domain.Noise;
 
 namespace MinecraftClone.Domain.Terrain {
 	class HeightMap {
@@ -29,7 +30,7 @@ namespace MinecraftClone.Domain.Terrain {
 				for (var z = 0; z < Chunk.Size; z++) {
 					float u = (x + offset.x + MapSize / 2f) / UnitSize;
 					float w = (z + offset.z + MapSize / 2f) / UnitSize;
-					map [x, z] += maxHeight * noise [u, 0f, w];
+					map [x, z] = maxHeight * noise [u, 0f, w];
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MinecraftClone.Domain.Terrain {
+namespace MinecraftClone.Domain.Noise {
 	class PerlinNoise {
 		private class Permutation {
 			private static readonly int Size = 4096; // 0x1000
