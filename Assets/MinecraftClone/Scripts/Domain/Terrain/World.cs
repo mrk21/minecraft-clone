@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain.Block;
+using MinecraftClone.Domain;
 
 namespace MinecraftClone.Domain.Terrain {
 	class World : IEntity<int> {
@@ -26,16 +27,20 @@ namespace MinecraftClone.Domain.Terrain {
 
 		private BlockAccessProxy blockAccessProxy;
 		private Dictionary<ChunkAddress, Chunk> chunks;
-		private int seed;
+		private Seed seed;
 
 		public World() {
-			this.seed = GetHashCode();
+			this.seed = new Seed(GetHashCode());
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
 			this.blockAccessProxy = new BlockAccessProxy (this);
 		}
 
-		public int Id {
+		public Seed Seed {
 			get { return seed; }
+		}
+
+		public int Id {
+			get { return seed.World; }
 		}
 
 		public BlockAccessProxy Blocks {

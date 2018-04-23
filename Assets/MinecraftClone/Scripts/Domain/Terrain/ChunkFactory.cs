@@ -17,9 +17,11 @@ namespace MinecraftClone.Domain.Terrain {
 
 		public Chunk Create () {
 			var chunk = new Chunk (world, address);
-			var heightMap = new HeightMap (world.Id, address, MaxHeight);
+			var heightMap = new HeightMap (world.Seed.World, address, MaxHeight);
+			var biomeMap = new BiomeMap (world.Seed.Temperature, world.Seed.Humidity, address);
 
 			heightMap.Generate ();
+			biomeMap.Generate ();
 
 			for (int x = 0; x < Chunk.Size; x++) {
 				for (int z = 0; z < Chunk.Size; z++) {
@@ -32,6 +34,20 @@ namespace MinecraftClone.Domain.Terrain {
 						if (y > WaterHeight + 10) block = new StoneBlock ();
 						else if (y > WaterHeight + 0) block = new GrassBlock ();
 						else block = new SandBlock ();
+						if (y > WaterHeight) {
+							var biome = biomeMap [x, z];
+							if (biome == "desert") {
+								block = new SandBlock ();
+							} else if (biome == "stone") {
+								block = new StoneBlock ();
+							} else if (biome == "grass") {
+								block = new GrassBlock ();
+							} else {
+								block = new GrassBlock ();
+							}
+						} else {
+							block = new SandBlock ();
+						}
 						chunk [x, y, z] = block;
 					}
 
