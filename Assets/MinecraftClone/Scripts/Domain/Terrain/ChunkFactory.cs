@@ -34,7 +34,7 @@ namespace MinecraftClone.Domain.Terrain {
 						if (y > WaterHeight + 10) block = new StoneBlock ();
 						else if (y > WaterHeight + 0) block = new GrassBlock ();
 						else block = new SandBlock ();
-						if (y > WaterHeight) {
+						if (y >= WaterHeight) {
 							var biome = biomeMap [x, z];
 							if (biome == "desert") {
 								block = new SandBlock ();

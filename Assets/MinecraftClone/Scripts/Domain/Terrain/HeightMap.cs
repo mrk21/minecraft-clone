@@ -3,7 +3,7 @@ using MinecraftClone.Domain.Noise;
 
 namespace MinecraftClone.Domain.Terrain {
 	class HeightMap {
-		private static readonly int UnitSize = 128;
+		private static readonly int UnitSize = 256;
 		private static readonly int MapSize = 65536;
 
 		private ChunkAddress address;
@@ -12,7 +12,7 @@ namespace MinecraftClone.Domain.Terrain {
 		private float maxHeight;
 
 		public HeightMap(int seed, ChunkAddress address, float maxHeight) {
-			noise = new OctavePerlinNoise (seed, 4);
+			noise = new OctavePerlinNoise (seed, 6);
 			map = new float[Chunk.Size, Chunk.Size];
 
 			this.address = address;
