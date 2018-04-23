@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 namespace MinecraftClone.Domain {
-	class Seed {
+	public class Seed {
 		private int[] seeds;
 
 		public Seed(int baseSeed){

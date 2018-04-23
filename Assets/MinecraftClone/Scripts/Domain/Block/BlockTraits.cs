@@ -2,7 +2,7 @@
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Block {
-	struct BlockTraits : IValueObject<BlockTraits> {
+	public struct BlockTraits : IValueObject<BlockTraits> {
 		public enum MatterTypeEnum {
 			Solid,
 			Fluid,

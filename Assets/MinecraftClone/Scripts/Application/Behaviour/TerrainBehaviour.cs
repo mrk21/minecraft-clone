@@ -6,6 +6,7 @@ using MinecraftClone.Infrastructure;
 namespace MinecraftClone.Application.Behaviour {
 	class TerrainBehaviour : MonoBehaviour {
 		public GameObject player = null; // set by the inspector
+		public GameObject debugScreen = null; // set by the inspector
 		public TerrainService terrainService;
 
 		void Start () {
@@ -18,6 +19,10 @@ namespace MinecraftClone.Application.Behaviour {
 		}
 
 		void Update () {
+			debugScreen.GetComponent<DebugScreenBehaviour>().currentChunk = terrainService.CurrentChunk;
+			debugScreen.GetComponent<DebugScreenBehaviour>().currentBlock = terrainService.CurrentBlock;
+			debugScreen.GetComponent<DebugScreenBehaviour>().currentPosition = terrainService.CurrentPosition;
+
 			if (Input.GetKey(KeyCode.R)) Start ();
 			if (Input.GetKey (KeyCode.P)) terrainService.Redraw ();
 

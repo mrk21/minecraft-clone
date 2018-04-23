@@ -39,6 +39,14 @@ namespace MinecraftClone.Application {
 			get { return world [player.transform.position]; }
 		}
 
+		public BaseBlock CurrentBlock {
+			get { return Blocks [player.transform.position + Vector3.down]; }
+		}
+
+		public Vector3 CurrentPosition {
+			get { return player.transform.position; }
+		}
+
 		public void RedrawChunk(ChunkAddress address) {
 			terrainRenderer.Redraw(address);
 		}

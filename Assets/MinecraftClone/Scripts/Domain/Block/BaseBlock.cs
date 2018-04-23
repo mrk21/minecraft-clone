@@ -5,7 +5,7 @@ using MinecraftClone.Infrastructure;
 using MinecraftClone.Application.Behaviour;
 
 namespace MinecraftClone.Domain.Block {
-	abstract class BaseBlock : IEntity<int> {
+	public abstract class BaseBlock : IEntity<int> {
 		protected int id;
 		protected int blockId;
 		protected BlockTraits traits;

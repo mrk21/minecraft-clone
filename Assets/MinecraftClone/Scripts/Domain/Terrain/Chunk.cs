@@ -5,7 +5,7 @@ using MinecraftClone.Domain.Renderer;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Terrain {
-	class Chunk : IEntity<ChunkAddress> {
+	public class Chunk : IEntity<ChunkAddress> {
 		public static readonly int Size = 16;
 		public static readonly int Depth = 128;
 		private static readonly BaseBlock AirBlockForOutOfRange = new AirBlock ();

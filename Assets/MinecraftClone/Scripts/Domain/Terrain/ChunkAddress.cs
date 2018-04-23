@@ -2,7 +2,7 @@ using UnityEngine;
 using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Terrain {
-	struct ChunkAddress : IValueObject<ChunkAddress> {
+	public struct ChunkAddress : IValueObject<ChunkAddress> {
 		private int x;
 		private int z;
 

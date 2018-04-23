@@ -5,7 +5,7 @@ using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain;
 
 namespace MinecraftClone.Domain.Terrain {
-	class World : IEntity<int> {
+	public class World : IEntity<int> {
 		public class BlockAccessProxy {
 			private World world;
 
