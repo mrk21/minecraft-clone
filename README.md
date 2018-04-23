@@ -1,8 +1,11 @@
 # Minecraft Clone
 
+![screenshot.png](./doc/screenshot.png)
+
 ## Middleware
 
 * Unity 2017.4.1f1
+* ImageMagick
 
 ## Preparing
 
@@ -16,8 +19,6 @@ Please import the following packages:
 
 1. Move `Assets/MinecraftClone/Textures` directory
 2. Enter `rake` command
-
-**NOTICE**: _This command requires ImageMagick!_
 
 ## Refer to
 
