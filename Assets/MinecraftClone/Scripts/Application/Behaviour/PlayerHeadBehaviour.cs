@@ -38,13 +38,13 @@ namespace MinecraftClone.Application.Behaviour {
 
                     if (terrainService.Blocks [position].Traits.IsBreakable()) {
 						terrainService.Blocks [position].RemoveFromTerrain ();
-						terrainService.RedrawCurrentChunk ();
+						terrainService.RedrawChunk(position);
 						var factory = new FluidPropagatorFactory ();
 						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, position));
 					}
 					else if (terrainService.Blocks [position].Traits.IsReplaceable() && terrainService.Blocks [position].Traits.IsBreakable()) {
 						terrainService.Blocks [position].RemoveFromTerrain ();
-						terrainService.RedrawCurrentChunk ();
+						terrainService.RedrawChunk(position);
 						var factory = new FluidPropagatorFactory ();
 						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.World, position));
 					}
@@ -60,7 +60,7 @@ namespace MinecraftClone.Application.Behaviour {
 					if (terrainService.Blocks [position].Traits.IsReplaceable()) {
 						var block = new GrassBlock ();
 						terrainService.Blocks [position] = block;
-						terrainService.RedrawCurrentChunk ();
+						terrainService.RedrawChunk(position);
 					}
 				}
 			}

@@ -47,6 +47,10 @@ namespace MinecraftClone.Application {
 			get { return player.transform.position; }
 		}
 
+		public void RedrawChunk(Vector3 position) {
+			terrainRenderer.Redraw(position);
+		}
+
 		public void RedrawChunk(ChunkAddress address) {
 			terrainRenderer.Redraw(address);
 		}
