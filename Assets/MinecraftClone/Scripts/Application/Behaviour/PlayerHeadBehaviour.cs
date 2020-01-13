@@ -34,17 +34,19 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (terrainService.Blocks [address.Value + Vector3.down].Traits.IsBreakable()) {
-						terrainService.Blocks [address.Value + Vector3.down].RemoveFromTerrain ();
+					Vector3 position = address.Value + 0.01f * GetRay().direction;
+
+                    if (terrainService.Blocks [position].Traits.IsBreakable()) {
+						terrainService.Blocks [position].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
 						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, address.Value + Vector3.down));
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, position));
 					}
-					else if (terrainService.Blocks [address.Value + Vector3.down].Traits.IsReplaceable() && terrainService.Blocks [address.Value].Traits.IsBreakable()) {
-						terrainService.Blocks [address.Value].RemoveFromTerrain ();
+					else if (terrainService.Blocks [position].Traits.IsReplaceable() && terrainService.Blocks [position].Traits.IsBreakable()) {
+						terrainService.Blocks [position].RemoveFromTerrain ();
 						terrainService.RedrawCurrentChunk ();
 						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.World, address.Value));
+						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.World, position));
 					}
 				}
 			}
@@ -53,13 +55,12 @@ namespace MinecraftClone.Application.Behaviour {
 				var address = GetBlockAddress();
 
 				if (address.HasValue) {
-					if (terrainService.Blocks [address.Value].Traits.IsReplaceable()) {
-						var block = new WaterBlock ();
-						var position = address.Value;
+					Vector3 position = address.Value - 0.01f * GetRay().direction;
+
+					if (terrainService.Blocks [position].Traits.IsReplaceable()) {
+						var block = new GrassBlock ();
 						terrainService.Blocks [position] = block;
 						terrainService.RedrawCurrentChunk ();
-						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromSource (terrainService.World, block, position));
 					}
 				}
 			}
@@ -83,13 +84,17 @@ namespace MinecraftClone.Application.Behaviour {
 
 		Vector3? GetBlockAddress() {
 			var distance = 100f;
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+			Ray ray = GetRay();
 			RaycastHit hit = new RaycastHit ();
 
 			if (Physics.Raycast (ray, out hit, distance)) {
 				return hit.point;
 			}
 			return new Vector3?();
+		}
+
+		Ray GetRay() {
+			return Camera.main.ScreenPointToRay(Input.mousePosition);
 		}
 	}
 }
