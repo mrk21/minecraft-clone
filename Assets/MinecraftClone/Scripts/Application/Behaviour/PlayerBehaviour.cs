@@ -8,16 +8,16 @@ namespace MinecraftClone.Application.Behaviour {
 		public TerrainService terrainService;
 
 		private float velocityScale = 1f;
-		private bool isTurningRight = false;
-		private bool isTurningLeft = false;
 		private bool isMovingToForward = false;
 		private bool isMovingToBack = false;
 		private bool isMovingToRight = false;
 		private bool isMovingToLeft = false;
 		private bool isJumping = false;
 
-		void Start() {
+        void Start() {
 			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = true;
 		}
 
 		void Update () {
@@ -30,19 +30,26 @@ namespace MinecraftClone.Application.Behaviour {
 				GetComponent<Rigidbody> ().drag = 0.01f;
 			}
 
-			isTurningRight = Input.GetKey (KeyCode.RightArrow);
-			isTurningLeft = Input.GetKey (KeyCode.LeftArrow);
-			isMovingToForward = Input.GetKey (KeyCode.W);
-			isMovingToBack = Input.GetKey (KeyCode.S);
-			isMovingToLeft = Input.GetKey (KeyCode.A);
-			isMovingToRight = Input.GetKey (KeyCode.D);
-			isJumping = Input.GetKey (KeyCode.Space);
+			isMovingToForward = EnabledOperation() && Input.GetKey (KeyCode.W);
+			isMovingToBack = EnabledOperation() && Input.GetKey (KeyCode.S);
+			isMovingToLeft = EnabledOperation() && Input.GetKey (KeyCode.A);
+			isMovingToRight = EnabledOperation() && Input.GetKey (KeyCode.D);
+			isJumping = EnabledOperation() && Input.GetKey (KeyCode.Space);
+
+			if (EnabledOperation()) {
+				float yRotation = 4.0f * Input.GetAxis("Mouse X");
+				transform.Rotate(0, yRotation, 0);
+			}
+			if (EnabledOperation() && Input.GetKeyDown(KeyCode.Escape)) {
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+			}
+			if (!EnabledOperation() && Input.GetMouseButtonDown(0)) {
+				Cursor.lockState = CursorLockMode.Locked;
+			}
 		}
 
 		void FixedUpdate () {
-			if (isTurningRight) transform.Rotate (new Vector3 (0, 4, 0));
-			if (isTurningLeft) transform.Rotate (new Vector3 (0, -4, 0));
-
 			if (isMovingToForward) {
 				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
 					5 * velocityScale,
@@ -78,6 +85,10 @@ namespace MinecraftClone.Application.Behaviour {
 					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).z
 				));
 			}
+		}
+
+		bool EnabledOperation() {
+			return Cursor.lockState == CursorLockMode.Locked;
 		}
 	}
 }

@@ -10,8 +10,6 @@ namespace MinecraftClone.Application.Behaviour {
 	class PlayerHeadBehaviour : MonoBehaviour {
 		public TerrainService terrainService;
 
-		private bool isLookingUp = false;
-		private bool isLookingDown = false;
 		private bool isPuttingBlock = false;
 		private bool isRemovingBlock = false;
 
@@ -20,16 +18,16 @@ namespace MinecraftClone.Application.Behaviour {
 		}
 
 		void Update () {
-			isLookingUp = Input.GetKey (KeyCode.UpArrow);
-			isLookingDown = Input.GetKey (KeyCode.DownArrow);
-			isRemovingBlock = Input.GetMouseButtonDown (0);
-			isPuttingBlock = Input.GetMouseButtonDown (1);
+            if (EnabledOperation()) {
+				float xRotation = -3.0f * Input.GetAxis("Mouse Y");
+				transform.Rotate(xRotation, 0, 0);
+			}
+
+            isRemovingBlock = EnabledOperation() && Input.GetMouseButtonDown (0);
+			isPuttingBlock = EnabledOperation() && Input.GetMouseButtonDown (1);
 		}
 
 		void FixedUpdate () {
-			if (isLookingUp) transform.Rotate (new Vector3 (-4, 0, 0));
-			if (isLookingDown) transform.Rotate (new Vector3 (4, 0, 0));
-
 			if (isRemovingBlock) {
 				var address = GetBlockAddress();
 
@@ -95,6 +93,10 @@ namespace MinecraftClone.Application.Behaviour {
 
 		Ray GetRay() {
 			return Camera.main.ScreenPointToRay(Input.mousePosition);
+		}
+
+		bool EnabledOperation() {
+			return Cursor.lockState == CursorLockMode.Locked;
 		}
 	}
 }
