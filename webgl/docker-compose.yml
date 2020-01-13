@@ -1,0 +1,10 @@
+---
+version: '3.7'
+services:
+  app:
+    image: nginx
+    init: true
+    volumes:
+      - ./build:/usr/share/nginx/html
+    ports:
+      - 80:80
