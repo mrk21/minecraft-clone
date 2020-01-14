@@ -40,8 +40,11 @@ namespace MinecraftClone.Domain.Renderer {
 		public BlockMeshBuilder AddXY2Plane() { return AddTriangles (Triangles.Normal ).AddVertices (Vertices.XY2).AddUV (UV.Base); }
 		public BlockMeshBuilder AddYZ2Plane() { return AddTriangles (Triangles.Normal ).AddVertices (Vertices.YZ2).AddUV (UV.Base); }
 
-		public Mesh ToMesh() {
-			var mesh = new Mesh();
+		// @see [Procedurally generated meshes in Unity without garbage](http://nothkedev.blogspot.com/2018/08/procedurally-generated-meshes-in-unity.html)
+		public Mesh ToMesh(Mesh mesh = null) {
+			if (mesh == null) mesh = new Mesh();
+			else mesh.Clear();
+
 			mesh.subMeshCount = triangles.Count;
 			mesh.SetVertices (vertices);
 

@@ -62,9 +62,12 @@ namespace MinecraftClone.Domain.Renderer {
 				}
 			}
 
+			var meshFilter = chunk.GameObjects["Chunk"].GetComponent<MeshFilter>();
+			var meshCollider = chunk.GameObjects["Chunk"].GetComponent<MeshCollider>();
+
 			var mesh = new ChunkMesh ();
-			mesh.renderer = builderForRenderer.ToMesh ();
-			mesh.collider = builderForCollider.ToMesh ();
+			mesh.renderer = builderForRenderer.ToMesh (meshFilter.sharedMesh);
+			mesh.collider = builderForCollider.ToMesh (meshCollider.sharedMesh);
 			return mesh;
 		}
 

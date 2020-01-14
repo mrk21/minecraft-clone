@@ -10,7 +10,7 @@ namespace MinecraftClone.Domain.Terrain {
 		public static readonly int Depth = 128;
 		private static readonly BaseBlock AirBlockForOutOfRange = new AirBlock ();
 
-		private class BlockHolder {
+        private class BlockHolder {
 			private BaseBlock block;
 
 			public BaseBlock Block {
@@ -35,7 +35,7 @@ namespace MinecraftClone.Domain.Terrain {
 		private World world;
 		private ChunkAddress address;
 		private BlockHolder[,,] blocks;
-		private Dictionary<string, GameObject> gameObjects;
+        private Dictionary<string, GameObject> gameObjects;
 
 		public Chunk(World world, ChunkAddress address) {
 			this.world = world;

@@ -66,9 +66,11 @@ namespace MinecraftClone.Domain.Renderer {
 		private void SetMesh (Chunk chunk) {
 			var factory = new ChunkMeshFactory (chunk);
 			var mesh = factory.Create ();
+            var meshCollider = chunk.GameObjects["Chunk"].GetComponent<MeshCollider>();
+			var meshFilter = chunk.GameObjects["Chunk"].GetComponent<MeshFilter>();
 
-			chunk.GameObjects ["Chunk"].GetComponent<MeshCollider> ().sharedMesh = mesh.collider;
-			chunk.GameObjects ["Chunk"].GetComponent<MeshFilter> ().mesh = mesh.renderer;
+			meshCollider.sharedMesh = mesh.collider;
+            meshFilter.sharedMesh = mesh.renderer;
 		}
 
 		private GameObject CreateGameObject (Chunk chunk, GameObject prefab) {
