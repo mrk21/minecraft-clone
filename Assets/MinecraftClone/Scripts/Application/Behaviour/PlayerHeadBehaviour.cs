@@ -29,10 +29,10 @@ namespace MinecraftClone.Application.Behaviour {
 
 		void FixedUpdate () {
 			if (isRemovingBlock) {
-				var address = GetBlockAddress();
+				var hit = GetRaycastHit();
 
-				if (address.HasValue) {
-					Vector3 position = address.Value + 0.01f * GetRay().direction;
+				if (hit.HasValue) {
+					Vector3 position = hit.Value.point - 0.5f * hit.Value.normal;
 
                     if (terrainService.Blocks [position].Traits.IsBreakable()) {
 						terrainService.Blocks [position].RemoveFromTerrain ();
@@ -50,10 +50,10 @@ namespace MinecraftClone.Application.Behaviour {
 			}
 
 			if (isPuttingBlock) {
-				var address = GetBlockAddress();
+				var hit = GetRaycastHit();
 
-				if (address.HasValue) {
-					Vector3 position = address.Value - 0.01f * GetRay().direction;
+				if (hit.HasValue) {
+					Vector3 position = hit.Value.point + 0.5f * hit.Value.normal;
 
 					if (terrainService.Blocks [position].Traits.IsReplaceable()) {
 						var block = new GrassBlock ();
@@ -80,15 +80,14 @@ namespace MinecraftClone.Application.Behaviour {
 			}
 		}
 
-		Vector3? GetBlockAddress() {
+		RaycastHit? GetRaycastHit() {
 			var distance = 100f;
 			Ray ray = GetRay();
-			RaycastHit hit = new RaycastHit ();
 
-			if (Physics.Raycast (ray, out hit, distance)) {
-				return hit.point;
+			if (Physics.Raycast (ray, out RaycastHit hit, distance)) {
+				return hit;
 			}
-			return new Vector3?();
+			return new RaycastHit?();
 		}
 
 		Ray GetRay() {
