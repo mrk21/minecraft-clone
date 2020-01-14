@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UniRx;
+using UnityEngine.UI;
 
 namespace MinecraftClone.Application.Behaviour
 {
@@ -35,11 +38,12 @@ namespace MinecraftClone.Application.Behaviour
                 new Vector3(-0.5f,  0.5f, 0),
                 new Vector3( 0.5f,  0.5f, 0)
             });
-        }
 
-        void Update()
-        {
-            SetTargetMarker();
+            var settingTargetMarkerStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
+                .Subscribe(_ => SetTargetMarker());
         }
 
         private void SetTargetMarker()
@@ -96,7 +100,7 @@ namespace MinecraftClone.Application.Behaviour
         private Ray GetRay()
         {
             return player.head.mainCamera.ScreenPointToRay(Input.mousePosition);
-            
+
         }
 
         private Mesh CreatePlaneMesh(Vector3[] face)
@@ -126,5 +130,11 @@ namespace MinecraftClone.Application.Behaviour
 
             return mesh;
         }
+
+        bool EnabledOperation()
+        {
+            return Cursor.lockState == CursorLockMode.Locked;
+        }
+
     }
 }

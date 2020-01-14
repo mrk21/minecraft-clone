@@ -1,94 +1,164 @@
 ﻿using UnityEngine;
 using MinecraftClone.Domain.Block.Fluid;
 using MinecraftClone.Infrastructure;
+using System;
+using UniRx;
+using UnityEngine.UI;
 
-namespace MinecraftClone.Application.Behaviour {
-	class PlayerBehaviour : MonoBehaviour {
-		public TerrainService terrainService;
-		public PlayerHeadBehaviour head;
+namespace MinecraftClone.Application.Behaviour
+{
+    class PlayerBehaviour : MonoBehaviour
+    {
+        public TerrainService terrainService;
+        public PlayerHeadBehaviour head;
 
-		private float velocityScale = 1f;
-		private bool isMovingToForward = false;
-		private bool isMovingToBack = false;
-		private bool isMovingToRight = false;
-		private bool isMovingToLeft = false;
-		private bool isJumping = false;
+        private float velocityScale = 1f;
+        private Rigidbody _rigidbody;
 
-        void Start() {
-			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = true;
-		}
+        void Start()
+        {
+            if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
+            _rigidbody = GetComponent<Rigidbody>();
+            EnableOperation();
 
-		void Update () {
-			velocityScale = 1f;
+            var settingVelocityScaleStream = Observable
+                .EveryFixedUpdate()
+                .Where(_ => EnabledOperation())
+                .Subscribe(_ => SetVelocityScale());
 
-			if (terrainService.BlockUnderPlayer () is FluidBlock || terrainService.BlockUnderPlayer (Vector3.up) is FluidBlock) {
-				GetComponent<Rigidbody> ().drag = 3f;
-				velocityScale = 0.5f;
-			} else {
-				GetComponent<Rigidbody> ().drag = 0.01f;
-			}
+            var movingToForwardStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.W))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => MoveToForward());
 
-			isMovingToForward = EnabledOperation() && Input.GetKey (KeyCode.W);
-			isMovingToBack = EnabledOperation() && Input.GetKey (KeyCode.S);
-			isMovingToLeft = EnabledOperation() && Input.GetKey (KeyCode.A);
-			isMovingToRight = EnabledOperation() && Input.GetKey (KeyCode.D);
-			isJumping = EnabledOperation() && Input.GetKey (KeyCode.Space);
+            var movingToBackStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.S))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => MoveToBack());
 
-			if (EnabledOperation()) {
-				float yRotation = 4.0f * Input.GetAxis("Mouse X");
-				transform.Rotate(0, yRotation, 0);
-			}
-			if (EnabledOperation() && Input.GetKeyDown(KeyCode.Escape)) {
-				Cursor.visible = true;
-				Cursor.lockState = CursorLockMode.None;
-			}
-			if (!EnabledOperation() && Input.GetMouseButtonDown(0)) {
-				Cursor.lockState = CursorLockMode.Locked;
-			}
-		}
+            var movingToLeftStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.A))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => MoveToLeft());
 
-		void FixedUpdate () {
-			if (isMovingToForward) {
-				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
-					5 * velocityScale,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).z
-				));
-			}
-			if (isMovingToBack) {
-				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
-					-5 * velocityScale,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).z
-				));
-			}
-			if (isMovingToLeft) {
-				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).x,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
-					5 * velocityScale
-				));
-			}
-			if (isMovingToRight) {
-				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).x,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).y,
-					-5 * velocityScale
-				));
-			}
-			if (isJumping) {
-				GetComponent<Rigidbody> ().velocity = transform.TransformDirection (new Vector3(
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).x,
-					5 * velocityScale,
-					transform.InverseTransformDirection(GetComponent<Rigidbody>().velocity).z
-				));
-			}
-		}
+            var movingToRightStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.D))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => MoveToRight());
 
-		bool EnabledOperation() {
-			return Cursor.lockState == CursorLockMode.Locked;
-		}
-	}
+            var jumpingStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.Space))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => Jump());
+
+            var changingViewStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Subscribe(_ => ChangeView());
+
+            var disablingOperationStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKeyDown(KeyCode.Escape))
+                .Subscribe(_ => DisableOperation());
+
+            var enablingOperationStream = Observable
+                .EveryUpdate()
+                .Where(_ => !EnabledOperation())
+                .Where(_ => Input.GetMouseButtonDown(0))
+                .Subscribe(_ => EnableOperation());
+
+        }
+
+        void SetVelocityScale()
+        {
+            if (terrainService.BlockUnderPlayer() is FluidBlock || terrainService.BlockUnderPlayer(Vector3.up) is FluidBlock)
+            {
+                _rigidbody.drag = 3f;
+                velocityScale = 0.5f;
+            }
+            else
+            {
+                _rigidbody.drag = 0.01f;
+                velocityScale = 1f;
+            }
+        }
+
+        void MoveToForward()
+        {
+            _rigidbody.velocity = transform.TransformDirection(new Vector3(
+                5 * velocityScale,
+                transform.InverseTransformDirection(_rigidbody.velocity).y,
+                transform.InverseTransformDirection(_rigidbody.velocity).z
+            ));
+        }
+
+        void MoveToBack()
+        {
+            _rigidbody.velocity = transform.TransformDirection(new Vector3(
+                -5 * velocityScale,
+                transform.InverseTransformDirection(_rigidbody.velocity).y,
+                transform.InverseTransformDirection(_rigidbody.velocity).z
+            ));
+        }
+
+        void MoveToLeft()
+        {
+            _rigidbody.velocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(_rigidbody.velocity).x,
+                transform.InverseTransformDirection(_rigidbody.velocity).y,
+                5 * velocityScale
+            ));
+        }
+
+        void MoveToRight()
+        {
+            _rigidbody.velocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(_rigidbody.velocity).x,
+                transform.InverseTransformDirection(_rigidbody.velocity).y,
+                -5 * velocityScale
+            ));
+        }
+
+        void Jump()
+        {
+            _rigidbody.velocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(_rigidbody.velocity).x,
+                5 * velocityScale,
+                transform.InverseTransformDirection(_rigidbody.velocity).z
+            ));
+        }
+
+        void ChangeView()
+        {
+            float yRotation = 4.0f * Input.GetAxis("Mouse X");
+            transform.Rotate(0, yRotation, 0);
+        }
+
+        void DisableOperation()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        void EnableOperation()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        bool EnabledOperation()
+        {
+            return Cursor.lockState == CursorLockMode.Locked;
+        }
+    }
 }

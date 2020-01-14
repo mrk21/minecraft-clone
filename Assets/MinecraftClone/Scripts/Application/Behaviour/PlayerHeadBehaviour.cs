@@ -6,125 +6,156 @@ using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
 using UniRx;
 using UnityEngine.UI;
+using System;
 
-namespace MinecraftClone.Application.Behaviour {
-	class PlayerHeadBehaviour : MonoBehaviour {
-		public TerrainService terrainService;
+namespace MinecraftClone.Application.Behaviour
+{
+    class PlayerHeadBehaviour : MonoBehaviour
+    {
+        public TerrainService terrainService;
 
         public Camera mainCamera;
-		public Camera subCamera1;
-		public Camera subCamera2;
-		private long currentCameraIndex;
-		
-		private bool isPuttingBlock = false;
-		private bool isRemovingBlock = false;
-		
-		void Start() {
-			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
-			currentCameraIndex = 0;
-			mainCamera.enabled = true;
-			subCamera1.enabled = false;
-			subCamera2.enabled = false;
-			
-			var cameraChangeObservable = Observable
-	            .EveryUpdate()
-	            .Where(_ => EnabledOperation() && Input.GetKey(KeyCode.F5));
+        public Camera subCamera1;
+        public Camera subCamera2;
+        private long currentCameraIndex;
 
-            Observable.Throttle(cameraChangeObservable, System.TimeSpan.FromSeconds(0.2f))
-				.Do(_ => ChangeCamera())
-				.Subscribe();
-		}
+        void Start()
+        {
+            if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
+            currentCameraIndex = 0;
+            mainCamera.enabled = true;
+            subCamera1.enabled = false;
+            subCamera2.enabled = false;
 
-		void ChangeCamera() {
-			var cameras = new Camera[]{ mainCamera, subCamera1, subCamera2 };
+            var cameraChangeStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetKey(KeyCode.F5))
+                .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
+                .Subscribe(_ => ChangeCamera());
+
+            var puttingBlockStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetMouseButtonDown(1))
+                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => PutBlock());
+
+            var removingBlockStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Where(_ => Input.GetMouseButtonDown(0))
+                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
+                .BatchFrame(0, FrameCountType.FixedUpdate)
+                .Subscribe(_ => RemoveBlock());
+
+            var changingViewStream = Observable
+                .EveryUpdate()
+                .Where(_ => EnabledOperation())
+                .Subscribe(_ => ChangeView());
+        }
+
+        void ChangeCamera()
+        {
+            var cameras = new Camera[] { mainCamera, subCamera1, subCamera2 };
             foreach (var camera in cameras)
             {
-				camera.enabled = false;
+                camera.enabled = false;
             }
 
-			currentCameraIndex = (currentCameraIndex + 1) % cameras.Length;
-			cameras[currentCameraIndex].enabled = true;
-		}
+            currentCameraIndex = (currentCameraIndex + 1) % cameras.Length;
+            cameras[currentCameraIndex].enabled = true;
+        }
 
-		void Update () {
-            if (EnabledOperation()) {
-				float xRotation = -3.0f * Input.GetAxis("Mouse Y");
-				transform.Rotate(xRotation, 0, 0);
-			}
+        void PutBlock()
+        {
+            var hit = GetRaycastHit();
 
-            isRemovingBlock = EnabledOperation() && Input.GetMouseButtonDown (0);
-			isPuttingBlock = EnabledOperation() && Input.GetMouseButtonDown (1);
-		}
+            if (hit.HasValue)
+            {
+                Vector3 position = hit.Value.point + 0.5f * hit.Value.normal;
 
-		void FixedUpdate () {
-			if (isRemovingBlock) {
-				var hit = GetRaycastHit();
+                if (terrainService.Blocks[position].Traits.IsReplaceable())
+                {
+                    var block = new GrassBlock();
+                    terrainService.Blocks[position] = block;
+                    terrainService.RedrawChunk(position);
+                }
+            }
+        }
 
-				if (hit.HasValue) {
-					Vector3 position = hit.Value.point - 0.5f * hit.Value.normal;
+        void ChangeView()
+        {
+            float xRotation = -3.0f * Input.GetAxis("Mouse Y");
+            transform.Rotate(xRotation, 0, 0);
+        }
 
-                    if (terrainService.Blocks [position].Traits.IsBreakable()) {
-						terrainService.Blocks [position].RemoveFromTerrain ();
-						terrainService.RedrawChunk(position);
-						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, position));
-					}
-					else if (terrainService.Blocks [position].Traits.IsReplaceable() && terrainService.Blocks [position].Traits.IsBreakable()) {
-						terrainService.Blocks [position].RemoveFromTerrain ();
-						terrainService.RedrawChunk(position);
-						var factory = new FluidPropagatorFactory ();
-						StartCoroutine ("DrawFluid", factory.CreateFromRemovingAdjoiningBlock (terrainService.World, position));
-					}
-				}
-			}
+        void RemoveBlock()
+        {
+            var hit = GetRaycastHit();
 
-			if (isPuttingBlock) {
-				var hit = GetRaycastHit();
+            if (hit.HasValue)
+            {
+                Vector3 position = hit.Value.point - 0.5f * hit.Value.normal;
 
-				if (hit.HasValue) {
-					Vector3 position = hit.Value.point + 0.5f * hit.Value.normal;
+                if (terrainService.Blocks[position].Traits.IsBreakable())
+                {
+                    terrainService.Blocks[position].RemoveFromTerrain();
+                    terrainService.RedrawChunk(position);
+                    var factory = new FluidPropagatorFactory();
+                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, position));
+                }
+                else if (terrainService.Blocks[position].Traits.IsReplaceable() && terrainService.Blocks[position].Traits.IsBreakable())
+                {
+                    terrainService.Blocks[position].RemoveFromTerrain();
+                    terrainService.RedrawChunk(position);
+                    var factory = new FluidPropagatorFactory();
+                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(terrainService.World, position));
+                }
+            }
+        }
 
-					if (terrainService.Blocks [position].Traits.IsReplaceable()) {
-						var block = new GrassBlock ();
-						terrainService.Blocks [position] = block;
-						terrainService.RedrawChunk(position);
-					}
-				}
-			}
-		}
+        IEnumerator DrawFluid(FluidPropagator propagator)
+        {
+            yield return new WaitForSeconds(0.5f);
 
-		IEnumerator DrawFluid(FluidPropagator propagator) {
-			yield return new WaitForSeconds (0.5f);
+            foreach (var items in propagator.Start())
+            {
+                var chunkAddresses = new HashSet<ChunkAddress>();
+                foreach (var item in items)
+                {
+                    terrainService.World.Blocks[item.Position] = item.Block;
+                    chunkAddresses.Add(ChunkAddress.FromPosition(item.Position));
+                }
+                foreach (var address in chunkAddresses)
+                {
+                    terrainService.RedrawChunk(address);
+                }
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
 
-			foreach (var items in propagator.Start ()) {
-				var chunkAddresses = new HashSet<ChunkAddress> ();
-				foreach (var item in items) {
-					terrainService.World.Blocks [item.Position] = item.Block;
-					chunkAddresses.Add (ChunkAddress.FromPosition (item.Position));
-				}
-				foreach (var address in chunkAddresses) {
-					terrainService.RedrawChunk (address);
-				}
-				yield return new WaitForSeconds (0.5f);
-			}
-		}
+        RaycastHit? GetRaycastHit()
+        {
+            var distance = 10f;
+            Ray ray = GetRay();
 
-		RaycastHit? GetRaycastHit() {
-			var distance = 10f;
-			Ray ray = GetRay();
-
-			if (Physics.Raycast (ray, out RaycastHit hit, distance)) {
+            if (Physics.Raycast(ray, out RaycastHit hit, distance))
+            {
                 return hit;
-			}
-			return new RaycastHit?();
-		}
+            }
+            return new RaycastHit?();
+        }
 
-		Ray GetRay() {
-			return mainCamera.ScreenPointToRay(Input.mousePosition);
-		}
+        Ray GetRay()
+        {
+            return mainCamera.ScreenPointToRay(Input.mousePosition);
+        }
 
-		bool EnabledOperation() {
-			return Cursor.lockState == CursorLockMode.Locked;
-		}
-	}
+        bool EnabledOperation()
+        {
+            return Cursor.lockState == CursorLockMode.Locked;
+        }
+    }
 }
