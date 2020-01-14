@@ -4,16 +4,46 @@ using UnityEngine;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
+using UniRx;
+using UnityEngine.UI;
 
 namespace MinecraftClone.Application.Behaviour {
 	class PlayerHeadBehaviour : MonoBehaviour {
 		public TerrainService terrainService;
 
+        public Camera mainCamera;
+		public Camera subCamera1;
+		public Camera subCamera2;
+		private long currentCameraIndex;
+		
 		private bool isPuttingBlock = false;
 		private bool isRemovingBlock = false;
-
+		
 		void Start() {
 			if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
+			currentCameraIndex = 0;
+			mainCamera.enabled = true;
+			subCamera1.enabled = false;
+			subCamera2.enabled = false;
+			
+			var cameraChangeObservable = Observable
+	            .EveryUpdate()
+	            .Where(_ => EnabledOperation() && Input.GetKey(KeyCode.F5));
+
+            Observable.Throttle(cameraChangeObservable, System.TimeSpan.FromSeconds(0.2f))
+				.Do(_ => ChangeCamera())
+				.Subscribe();
+		}
+
+		void ChangeCamera() {
+			var cameras = new Camera[]{ mainCamera, subCamera1, subCamera2 };
+            foreach (var camera in cameras)
+            {
+				camera.enabled = false;
+            }
+
+			currentCameraIndex = (currentCameraIndex + 1) % cameras.Length;
+			cameras[currentCameraIndex].enabled = true;
 		}
 
 		void Update () {
@@ -90,7 +120,7 @@ namespace MinecraftClone.Application.Behaviour {
 		}
 
 		Ray GetRay() {
-			return Camera.main.ScreenPointToRay(Input.mousePosition);
+			return mainCamera.ScreenPointToRay(Input.mousePosition);
 		}
 
 		bool EnabledOperation() {

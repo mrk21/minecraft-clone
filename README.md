@@ -14,6 +14,7 @@
 Please import the following packages:
 
 * Standard Assets
+* UniRx
 
 ### Block texture generation
 

@@ -19,6 +19,7 @@ namespace MinecraftClone.Application.Behaviour {
 		}
 
 		void Update () {
+			debugScreen.GetComponent<DebugScreenBehaviour>().currentSeed = terrainService.World.Seed;
 			debugScreen.GetComponent<DebugScreenBehaviour>().currentChunk = terrainService.CurrentChunk;
 			debugScreen.GetComponent<DebugScreenBehaviour>().currentBlock = terrainService.CurrentBlock;
 			debugScreen.GetComponent<DebugScreenBehaviour>().currentPosition = terrainService.CurrentPosition;

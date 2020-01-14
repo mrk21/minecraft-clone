@@ -6,6 +6,8 @@ namespace MinecraftClone.Application.Behaviour
 {
     class TargetMarkerBehaviour : MonoBehaviour
     {
+        public PlayerBehaviour player;
+
         private MeshFilter meshFilter;
         private Mesh xMesh;
         private Mesh yMesh;
@@ -93,7 +95,8 @@ namespace MinecraftClone.Application.Behaviour
 
         private Ray GetRay()
         {
-            return Camera.main.ScreenPointToRay(Input.mousePosition);
+            return player.head.mainCamera.ScreenPointToRay(Input.mousePosition);
+            
         }
 
         private Mesh CreatePlaneMesh(Vector3[] face)

@@ -5,6 +5,7 @@ using MinecraftClone.Infrastructure;
 namespace MinecraftClone.Application.Behaviour {
 	class PlayerBehaviour : MonoBehaviour {
 		public TerrainService terrainService;
+		public PlayerHeadBehaviour head;
 
 		private float velocityScale = 1f;
 		private bool isMovingToForward = false;
