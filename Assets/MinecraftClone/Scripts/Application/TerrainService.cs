@@ -8,7 +8,7 @@ namespace MinecraftClone.Application {
 	class TerrainService {
 		private GameObject terrain;
 		private GameObject player;
-		private World world;
+        private World world;
 		private TerrainRenderer terrainRenderer;
 
 		public void Init(GameObject terrain, GameObject player) {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Domain.Block;
-using MinecraftClone.Domain.Block.Fluid;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
 
@@ -81,11 +80,11 @@ namespace MinecraftClone.Application.Behaviour {
 		}
 
 		RaycastHit? GetRaycastHit() {
-			var distance = 100f;
+			var distance = 10f;
 			Ray ray = GetRay();
 
 			if (Physics.Raycast (ray, out RaycastHit hit, distance)) {
-				return hit;
+                return hit;
 			}
 			return new RaycastHit?();
 		}
