@@ -7,16 +7,37 @@ namespace MinecraftClone.Application.Behaviour
 {
     class WorldManagerBehaviour : MonoBehaviour
     {
+        [SerializeField] private Canvas debugCanvas = null;
+        [SerializeField] private Canvas cursorCanvas = null;
+        [SerializeField] private PlayerBehaviour player = null;
+
+        private bool enabledDebugCanvas = false;
+
         void Start()
         {
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            debugCanvas.enabled = enabledDebugCanvas;
 
             // GoToMenu
             Observable
                 .EveryUpdate()
                 .Where(_ => Input.GetKeyDown(KeyCode.Backspace))
-                .Where(_ => SceneManager.GetActiveScene().name == "World")
+                .Where(_ => IsActive())
                 .Subscribe(_ => GoToMenu())
+                .AddTo(gameObject);
+
+            // Toggle CursorCanvas
+            Observable
+                .EveryUpdate()
+                .Where(_ => Input.GetKeyDown(KeyCode.F2))
+                .Where(_ => IsActive())
+                .Subscribe(_ => ToggleDebugCanvas())
+                .AddTo(gameObject);
+
+            // Display CursorCanvas
+            player.head.OnCameraChanged
+                .Where(_ => IsActive())
+                .Subscribe(_ => DisplayCursorCanvas())
                 .AddTo(gameObject);
 
             // DisableOperation
@@ -38,6 +59,23 @@ namespace MinecraftClone.Application.Behaviour
                 .AddTo(gameObject);
         }
 
+        void GoToMenu()
+        {
+            Scene menuScene = SceneManager.GetSceneByName("Menu");
+            if (!menuScene.isLoaded) SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
+        }
+
+        void ToggleDebugCanvas()
+        {
+            enabledDebugCanvas = !enabledDebugCanvas;
+            debugCanvas.enabled = enabledDebugCanvas;
+        }
+
+        private void DisplayCursorCanvas()
+        {
+            cursorCanvas.enabled = player.head.CurrentCamera == player.head.mainCamera;
+        }
+
         void OnActiveSceneChanged(Scene prev, Scene next)
         {
             Debug.Log("## " + prev.name + "->" + next.name);
@@ -45,22 +83,20 @@ namespace MinecraftClone.Application.Behaviour
             if (prev.name == "World")
             {
                 DisableOperation();
+                debugCanvas.enabled = false;
+                cursorCanvas.enabled = false;
             }
             else if (next.name == "World")
             {
                 EnableOperation();
+                debugCanvas.enabled = enabledDebugCanvas;
+                DisplayCursorCanvas();
             }
         }
 
         private void OnDestroy()
         {
             DisableOperation();
-        }
-
-        void GoToMenu()
-        {
-            Scene menuScene = SceneManager.GetSceneByName("Menu");
-            if (!menuScene.isLoaded) SceneManager.LoadScene("Menu", LoadSceneMode.Additive);
         }
 
         public static bool IsActive()

@@ -10,10 +10,11 @@ namespace MinecraftClone.Application.Behaviour
 {
     class TerrainBehaviour : MonoBehaviour
     {
-        public GameObject player = null; // set by the inspector
-        public GameObject debugScreen = null; // set by the inspector
-        public TerrainService terrainService;
-        public bool isDrawing;
+        [SerializeField] private GameObject player = null;
+        [SerializeField] private DebugScreenBehaviour debugScreen = null;
+        [SerializeField] private TerrainService terrainService = null;
+
+        private bool isDrawing;
 
         void Start()
         {
@@ -36,24 +37,6 @@ namespace MinecraftClone.Application.Behaviour
                 .Where(_ => EnabledOperation())
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .Subscribe(_ => SetDebugScreen())
-                .AddTo(gameObject);
-
-            // Init
-            Observable
-                .EveryUpdate()
-                .Where(_ => EnabledOperation())
-                .Where(_ => Input.GetKey(KeyCode.R))
-                .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
-                .Subscribe(_ => Init())
-                .AddTo(gameObject);
-
-            // Redraw
-            Observable
-                .EveryUpdate()
-                .Where(_ => EnabledOperation())
-                .Where(_ => Input.GetKey(KeyCode.P))
-                .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
-                .Subscribe(_ => Redraw())
                 .AddTo(gameObject);
         }
 
@@ -81,19 +64,12 @@ namespace MinecraftClone.Application.Behaviour
             isDrawing = false;
         }
 
-        private void Redraw()
-        {
-            isDrawing = true;
-            terrainService.Redraw();
-            isDrawing = false;
-        }
-
         private void SetDebugScreen()
         {
-            debugScreen.GetComponent<DebugScreenBehaviour>().currentSeed = terrainService.World.Seed;
-            debugScreen.GetComponent<DebugScreenBehaviour>().currentChunk = terrainService.CurrentChunk;
-            debugScreen.GetComponent<DebugScreenBehaviour>().currentBlock = terrainService.CurrentBlock;
-            debugScreen.GetComponent<DebugScreenBehaviour>().currentPosition = terrainService.CurrentPosition;
+            debugScreen.currentSeed = terrainService.World.Seed;
+            debugScreen.currentChunk = terrainService.CurrentChunk;
+            debugScreen.currentBlock = terrainService.CurrentBlock;
+            debugScreen.currentPosition = terrainService.CurrentPosition;
         }
 
         private bool EnabledOperation()

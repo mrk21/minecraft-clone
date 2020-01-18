@@ -9,9 +9,9 @@ namespace MinecraftClone.Application.Behaviour
 {
     class PlayerBehaviour : MonoBehaviour
     {
-        public TerrainService terrainService;
-        public PlayerHeadBehaviour head;
+        [SerializeField] public PlayerHeadBehaviour head = null;
 
+        private TerrainService terrainService;
         private float velocityScale = 1f;
         private Rigidbody _rigidbody;
 

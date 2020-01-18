@@ -12,12 +12,15 @@ namespace MinecraftClone.Application.Behaviour
 {
     class PlayerHeadBehaviour : MonoBehaviour
     {
-        public TerrainService terrainService;
+        [SerializeField] public Camera mainCamera = null;
+        [SerializeField] public Camera subCamera1 = null;
+        [SerializeField] public Camera subCamera2 = null;
 
-        public Camera mainCamera;
-        public Camera subCamera1;
-        public Camera subCamera2;
+        public Subject<Camera> OnCameraChanged = new Subject<Camera>();
+
         private long currentCameraIndex;
+        private TerrainService terrainService;
+        private Camera[] cameras;
 
         void Start()
         {
@@ -26,6 +29,7 @@ namespace MinecraftClone.Application.Behaviour
             mainCamera.enabled = true;
             subCamera1.enabled = false;
             subCamera2.enabled = false;
+            cameras = new Camera[] { mainCamera, subCamera1, subCamera2 };
 
             // ChangeCamera
             Observable
@@ -66,14 +70,18 @@ namespace MinecraftClone.Application.Behaviour
 
         void ChangeCamera()
         {
-            var cameras = new Camera[] { mainCamera, subCamera1, subCamera2 };
             foreach (var camera in cameras)
             {
                 camera.enabled = false;
             }
 
             currentCameraIndex = (currentCameraIndex + 1) % cameras.Length;
-            cameras[currentCameraIndex].enabled = true;
+            CurrentCamera.enabled = true;
+            OnCameraChanged.OnNext(CurrentCamera);
+        }
+
+        public Camera CurrentCamera {
+            get { return cameras[currentCameraIndex]; }
         }
 
         void PutBlock()

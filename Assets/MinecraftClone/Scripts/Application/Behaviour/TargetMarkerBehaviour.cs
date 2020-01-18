@@ -7,7 +7,7 @@ namespace MinecraftClone.Application.Behaviour
 {
     class TargetMarkerBehaviour : MonoBehaviour
     {
-        public PlayerBehaviour player;
+        [SerializeField] private PlayerBehaviour player = null;
 
         private MeshFilter meshFilter;
         private Mesh xMesh;

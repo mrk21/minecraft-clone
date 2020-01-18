@@ -31,3 +31,5 @@ sysinfo.txt
 
 # Others
 .DS_Store
+/.vs/
+/Assets/Plugins/UniRx
