@@ -21,32 +21,40 @@ namespace MinecraftClone.Application.Behaviour
             Init();
             SetDebugScreen();
 
-            var drawingStream = Observable
+            // Draw
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => !isDrawing)
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => Draw());
+                .Subscribe(_ => Draw())
+                .AddTo(gameObject);
 
-            var settingDebugScreenStream = Observable
+            // SetDebugScreen
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => SetDebugScreen());
+                .Subscribe(_ => SetDebugScreen())
+                .AddTo(gameObject);
 
-            var initingStream = Observable
+            // Init
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.R))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
-                .Subscribe(_ => Init());
+                .Subscribe(_ => Init())
+                .AddTo(gameObject);
 
-            var redrawingStream = Observable
+            // Redraw
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.P))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
-                .Subscribe(_ => Redraw());
+                .Subscribe(_ => Redraw())
+                .AddTo(gameObject);
         }
 
         private void Init()

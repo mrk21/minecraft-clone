@@ -6,5 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/MinecraftClone/Scenes/Title.unity
+    guid: 7e3a116c65b234df4a94df38a1ae0ccb
+  - enabled: 1
     path: Assets/MinecraftClone/Scenes/World.unity
     guid: 98d21796359ff48c68a5dd46dcaec16c
+  - enabled: 1
+    path: Assets/MinecraftClone/Scenes/Menu.unity
+    guid: f4a106be94a9f4fe0b16d6f826246409
+  m_configObjects: {}

@@ -27,33 +27,41 @@ namespace MinecraftClone.Application.Behaviour
             subCamera1.enabled = false;
             subCamera2.enabled = false;
 
-            var cameraChangeStream = Observable
+            // ChangeCamera
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.F5))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
-                .Subscribe(_ => ChangeCamera());
+                .Subscribe(_ => ChangeCamera())
+                .AddTo(gameObject);
 
-            var puttingBlockStream = Observable
+            // PutBlock
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetMouseButtonDown(1))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => PutBlock());
+                .Subscribe(_ => PutBlock())
+                .AddTo(gameObject);
 
-            var removingBlockStream = Observable
+            // RemoveBlock
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetMouseButtonDown(0))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => RemoveBlock());
+                .Subscribe(_ => RemoveBlock())
+                .AddTo(gameObject);
 
-            var changingViewStream = Observable
+            // ChangeView
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
-                .Subscribe(_ => ChangeView());
+                .Subscribe(_ => ChangeView())
+                .AddTo(gameObject);
         }
 
         void ChangeCamera()

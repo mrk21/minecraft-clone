@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain;
 using System;
 using UniRx;
-using UnityEngine.UI;
 
 namespace MinecraftClone.Application.Behaviour
 {
@@ -22,11 +19,13 @@ namespace MinecraftClone.Application.Behaviour
         {
             GetComponent<Text>().text = "";
 
-            var cameraChangeStream = Observable
+            // Display
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => Display());
+                .Subscribe(_ => Display())
+                .AddTo(gameObject);
         }
 
         void Display()
@@ -34,7 +33,7 @@ namespace MinecraftClone.Application.Behaviour
             string text = "";
             if (currentSeed != null)
             {
-                text += $"CurrentSeed: {currentSeed.World}\n";
+                text += $"CurrentSeed: {currentSeed.Base}\n";
             }
             if (currentChunk != null)
             {

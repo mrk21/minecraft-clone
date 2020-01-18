@@ -19,65 +19,65 @@ namespace MinecraftClone.Application.Behaviour
         {
             if (terrainService == null) terrainService = Singleton<TerrainService>.Instance;
             _rigidbody = GetComponent<Rigidbody>();
-            EnableOperation();
 
-            var settingVelocityScaleStream = Observable
+            // SetVelocityScale
+            Observable
                 .EveryFixedUpdate()
                 .Where(_ => EnabledOperation())
-                .Subscribe(_ => SetVelocityScale());
+                .Subscribe(_ => SetVelocityScale())
+                .AddTo(gameObject);
 
-            var movingToForwardStream = Observable
+            // MoveToForward
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.W))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => MoveToForward());
+                .Subscribe(_ => MoveToForward())
+                .AddTo(gameObject);
 
-            var movingToBackStream = Observable
+            // MoveToBack
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.S))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => MoveToBack());
+                .Subscribe(_ => MoveToBack())
+                .AddTo(gameObject);
 
-            var movingToLeftStream = Observable
+            // MoveToLeft
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.A))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => MoveToLeft());
+                .Subscribe(_ => MoveToLeft())
+                .AddTo(gameObject);
 
-            var movingToRightStream = Observable
+            // MoveToRight
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.D))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => MoveToRight());
+                .Subscribe(_ => MoveToRight())
+                .AddTo(gameObject);
 
-            var jumpingStream = Observable
+            // Jump
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .Where(_ => Input.GetKey(KeyCode.Space))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
-                .Subscribe(_ => Jump());
+                .Subscribe(_ => Jump())
+                .AddTo(gameObject);
 
-            var changingViewStream = Observable
+            // ChangeView
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
-                .Subscribe(_ => ChangeView());
-
-            var disablingOperationStream = Observable
-                .EveryUpdate()
-                .Where(_ => EnabledOperation())
-                .Where(_ => Input.GetKeyDown(KeyCode.Escape))
-                .Subscribe(_ => DisableOperation());
-
-            var enablingOperationStream = Observable
-                .EveryUpdate()
-                .Where(_ => !EnabledOperation())
-                .Where(_ => Input.GetMouseButtonDown(0))
-                .Subscribe(_ => EnableOperation());
-
+                .Subscribe(_ => ChangeView())
+                .AddTo(gameObject);
         }
 
         void SetVelocityScale()
@@ -143,17 +143,6 @@ namespace MinecraftClone.Application.Behaviour
         {
             float yRotation = 4.0f * Input.GetAxis("Mouse X");
             transform.Rotate(0, yRotation, 0);
-        }
-
-        void DisableOperation()
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-
-        void EnableOperation()
-        {
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         bool EnabledOperation()

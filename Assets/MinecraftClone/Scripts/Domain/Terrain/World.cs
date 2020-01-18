@@ -29,8 +29,8 @@ namespace MinecraftClone.Domain.Terrain {
 		private Dictionary<ChunkAddress, Chunk> chunks;
 		private Seed seed;
 
-		public World() {
-			this.seed = new Seed(GetHashCode());
+		public World(Seed seed_) {
+			this.seed = seed_;
 			this.chunks = new Dictionary<ChunkAddress, Chunk> ();
 			this.blockAccessProxy = new BlockAccessProxy (this);
 		}

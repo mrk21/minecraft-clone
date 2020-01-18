@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UniRx;
-using UnityEngine.UI;
 
 namespace MinecraftClone.Application.Behaviour
 {
@@ -39,11 +37,13 @@ namespace MinecraftClone.Application.Behaviour
                 new Vector3( 0.5f,  0.5f, 0)
             });
 
-            var settingTargetMarkerStream = Observable
+            // SetTargetMarker
+            Observable
                 .EveryUpdate()
                 .Where(_ => EnabledOperation())
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => SetTargetMarker());
+                .Subscribe(_ => SetTargetMarker())
+                .AddTo(gameObject);
         }
 
         private void SetTargetMarker()
