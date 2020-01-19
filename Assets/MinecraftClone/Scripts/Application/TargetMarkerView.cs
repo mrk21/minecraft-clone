@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using System.Collections.Generic;
 
-namespace MinecraftClone.Application.Behaviour
+namespace MinecraftClone.Application
 {
-    class TargetMarkerBehaviour : MonoBehaviour
+    public class TargetMarkerView : MonoBehaviour
     {
-        [SerializeField] private PlayerBehaviour player = null;
-
         private MeshFilter meshFilter;
         private Mesh xMesh;
         private Mesh yMesh;
@@ -36,22 +33,11 @@ namespace MinecraftClone.Application.Behaviour
                 new Vector3(-0.5f,  0.5f, 0),
                 new Vector3( 0.5f,  0.5f, 0)
             });
-
-            // SetTargetMarker
-            Observable
-                .EveryUpdate()
-                .Where(_ => EnabledOperation())
-                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => SetTargetMarker())
-                .AddTo(gameObject);
         }
 
-        private void SetTargetMarker()
+        public void DisplayWhereRayHits(Ray ray, float range)
         {
-            var distance = 10f;
-            Ray ray = GetRay();
-
-            if (Physics.Raycast(ray, out RaycastHit hit, distance))
+            if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
                 float[] x = { (float)Math.Floor(hit.point.x), (float)Math.Ceiling(hit.point.x) };
                 float[] y = { (float)Math.Floor(hit.point.y), (float)Math.Ceiling(hit.point.y) };
@@ -97,12 +83,6 @@ namespace MinecraftClone.Application.Behaviour
             }
         }
 
-        private Ray GetRay()
-        {
-            return player.head.mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        }
-
         private Mesh CreatePlaneMesh(Vector3[] face)
         {
             var mesh = new Mesh();
@@ -130,11 +110,5 @@ namespace MinecraftClone.Application.Behaviour
 
             return mesh;
         }
-
-        bool EnabledOperation()
-        {
-            return Cursor.lockState == CursorLockMode.Locked;
-        }
-
     }
 }

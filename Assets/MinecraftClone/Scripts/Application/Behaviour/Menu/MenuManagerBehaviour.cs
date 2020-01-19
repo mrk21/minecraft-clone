@@ -4,6 +4,7 @@ using System;
 using UniRx;
 using UnityEngine.UI;
 using MinecraftClone.Infrastructure;
+using MinecraftClone.Domain;
 
 namespace MinecraftClone.Application.Behaviour.Menu
 {
@@ -18,8 +19,9 @@ namespace MinecraftClone.Application.Behaviour.Menu
             var menuScene = SceneManager.GetSceneByName("Menu");
             SceneManager.SetActiveScene(menuScene);
 
-            Debug.Log(Singleton<TerrainService>.Instance.Seed.Base);
-            currentSeedField.text = Singleton<TerrainService>.Instance.Seed.Base.ToString();
+            var seed = Singleton<GameProgress>.Instance.currentWorld.Value.Seed;
+            Debug.Log(seed.Base);
+            currentSeedField.text = seed.Base.ToString();
         }
 
         public void OnClickBackToTitleButton()

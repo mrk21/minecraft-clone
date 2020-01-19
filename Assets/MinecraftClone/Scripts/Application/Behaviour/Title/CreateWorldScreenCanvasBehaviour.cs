@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
-using UniRx;
 using UnityEngine.UI;
 using MinecraftClone.Infrastructure;
+using MinecraftClone.Domain;
 
 namespace MinecraftClone.Application.Behaviour.Title
 {
@@ -29,10 +29,10 @@ namespace MinecraftClone.Application.Behaviour.Title
             if (worldSeedField.text != "")
             {
                 Int32.TryParse(worldSeedField.text, out int baseSeed);
-                Singleton<TerrainService>.Instance.Seed = new Domain.Seed(baseSeed);
+                Singleton<GameProgress>.Instance.MakeNewWorld(new Seed(baseSeed));
             }
             else {
-                Singleton<TerrainService>.Instance.Seed = new Domain.Seed();
+                Singleton<GameProgress>.Instance.MakeNewWorld(new Seed());
             }
             SceneManager.LoadScene("World");
         }
