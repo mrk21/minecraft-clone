@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
-using UniRx;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain;
 

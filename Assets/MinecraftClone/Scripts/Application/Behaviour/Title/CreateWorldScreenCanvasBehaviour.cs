@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
-using MinecraftClone.Infrastructure;
+using UnityEngine.SceneManagement;
 using MinecraftClone.Domain;
+using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.Behaviour.Title
 {
@@ -31,7 +31,8 @@ namespace MinecraftClone.Application.Behaviour.Title
                 Int32.TryParse(worldSeedField.text, out int baseSeed);
                 Singleton<GameProgress>.Instance.MakeNewWorld(new Seed(baseSeed));
             }
-            else {
+            else
+            {
                 Singleton<GameProgress>.Instance.MakeNewWorld(new Seed());
             }
             SceneManager.LoadScene("World");

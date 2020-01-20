@@ -1,4 +1,6 @@
-namespace MinecraftClone.Infrastructure {
-	interface IValueObject<T> where T: struct {
-	}
+namespace MinecraftClone.Infrastructure
+{
+    interface IValueObject<T> where T : struct
+    {
+    }
 }

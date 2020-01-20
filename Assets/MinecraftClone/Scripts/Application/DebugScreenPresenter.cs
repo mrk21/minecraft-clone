@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UniRx;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain;

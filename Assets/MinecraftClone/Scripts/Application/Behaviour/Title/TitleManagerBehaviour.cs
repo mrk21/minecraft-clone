@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
-using UniRx;
 
 namespace MinecraftClone.Application.Behaviour.Title
 {

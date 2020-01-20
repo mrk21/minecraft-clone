@@ -44,11 +44,9 @@ namespace MinecraftClone.Application
 
         public void PutBlock(Ray ray, float range)
         {
-            var hit = GetRaycastHit(ray, range);
-
-            if (hit.HasValue)
+            if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
-                Vector3 position = hit.Value.point + 0.5f * hit.Value.normal;
+                Vector3 position = hit.point + 0.5f * hit.normal;
 
                 if (world.Blocks[position].Traits.IsReplaceable())
                 {
@@ -61,11 +59,9 @@ namespace MinecraftClone.Application
 
         public void RemoveBlock(Ray ray, float range)
         {
-            var hit = GetRaycastHit(ray, range);
-
-            if (hit.HasValue)
+            if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
-                Vector3 position = hit.Value.point - 0.5f * hit.Value.normal;
+                Vector3 position = hit.point - 0.5f * hit.normal;
 
                 if (world.Blocks[position].Traits.IsBreakable())
                 {
@@ -102,15 +98,6 @@ namespace MinecraftClone.Application
                 }
                 yield return new WaitForSeconds(0.5f);
             }
-        }
-
-        private RaycastHit? GetRaycastHit(Ray ray, float range)
-        {
-            if (Physics.Raycast(ray, out RaycastHit hit, range))
-            {
-                return hit;
-            }
-            return new RaycastHit?();
         }
     }
 }
