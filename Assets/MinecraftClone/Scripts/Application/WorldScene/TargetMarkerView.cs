@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     public class TargetMarkerView : MonoBehaviour
     {

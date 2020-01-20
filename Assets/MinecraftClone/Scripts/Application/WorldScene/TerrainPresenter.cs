@@ -4,8 +4,9 @@ using UniRx;
 using MinecraftClone.Domain;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain.Terrain;
+using MinecraftClone.Domain.Store;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     class TerrainPresenter : MonoBehaviour
     {

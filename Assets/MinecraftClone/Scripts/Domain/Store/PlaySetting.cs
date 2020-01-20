@@ -1,7 +1,7 @@
 ﻿using System;
 using UniRx;
 
-namespace MinecraftClone.Domain
+namespace MinecraftClone.Domain.Store
 {
     public class PlaySetting
     {

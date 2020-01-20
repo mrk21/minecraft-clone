@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain;
+using MinecraftClone.Domain.Store;
 
 namespace MinecraftClone.Application.Behaviour.Menu
 {

@@ -4,7 +4,7 @@ using MinecraftClone.Infrastructure;
 using UnityEngine;
 using MinecraftClone.Domain.Terrain;
 
-namespace MinecraftClone.Domain
+namespace MinecraftClone.Domain.Store
 {
     public class GameProgress
     {

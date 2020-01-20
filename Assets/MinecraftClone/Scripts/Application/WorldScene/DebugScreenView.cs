@@ -4,7 +4,7 @@ using MinecraftClone.Domain;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Block;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     public class DebugScreenView : MonoBehaviour
     {

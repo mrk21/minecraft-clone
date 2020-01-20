@@ -4,8 +4,9 @@ using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain;
 using System;
 using System.Collections.Generic;
+using MinecraftClone.Domain.Store;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     public class PlayerPresenter : MonoBehaviour
     {

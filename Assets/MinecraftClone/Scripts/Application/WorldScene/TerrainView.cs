@@ -6,7 +6,7 @@ using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Renderer;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     class TerrainView : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using System;
 using MinecraftClone.Domain.Block.Fluid;
 using MinecraftClone.Domain.Block;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     public class PlayerView : MonoBehaviour
     {

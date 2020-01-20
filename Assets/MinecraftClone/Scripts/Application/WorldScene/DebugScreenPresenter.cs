@@ -3,8 +3,9 @@ using UnityEngine;
 using UniRx;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain;
+using MinecraftClone.Domain.Store;
 
-namespace MinecraftClone.Application
+namespace MinecraftClone.Application.WorldScene
 {
     public class DebugScreenPresenter : MonoBehaviour
     {

@@ -3,7 +3,7 @@ using UniRx;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Terrain;
 
-namespace MinecraftClone.Domain
+namespace MinecraftClone.Domain.Store
 {
     public class Player
     {
