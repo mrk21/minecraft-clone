@@ -18,7 +18,7 @@ namespace MinecraftClone.Application.Behaviour.Menu
             var menuScene = SceneManager.GetSceneByName("Menu");
             SceneManager.SetActiveScene(menuScene);
 
-            var seed = Singleton<GameProgress>.Instance.currentWorld.Value.Seed;
+            var seed = Singleton<GameProgress>.Instance.currentDimension.Value.Seed;
             Debug.Log(seed.Base);
             currentSeedField.text = seed.Base.ToString();
         }

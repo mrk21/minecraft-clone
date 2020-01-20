@@ -38,14 +38,14 @@ namespace MinecraftClone.Domain.Terrain
             }
         }
 
-        private World world;
+        private Dimension dimension;
         private ChunkAddress address;
         private BlockHolder[,,] blocks;
         private Dictionary<string, GameObject> gameObjects;
 
-        public Chunk(World world, ChunkAddress address)
+        public Chunk(Dimension dimension, ChunkAddress address)
         {
-            this.world = world;
+            this.dimension = dimension;
             this.address = address;
             this.blocks = new BlockHolder[Size, Depth, Size];
             this.gameObjects = new Dictionary<string, GameObject>();
@@ -67,9 +67,9 @@ namespace MinecraftClone.Domain.Terrain
             get { return address; }
         }
 
-        public World World
+        public Dimension Dimension
         {
-            get { return world; }
+            get { return dimension; }
         }
 
         public ChunkAddress Address

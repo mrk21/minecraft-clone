@@ -21,9 +21,9 @@ namespace MinecraftClone.Application.WorldScene
             gameProgress = Singleton<GameProgress>.Instance;
 
             // JoinWorld
-            gameProgress.currentWorld
-                .Where(world => world != null)
-                .Subscribe(JoinWorld)
+            gameProgress.currentDimension
+                .Where(dimension => dimension != null)
+                .Subscribe(JoinDimension)
                 .AddTo(gameObject);
             
             // Draw
@@ -54,10 +54,10 @@ namespace MinecraftClone.Application.WorldScene
                 .AddTo(gameObject);
         }
 
-        private void JoinWorld(World world)
+        private void JoinDimension(Dimension dimension)
         {
-            view.Init(world);
-            player.JoinWorld(world);
+            view.Init(dimension);
+            player.JoinDimension(dimension);
         }
 
         private void Draw()

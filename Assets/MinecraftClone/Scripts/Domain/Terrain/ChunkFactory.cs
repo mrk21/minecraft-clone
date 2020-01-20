@@ -9,20 +9,20 @@ namespace MinecraftClone.Domain.Terrain
         public static readonly int MaxHeight = Chunk.Depth - 1;
         public static readonly int WaterHeight = (int)(MaxHeight * 0.5f);
 
-        private World world;
+        private Dimension dimension;
         private ChunkAddress address;
 
-        public ChunkFactory(World world, ChunkAddress address)
+        public ChunkFactory(Dimension dimension, ChunkAddress address)
         {
-            this.world = world;
+            this.dimension = dimension;
             this.address = address;
         }
 
         public Chunk Create()
         {
-            var chunk = new Chunk(world, address);
-            var heightMap = new HeightMap(world.Seed.World, address, MaxHeight);
-            var biomeMap = new BiomeMap(world.Seed.Temperature, world.Seed.Humidity, address);
+            var chunk = new Chunk(dimension, address);
+            var heightMap = new HeightMap(dimension.Seed.Dimension, address, MaxHeight);
+            var biomeMap = new BiomeMap(dimension.Seed.Temperature, dimension.Seed.Humidity, address);
 
             heightMap.Generate();
             biomeMap.Generate();

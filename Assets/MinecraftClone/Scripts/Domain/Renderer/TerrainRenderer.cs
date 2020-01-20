@@ -5,13 +5,13 @@ namespace MinecraftClone.Domain.Renderer
 {
     class TerrainRenderer
     {
-        private World world;
+        private Dimension dimension;
         private GameObject chunkPrefab;
         private GameObject target;
 
-        public TerrainRenderer(World world, GameObject target)
+        public TerrainRenderer(Dimension dimension, GameObject target)
         {
-            this.world = world;
+            this.dimension = dimension;
             this.target = target;
             this.chunkPrefab = Resources.Load("Prefabs/Chunk") as GameObject;
         }
@@ -23,7 +23,7 @@ namespace MinecraftClone.Domain.Renderer
 
         public void Unload()
         {
-            foreach (var chunk in world.Chunks.Values)
+            foreach (var chunk in dimension.Chunks.Values)
             {
                 foreach (var obj in chunk.GameObjects.Values)
                 {
@@ -40,7 +40,7 @@ namespace MinecraftClone.Domain.Renderer
 
         public bool IsDrawed(ChunkAddress address)
         {
-            return world.IsGenerated(address) && world[address].GameObjects.Count > 0;
+            return dimension.IsGenerated(address) && dimension[address].GameObjects.Count > 0;
         }
 
         public void Redraw(Vector3 position)
@@ -50,7 +50,7 @@ namespace MinecraftClone.Domain.Renderer
 
         public void Redraw(ChunkAddress address)
         {
-            var chunk = world[address];
+            var chunk = dimension[address];
             SetMesh(chunk);
         }
 
@@ -61,7 +61,7 @@ namespace MinecraftClone.Domain.Renderer
 
         public void Draw(ChunkAddress address)
         {
-            var chunk = world[address];
+            var chunk = dimension[address];
 
             if (!IsDrawed(address))
             {

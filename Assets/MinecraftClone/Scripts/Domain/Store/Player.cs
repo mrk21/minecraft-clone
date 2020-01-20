@@ -13,7 +13,7 @@ namespace MinecraftClone.Domain.Store
         public ReactiveProperty<Quaternion> headRotation;
         public ReactiveProperty<Ray> gaze;
         public ReactiveProperty<float> operationRange;
-        public ReactiveProperty<World> currentWorld;
+        public ReactiveProperty<Dimension> currentDimension;
         
         public Player()
         {
@@ -23,26 +23,26 @@ namespace MinecraftClone.Domain.Store
             headRotation = new ReactiveProperty<Quaternion>();
             gaze = new ReactiveProperty<Ray>();
             operationRange = new ReactiveProperty<float>(10f);
-            currentWorld = new ReactiveProperty<World>();
+            currentDimension = new ReactiveProperty<Dimension>();
         }
 
-        public void JoinWorld(World world)
+        public void JoinDimension(Dimension dimension)
         {
             position.Value = new Vector3(60, ChunkFactory.MaxHeight, 60);
             isOperable.Value = true;
-            currentWorld.Value = world;
+            currentDimension.Value = dimension;
         }
 
         public Chunk CurrentChunk()
         {
-            if (!currentWorld.HasValue) throw new System.Exception("User does not join world!");
-            return currentWorld.Value[position.Value];
+            if (!currentDimension.HasValue) throw new System.Exception("User does not join dimension!");
+            return currentDimension.Value[position.Value];
         }
 
         public BaseBlock CurrentBlock()
         {
-            if (!currentWorld.HasValue) throw new System.Exception("User does not join world!");
-            return currentWorld.Value.Blocks[position.Value + 1.5f * Vector3.down];
+            if (!currentDimension.HasValue) throw new System.Exception("User does not join dimension!");
+            return currentDimension.Value.Blocks[position.Value + 1.5f * Vector3.down];
         }
     }
 }

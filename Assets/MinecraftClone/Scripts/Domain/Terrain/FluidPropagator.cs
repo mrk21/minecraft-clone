@@ -11,14 +11,14 @@ namespace MinecraftClone.Domain.Terrain
 
     class FluidPropagatorFactory
     {
-        public FluidPropagator CreateFromSource(World world, FluidBlock source, Vector3 position)
+        public FluidPropagator CreateFromSource(Dimension dimension, FluidBlock source, Vector3 position)
         {
-            return new FluidPropagator(world, source, position);
+            return new FluidPropagator(dimension, source, position);
         }
 
-        public FluidPropagator CreateFromRemovingAdjoiningBlock(World world, Vector3 basePosition)
+        public FluidPropagator CreateFromRemovingAdjoiningBlock(Dimension dimension, Vector3 basePosition)
         {
-            return new FluidPropagator(world, basePosition);
+            return new FluidPropagator(dimension, basePosition);
         }
     }
 
@@ -54,29 +54,29 @@ namespace MinecraftClone.Domain.Terrain
             public FluidBlock Block { get { return block; } }
         }
 
-        private World world;
+        private Dimension dimension;
         private List<Item> edgeBlocks;
         private Dictionary<Vector3, FluidBlock> flowedBlocks;
 
-        public FluidPropagator(World world, FluidBlock source, Vector3 position)
+        public FluidPropagator(Dimension dimension, FluidBlock source, Vector3 position)
         {
-            this.world = world;
+            this.dimension = dimension;
             flowedBlocks = new Dictionary<Vector3, FluidBlock>();
             edgeBlocks = new List<Item>();
             flowedBlocks[position] = source;
             edgeBlocks.Add(new Item(position, source));
         }
 
-        public FluidPropagator(World world, Vector3 basePosition)
+        public FluidPropagator(Dimension dimension, Vector3 basePosition)
         {
-            this.world = world;
+            this.dimension = dimension;
             flowedBlocks = new Dictionary<Vector3, FluidBlock>();
             edgeBlocks = new List<Item>();
 
             foreach (var direction in AdjoiningDirections)
             {
                 var position = basePosition + direction;
-                var block = world.Blocks[position];
+                var block = dimension.Blocks[position];
                 if (!(block is FluidBlock)) continue;
                 edgeBlocks.Add(new Item(position, block as FluidBlock));
             }
@@ -124,7 +124,7 @@ namespace MinecraftClone.Domain.Terrain
             var position = item.Position + direction;
             if (flowedBlocks.ContainsKey(position)) return false;
 
-            var block = world.Blocks[position];
+            var block = dimension.Blocks[position];
             if (block == null || block.Traits.MatterType != MatterTypeEnum.Void) return false;
 
             if (direction != Vector3.down)
@@ -135,10 +135,10 @@ namespace MinecraftClone.Domain.Terrain
                 var obliquelyDownwardPosition = downwardPosition + direction;
                 if (flowedBlocks.ContainsKey(obliquelyDownwardPosition)) return false;
 
-                var downwardBlock = world.Blocks[downwardPosition];
+                var downwardBlock = dimension.Blocks[downwardPosition];
                 if (downwardBlock == null) return false;
 
-                var obliquelyDownwardBlock = world.Blocks[obliquelyDownwardPosition];
+                var obliquelyDownwardBlock = dimension.Blocks[obliquelyDownwardPosition];
                 if (obliquelyDownwardBlock == null) return false;
 
                 if (downwardBlock.Traits.MatterType != MatterTypeEnum.Solid &&

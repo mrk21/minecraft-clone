@@ -6,27 +6,27 @@ using MinecraftClone.Domain;
 
 namespace MinecraftClone.Domain.Terrain
 {
-    public class World : IEntity<int>
+    public class Dimension : IEntity<int>
     {
         public class BlockAccessProxy
         {
-            private World world;
+            private Dimension dimension;
 
-            public BlockAccessProxy(World world)
+            public BlockAccessProxy(Dimension dimension)
             {
-                this.world = world;
+                this.dimension = dimension;
             }
 
             public BaseBlock this[Vector3 position]
             {
                 get
                 {
-                    var chunk = world[position];
+                    var chunk = dimension[position];
                     return chunk[chunk.GetLocalPosition(position)];
                 }
                 set
                 {
-                    var chunk = world[position];
+                    var chunk = dimension[position];
                     chunk[chunk.GetLocalPosition(position)] = value;
                 }
             }
@@ -36,7 +36,7 @@ namespace MinecraftClone.Domain.Terrain
         private Dictionary<ChunkAddress, Chunk> chunks;
         private Seed seed;
 
-        public World(Seed seed_)
+        public Dimension(Seed seed_)
         {
             this.seed = seed_;
             this.chunks = new Dictionary<ChunkAddress, Chunk>();
@@ -50,7 +50,7 @@ namespace MinecraftClone.Domain.Terrain
 
         public int Id
         {
-            get { return seed.World; }
+            get { return seed.Dimension; }
         }
 
         public BlockAccessProxy Blocks

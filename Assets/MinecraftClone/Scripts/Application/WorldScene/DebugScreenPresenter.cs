@@ -50,7 +50,7 @@ namespace MinecraftClone.Application.WorldScene
         private void Display()
         {
             view.Display(
-                currentSeed: player.currentWorld.Value.Seed,
+                currentSeed: player.currentDimension.Value.Seed,
                 currentChunk: player.CurrentChunk(),
                 currentBlock: player.CurrentBlock(),
                 currentPosition: player.position.Value

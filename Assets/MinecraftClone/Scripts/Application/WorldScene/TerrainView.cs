@@ -12,17 +12,17 @@ namespace MinecraftClone.Application.WorldScene
     {
         public ReactiveProperty<bool> isDrawing;
         private TerrainRenderer terrainRenderer;
-        private World world;
+        private Dimension dimension;
         
         void Start()
         {
             isDrawing = new ReactiveProperty<bool>(false);
         }
 
-        public void Init(World world)
+        public void Init(Dimension dimension)
         {
-            this.world = world;
-            terrainRenderer = new TerrainRenderer(world, gameObject);
+            this.dimension = dimension;
+            terrainRenderer = new TerrainRenderer(dimension, gameObject);
             terrainRenderer.Init();
         }
 
@@ -48,10 +48,10 @@ namespace MinecraftClone.Application.WorldScene
             {
                 Vector3 position = hit.point + 0.5f * hit.normal;
 
-                if (world.Blocks[position].Traits.IsReplaceable())
+                if (dimension.Blocks[position].Traits.IsReplaceable())
                 {
                     var block = new GrassBlock();
-                    world.Blocks[position] = block;
+                    dimension.Blocks[position] = block;
                     terrainRenderer.Redraw(position);
                 }
             }
@@ -63,19 +63,19 @@ namespace MinecraftClone.Application.WorldScene
             {
                 Vector3 position = hit.point - 0.5f * hit.normal;
 
-                if (world.Blocks[position].Traits.IsBreakable())
+                if (dimension.Blocks[position].Traits.IsBreakable())
                 {
-                    world.Blocks[position].RemoveFromTerrain();
+                    dimension.Blocks[position].RemoveFromTerrain();
                     terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
-                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(world, position));
+                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
                 }
-                else if (world.Blocks[position].Traits.IsReplaceable() && world.Blocks[position].Traits.IsBreakable())
+                else if (dimension.Blocks[position].Traits.IsReplaceable() && dimension.Blocks[position].Traits.IsBreakable())
                 {
-                    world.Blocks[position].RemoveFromTerrain();
+                    dimension.Blocks[position].RemoveFromTerrain();
                     terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
-                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(world, position));
+                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace MinecraftClone.Application.WorldScene
                 var chunkAddresses = new HashSet<ChunkAddress>();
                 foreach (var item in items)
                 {
-                    world.Blocks[item.Position] = item.Block;
+                    dimension.Blocks[item.Position] = item.Block;
                     chunkAddresses.Add(ChunkAddress.FromPosition(item.Position));
                 }
                 foreach (var address in chunkAddresses)

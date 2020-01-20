@@ -17,7 +17,7 @@ namespace MinecraftClone.Application.WorldScene
             player = Singleton<Player>.Instance;
             gameProgress = Singleton<GameProgress>.Instance;
 
-            if (!gameProgress.currentWorld.HasValue || gameProgress.currentWorld.Value == null)
+            if (!gameProgress.currentDimension.HasValue || gameProgress.currentDimension.Value == null)
             {
                 gameProgress.MakeNewWorld(new Seed());
             }
@@ -58,7 +58,7 @@ namespace MinecraftClone.Application.WorldScene
 
             gameProgress.worldIsActivated
                 .Where(isActivated => isActivated)
-                .Where(_ => player.currentWorld.HasValue)
+                .Where(_ => player.currentDimension.HasValue)
                 .Subscribe(_ => Activate())
                 .AddTo(gameObject);
         }

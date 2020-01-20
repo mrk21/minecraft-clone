@@ -37,7 +37,7 @@ namespace MinecraftClone.Application.WorldScene
             };
 
             // Init
-            player.currentWorld
+            player.currentDimension
                 .Subscribe(_ => Init())
                 .AddTo(gameObject);
 

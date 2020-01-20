@@ -33,7 +33,7 @@ namespace MinecraftClone.Domain
 
         public int Base { get { return baseSeed; } }
 
-        public int World { get { return seeds[0]; } }
+        public int Dimension { get { return seeds[0]; } }
         public int Temperature { get { return seeds[10]; } }
         public int Humidity { get { return seeds[11]; } }
     }

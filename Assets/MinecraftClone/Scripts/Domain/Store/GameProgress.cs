@@ -9,7 +9,7 @@ namespace MinecraftClone.Domain.Store
     public class GameProgress
     {
         public ReactiveProperty<bool> worldIsActivated;
-        public ReactiveProperty<World> currentWorld;
+        public ReactiveProperty<Dimension> currentDimension;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
@@ -20,14 +20,14 @@ namespace MinecraftClone.Domain.Store
         public GameProgress()
         {
             worldIsActivated = new ReactiveProperty<bool>(false);
-            currentWorld = new ReactiveProperty<World>();
+            currentDimension = new ReactiveProperty<Dimension>();
 
             SceneManager.activeSceneChanged += OnActiveSceneChanged_;
         }
 
         public void MakeNewWorld(Seed seed)
         {
-            currentWorld.Value = new World(seed);
+            currentDimension.Value = new Dimension(seed);
         }
 
         private void OnActiveSceneChanged_(Scene prev, Scene next)
