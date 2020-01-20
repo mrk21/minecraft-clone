@@ -450,7 +450,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1413821423}
+      - m_Target: {fileID: 0}
         m_MethodName: OnClickCancelButton
         m_Mode: 1
         m_Arguments:
@@ -527,7 +527,6 @@ Transform:
   m_Children:
   - {fileID: 1639922224}
   - {fileID: 1647996787}
-  - {fileID: 488325860}
   - {fileID: 771802837}
   - {fileID: 1413821419}
   m_Father: {fileID: 0}
@@ -542,11 +541,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 461592917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c0bc0bbe67e34d5ca77d8dc6457492a, type: 3}
+  m_Script: {fileID: 11500000, guid: 976dd7f4df6464e80aa30a30515aa3d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topScreen: {fileID: 771802833}
-  createWorldScreen: {fileID: 1413821418}
 --- !u!1 &488325857
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,11 +604,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488325857}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -505, y: -316, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 461592918}
-  m_RootOrder: 2
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &770118416
 GameObject:
@@ -702,9 +699,10 @@ GameObject:
   - component: {fileID: 771802836}
   - component: {fileID: 771802835}
   - component: {fileID: 771802834}
-  - component: {fileID: 771802838}
+  - component: {fileID: 771802840}
+  - component: {fileID: 771802839}
   m_Layer: 5
-  m_Name: TopScreenCanvas
+  m_Name: TopScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -785,14 +783,14 @@ RectTransform:
   - {fileID: 1933284363}
   - {fileID: 2143266414}
   m_Father: {fileID: 461592918}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &771802838
+--- !u!114 &771802839
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -801,10 +799,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 771802833}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48bbb37f1b62d438aa316fe6ddb9541a, type: 3}
+  m_Script: {fileID: 11500000, guid: 77b2285cd032f45d5beb11d1024ca9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createWorldScreen: {fileID: 1413821418}
+  parent: {fileID: 461592919}
+--- !u!114 &771802840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771802833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7118c55dc72444c108ad2373718bd09f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playButton: {fileID: 1933284364}
+  quitButton: {fileID: 2143266416}
 --- !u!1 &831307310
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +976,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1413821423}
+      - m_Target: {fileID: 0}
         m_MethodName: OnClickCreateWorldButton
         m_Mode: 1
         m_Arguments:
@@ -1100,9 +1112,10 @@ GameObject:
   - component: {fileID: 1413821422}
   - component: {fileID: 1413821421}
   - component: {fileID: 1413821420}
+  - component: {fileID: 1413821424}
   - component: {fileID: 1413821423}
   m_Layer: 5
-  m_Name: CreateWorldCanvas
+  m_Name: CreateWorldScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1122,7 +1135,7 @@ RectTransform:
   - {fileID: 269902912}
   - {fileID: 398485571}
   m_Father: {fileID: 461592918}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1198,11 +1211,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1413821418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9686a85d408f4316855c94d0f06661e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0936246a4dfdd442390077b9541f4d38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleScreen: {fileID: 771802833}
+  parent: {fileID: 461592919}
+--- !u!114 &1413821424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413821418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b9e56c96a6a46e8886283ffc75c358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   worldSeedField: {fileID: 192566899}
+  createWorldButton: {fileID: 888904365}
+  cancelButton: {fileID: 398485572}
 --- !u!1 &1560238431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1689,18 +1716,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1933284365}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 771802838}
-        m_MethodName: OnClickPlayButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1933284365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1818,18 +1834,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2143266417}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 771802838}
-        m_MethodName: OnClickQuitButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2143266417
 MonoBehaviour:
   m_ObjectHideFlags: 0
