@@ -8,13 +8,13 @@ namespace MinecraftClone.Application.WorldScene
 {
     public class CursorScreenPresenter : MonoBehaviour
     {
-        private PlaySetting playSetting = null;
         private GameProgress gameProgress = null;
+        private PlaySetting playSetting = null;
 
         void Start()
         {
-            playSetting = Singleton<PlaySetting>.Instance;
-            gameProgress = Singleton<GameProgress>.Instance;
+            gameProgress = GameProgress.Get();
+            playSetting = gameProgress.CurrentWorld.PlaySetting;
 
             // SetEnabled()
             Observable

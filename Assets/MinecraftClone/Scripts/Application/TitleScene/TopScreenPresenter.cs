@@ -40,11 +40,11 @@ namespace MinecraftClone.Application.TitleScene
 
         private void OnClickQuitButton()
         {
-            #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-            #elif UNITY_STANDALONE
-                UnityEngine.Application.Quit();
-            #endif
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #elif UNITY_STANDALONE
+            UnityEngine.Application.Quit();
+        #endif
         }
     }
 }

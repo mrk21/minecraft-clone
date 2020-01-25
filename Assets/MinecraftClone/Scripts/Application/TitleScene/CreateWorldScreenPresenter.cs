@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UniRx;
@@ -33,6 +34,29 @@ namespace MinecraftClone.Application.TitleScene
                 .OnClickAsObservable()
                 .Subscribe(_ => OnClickCreateWorldButton())
                 .AddTo(gameObject);
+
+            view.worldList.onClickJoinButton
+                .Subscribe(OnClickJoinWorldButton);
+
+            view.worldList.onClickDeleteButton
+                .Subscribe(OnClickDeleteWorldButton);
+
+            gameProgress.worldList
+                .ObserveAdd()
+                .Subscribe(item => AddItem(item.Value))
+                .AddTo(gameObject);
+
+            gameProgress.worldList
+                .ObserveRemove()
+                .Subscribe(item => view.worldList.DeleteItem(item.Key))
+                .AddTo(gameObject);
+
+            Render();
+        }
+
+        private void Render()
+        {
+            gameProgress.worldList.Values.ToList().ForEach(AddItem);
         }
 
         private void OnTransitionScreen(TitleManagerPresenter.ScreenType currentScreen)
@@ -45,18 +69,39 @@ namespace MinecraftClone.Application.TitleScene
             parent.currentScreen.Value = TitleManagerPresenter.ScreenType.Top;
         }
 
+        private void OnClickJoinWorldButton(WorldListItemView item)
+        {
+            gameProgress.JoinWorld(item.worldId);
+            SceneManager.LoadScene("World");
+        }
+
+        private void OnClickDeleteWorldButton(WorldListItemView item)
+        {
+            gameProgress.worldList.Remove(item.worldId);
+        }
+
         private void OnClickCreateWorldButton()
         {
             if (view.worldSeedField.text != "")
             {
                 Int32.TryParse(view.worldSeedField.text, out int baseSeed);
-                gameProgress.MakeNewWorld(new Seed(baseSeed));
+                var seed = new Seed(baseSeed);
+                gameProgress.MakeWorld(seed: seed);
             }
             else
             {
-                gameProgress.MakeNewWorld(new Seed());
+                var seed = new Seed();
+                gameProgress.MakeWorld(seed: seed);
             }
-            SceneManager.LoadScene("World");
+        }
+
+        private void AddItem(World world)
+        {
+            view.worldList.AddItem(
+                id: world.Id,
+                name: world.name.Value,
+                seed: world.seed.Value
+            );
         }
     }
 }

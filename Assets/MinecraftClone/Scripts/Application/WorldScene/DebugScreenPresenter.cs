@@ -10,16 +10,18 @@ namespace MinecraftClone.Application.WorldScene
     public class DebugScreenPresenter : MonoBehaviour
     {
         private DebugScreenView view;
+
+        private GameProgress gameProgress;
         private Player player;
         private PlaySetting playSetting;
-        private GameProgress gameProgress;
-
+        
         void Start()
         {
             view = GetComponent<DebugScreenView>();
-            player = Singleton<Player>.Instance;
-            playSetting = Singleton<PlaySetting>.Instance;
-            gameProgress = Singleton<GameProgress>.Instance;
+
+            gameProgress = GameProgress.Get();
+            player = gameProgress.CurrentWorld.Player;
+            playSetting = gameProgress.CurrentWorld.PlaySetting;
 
             // SetEnabled()
             Observable

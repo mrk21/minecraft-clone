@@ -11,15 +11,17 @@ namespace MinecraftClone.Application.TitleScene
         [SerializeField] private MainScreenView view = null;
 
         private GameProgress gameProgress;
+        private World world;
 
         void Start()
         {
-            gameProgress = Singleton<GameProgress>.Instance;
+            gameProgress = GameProgress.Get();
+            world = gameProgress.CurrentWorld;
 
             var menuScene = SceneManager.GetSceneByName("Menu");
             SceneManager.SetActiveScene(menuScene);
 
-            view.currentSeedField.text = gameProgress.currentDimension.Value.Seed.Base.ToString();
+            view.currentSeedField.text = world.currentDimension.Value.Seed.Base.ToString();
 
             view.closeMenuButton
                 .OnClickAsObservable()

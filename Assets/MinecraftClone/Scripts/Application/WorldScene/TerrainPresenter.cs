@@ -11,17 +11,19 @@ namespace MinecraftClone.Application.WorldScene
     class TerrainPresenter : MonoBehaviour
     {
         private TerrainView view;
-        private Player player;
         private GameProgress gameProgress;
+        private World world;
+        private Player player;
 
         void Start()
         {
             view = GetComponent<TerrainView>();
-            player = Singleton<Player>.Instance;
-            gameProgress = Singleton<GameProgress>.Instance;
+            gameProgress = GameProgress.Get();
+            world = gameProgress.CurrentWorld;
+            player = world.Player;
 
             // JoinWorld
-            gameProgress.currentDimension
+            world.currentDimension
                 .Where(dimension => dimension != null)
                 .Subscribe(JoinDimension)
                 .AddTo(gameObject);

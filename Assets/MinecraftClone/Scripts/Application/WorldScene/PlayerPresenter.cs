@@ -11,16 +11,21 @@ namespace MinecraftClone.Application.WorldScene
     public class PlayerPresenter : MonoBehaviour
     {
         private PlayerView view;
+
+        private GameProgress gameProgress;
         private Player player;
         private PlaySetting playSetting;
+
         private Dictionary<Camera, PlaySetting.CameraType> cameraToTypes;
         private Dictionary<PlaySetting.CameraType, Camera> typeToCamera;
 
         void Start()
         {
             view = GetComponent<PlayerView>();
-            player = Singleton<Player>.Instance;
-            playSetting = Singleton<PlaySetting>.Instance;
+
+            gameProgress = GameProgress.Get();
+            player = gameProgress.CurrentWorld.Player;
+            playSetting = gameProgress.CurrentWorld.PlaySetting;
 
             cameraToTypes = new Dictionary<Camera, PlaySetting.CameraType>
             {

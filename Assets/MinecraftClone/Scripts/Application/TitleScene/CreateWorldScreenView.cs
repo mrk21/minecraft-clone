@@ -8,6 +8,7 @@ namespace MinecraftClone.Application.TitleScene
         [SerializeField] public InputField worldSeedField = null;
         [SerializeField] public Button createWorldButton = null;
         [SerializeField] public Button cancelButton = null;
+        [SerializeField] public WorldListView worldList = null;
 
         public void SetEnabled(bool enabled)
         {

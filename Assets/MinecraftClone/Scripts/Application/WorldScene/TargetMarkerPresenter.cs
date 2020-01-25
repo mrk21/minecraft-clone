@@ -9,13 +9,15 @@ namespace MinecraftClone.Application.WorldScene
 {
     public class TargetMarkerPresenter : MonoBehaviour
     {
-        private Player player = null;
         private TargetMarkerView view = null;
+        private GameProgress gameProgress;
+        private Player player = null;
 
         void Start()
         {
-            player = Singleton<Player>.Instance;
             view = GetComponent<TargetMarkerView>();
+            gameProgress = GameProgress.Get();
+            player = gameProgress.CurrentWorld.Player;
 
             // DisplayWherePlayerWillOperate
             Observable

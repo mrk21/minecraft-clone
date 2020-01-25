@@ -9,18 +9,21 @@ namespace MinecraftClone.Application.WorldScene
 {
     class WorldManagerPresenter : MonoBehaviour
     {
-        private Player player = null;
         private GameProgress gameProgress = null;
+        private World world = null;
+        private Player player = null;
 
         void Start()
         {
-            player = Singleton<Player>.Instance;
-            gameProgress = Singleton<GameProgress>.Instance;
-
-            if (!gameProgress.currentDimension.HasValue || gameProgress.currentDimension.Value == null)
+            gameProgress = GameProgress.Get();
+            
+            if (!gameProgress.currentWorld.HasValue || gameProgress.currentWorld.Value == null)
             {
-                gameProgress.MakeNewWorld(new Seed());
+                world = gameProgress.MakeWorld(new Seed());
+                gameProgress.JoinWorld(world.Id);
             }
+            world = gameProgress.CurrentWorld;
+            player = world.Player;
 
             // GoToMenu
             Observable
