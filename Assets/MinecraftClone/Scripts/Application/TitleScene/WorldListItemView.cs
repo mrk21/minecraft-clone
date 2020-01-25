@@ -9,6 +9,7 @@ namespace MinecraftClone.Application.TitleScene
         [SerializeField] public Text worldName = null;
         [SerializeField] public Text worldSeed = null;
         [SerializeField] public Button joinButton = null;
+        [SerializeField] public Button editButton = null;
         [SerializeField] public Button deleteButton = null;
     }
 }

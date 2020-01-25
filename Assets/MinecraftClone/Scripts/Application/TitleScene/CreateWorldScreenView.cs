@@ -5,9 +5,10 @@ namespace MinecraftClone.Application.TitleScene
 {
     class CreateWorldScreenView : MonoBehaviour
     {
-        [SerializeField] public InputField worldSeedField = null;
-        [SerializeField] public Button createWorldButton = null;
-        [SerializeField] public Button cancelButton = null;
+        [SerializeField] public Button newWorldButton = null;
+        [SerializeField] public Button backButton = null;
+        [SerializeField] public CreateWorldModalView createWorldModal = null;
+        [SerializeField] public EditWorldModalView editWorldModal = null;
         [SerializeField] public WorldListView worldList = null;
 
         public void SetEnabled(bool enabled)

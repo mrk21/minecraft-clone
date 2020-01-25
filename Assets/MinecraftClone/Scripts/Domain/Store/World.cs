@@ -41,9 +41,9 @@ namespace MinecraftClone.Domain.Store
 
         public void Join()
         {
-            playSetting.Value = new PlaySetting();
-            player.Value = new Player();
-            currentDimension.Value = new Dimension(seed.Value);
+            if (playSetting.Value == null) playSetting.Value = new PlaySetting();
+            if (player.Value == null) player.Value = new Player();
+            if (currentDimension.Value == null) currentDimension.Value = new Dimension(seed.Value);
         }
     }
 }

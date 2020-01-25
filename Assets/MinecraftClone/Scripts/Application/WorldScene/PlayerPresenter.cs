@@ -132,7 +132,12 @@ namespace MinecraftClone.Application.WorldScene
 
         private void Init()
         {
-            view.Init(player.position.Value);
+            view.Init(
+                position: player.position.Value,
+                rotation: player.rotation.Value,
+                headRotation: player.headRotation.Value,
+                camera: typeToCamera[playSetting.cameraType.Value]
+            );
         }
 
         private void UpdatePlayerInfo()

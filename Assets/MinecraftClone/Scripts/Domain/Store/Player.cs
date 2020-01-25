@@ -29,6 +29,8 @@ namespace MinecraftClone.Domain.Store
         public void JoinDimension(Dimension dimension)
         {
             position.Value = new Vector3(60, ChunkFactory.MaxHeight, 60);
+            rotation.Value = Quaternion.identity;
+            headRotation.Value = Quaternion.AngleAxis(90.0f, Vector3.up);
             isOperable.Value = true;
             currentDimension.Value = dimension;
         }

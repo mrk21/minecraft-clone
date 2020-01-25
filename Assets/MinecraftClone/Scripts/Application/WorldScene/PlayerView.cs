@@ -19,21 +19,32 @@ namespace MinecraftClone.Application.WorldScene
         private float velocityScale;
         private Rigidbody myRigidbody;
 
-        void Start()
+        void Awake()
         {
             cameras = new Camera[] { mainCamera, subCamera1, subCamera2 };
             myRigidbody = GetComponent<Rigidbody>();
             velocityScale = 1f;
-
             currentCamera = new ReactiveProperty<Camera>(mainCamera);
+        }
+
+        void Start()
+        {
             currentCamera
                 .Subscribe(ChangeCamera)
                 .AddTo(gameObject);
         }
 
-        public void Init(Vector3 position)
+        public void Init(
+            Vector3 position,
+            Quaternion rotation,
+            Quaternion headRotation,
+            Camera camera
+        )
         {
             transform.position = position;
+            transform.rotation = rotation;
+            head.transform.rotation = headRotation;
+            currentCamera.Value = camera;
         }
 
         public void MoveGaze(float xRotation, float yRotation)

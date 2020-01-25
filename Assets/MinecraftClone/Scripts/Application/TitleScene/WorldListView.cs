@@ -12,6 +12,7 @@ namespace MinecraftClone.Application.TitleScene
 
         public ReactiveDictionary<string, WorldListItemView> items;
         public Subject<WorldListItemView> onClickJoinButton;
+        public Subject<WorldListItemView> onClickEditButton;
         public Subject<WorldListItemView> onClickDeleteButton;
 
         private void Awake()
@@ -19,6 +20,7 @@ namespace MinecraftClone.Application.TitleScene
             scrollView = GetComponent<ScrollRect>();
             items = new ReactiveDictionary<string, WorldListItemView>();
             onClickJoinButton = new Subject<WorldListItemView>();
+            onClickEditButton = new Subject<WorldListItemView>();
             onClickDeleteButton = new Subject<WorldListItemView>();
         }
 
@@ -38,6 +40,11 @@ namespace MinecraftClone.Application.TitleScene
             item.joinButton
                 .OnClickAsObservable()
                 .Subscribe(_ => onClickJoinButton.OnNext(item))
+                .AddTo(gameObject);
+
+            item.editButton
+                .OnClickAsObservable()
+                .Subscribe(_ => onClickEditButton.OnNext(item))
                 .AddTo(gameObject);
 
             item.deleteButton

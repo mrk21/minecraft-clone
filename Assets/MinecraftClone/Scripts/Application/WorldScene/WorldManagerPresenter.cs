@@ -13,10 +13,10 @@ namespace MinecraftClone.Application.WorldScene
         private World world = null;
         private Player player = null;
 
-        void Start()
+        private void Awake()
         {
             gameProgress = GameProgress.Get();
-            
+
             if (!gameProgress.currentWorld.HasValue || gameProgress.currentWorld.Value == null)
             {
                 world = gameProgress.MakeWorld(new Seed());
@@ -24,7 +24,10 @@ namespace MinecraftClone.Application.WorldScene
             }
             world = gameProgress.CurrentWorld;
             player = world.Player;
+        }
 
+        void Start()
+        {
             // GoToMenu
             Observable
                 .EveryUpdate()
