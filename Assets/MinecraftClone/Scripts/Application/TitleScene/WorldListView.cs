@@ -8,6 +8,7 @@ namespace MinecraftClone.Application.TitleScene
     class WorldListView : MonoBehaviour
     {
         [SerializeField] private RectTransform itemPrefab = null;
+        [SerializeField] private GameObject itemPrefabBase = null;
         private ScrollRect scrollView;
 
         public ReactiveDictionary<string, WorldListItemView> Items { get; }
@@ -16,6 +17,7 @@ namespace MinecraftClone.Application.TitleScene
         private void Awake()
         {
             scrollView = GetComponent<ScrollRect>();
+            Destroy(itemPrefabBase);
         }
 
         public void AddItem(Action<WorldListItemView> setter)
