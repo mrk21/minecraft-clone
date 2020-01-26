@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using UniRx;
-using MinecraftClone.Infrastructure;
-using MinecraftClone.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UniRx;
 using MinecraftClone.Domain.Store;
 
 namespace MinecraftClone.Application.WorldScene
@@ -19,13 +17,12 @@ namespace MinecraftClone.Application.WorldScene
         private Dictionary<Camera, PlaySetting.CameraType> cameraToTypes;
         private Dictionary<PlaySetting.CameraType, Camera> typeToCamera;
 
-        void Start()
+        void Awake()
         {
             view = GetComponent<PlayerView>();
-
             gameProgress = GameProgress.Get();
-            player = gameProgress.CurrentWorld.Player;
-            playSetting = gameProgress.CurrentWorld.PlaySetting;
+            player = gameProgress.CurrentWorld.Value.Player.Value;
+            playSetting = gameProgress.CurrentWorld.Value.PlaySetting.Value;
 
             cameraToTypes = new Dictionary<Camera, PlaySetting.CameraType>
             {
@@ -40,23 +37,26 @@ namespace MinecraftClone.Application.WorldScene
                 { PlaySetting.CameraType.sub1, view.subCamera1 },
                 { PlaySetting.CameraType.sub2, view.subCamera2 }
             };
+        }
 
+        void Start()
+        {
             // Init
-            player.currentDimension
+            player.CurrentDimension
                 .Subscribe(_ => Init())
                 .AddTo(gameObject);
 
             // SetPlayerPosition
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Subscribe(_ => UpdatePlayerInfo())
                 .AddTo(gameObject);
 
             // ToggleCamera
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.F5))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
                 .Subscribe(_ => ToggleCamera())
@@ -66,28 +66,28 @@ namespace MinecraftClone.Application.WorldScene
                 .Subscribe(SetCurrentCameraToModel)
                 .AddTo(gameObject);
 
-            playSetting.cameraType
+            playSetting.Camera
                 .Subscribe(SetCurrentCameraToView)
                 .AddTo(gameObject);
 
             // MoveGaze
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Subscribe(_ => MoveGaze())
                 .AddTo(gameObject);
 
             // SetVelocityScale
             Observable
                 .EveryFixedUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Subscribe(_ => SetVelocityScale())
                 .AddTo(gameObject);
 
             // MoveToForward
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.W))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
                 .Subscribe(_ => MoveToForward())
@@ -96,7 +96,7 @@ namespace MinecraftClone.Application.WorldScene
             // MoveToBack
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.S))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
                 .Subscribe(_ => MoveToBack())
@@ -105,7 +105,7 @@ namespace MinecraftClone.Application.WorldScene
             // MoveToLeft
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.A))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
                 .Subscribe(_ => MoveToLeft())
@@ -114,7 +114,7 @@ namespace MinecraftClone.Application.WorldScene
             // MoveToRight
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.D))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
                 .Subscribe(_ => MoveToRight())
@@ -123,7 +123,7 @@ namespace MinecraftClone.Application.WorldScene
             // Jump
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetKey(KeyCode.Space))
                 .BatchFrame(0, FrameCountType.FixedUpdate)
                 .Subscribe(_ => Jump())
@@ -133,19 +133,19 @@ namespace MinecraftClone.Application.WorldScene
         private void Init()
         {
             view.Init(
-                position: player.position.Value,
-                rotation: player.rotation.Value,
-                headRotation: player.headRotation.Value,
-                camera: typeToCamera[playSetting.cameraType.Value]
+                position: player.Position.Value,
+                rotation: player.Rotation.Value,
+                headRotation: player.HeadRotation.Value,
+                camera: typeToCamera[playSetting.Camera.Value]
             );
         }
 
         private void UpdatePlayerInfo()
         {
-            player.position.Value = view.transform.position;
-            player.rotation.Value = view.transform.rotation;
-            player.headRotation.Value = view.head.transform.rotation;
-            player.gaze.Value = view.mainCamera.ScreenPointToRay(Input.mousePosition);
+            player.Position.Value = view.transform.position;
+            player.Rotation.Value = view.transform.rotation;
+            player.HeadRotation.Value = view.head.transform.rotation;
+            player.Gaze.Value = view.mainCamera.ScreenPointToRay(Input.mousePosition);
         }
 
         private void ToggleCamera()
@@ -155,7 +155,7 @@ namespace MinecraftClone.Application.WorldScene
 
         private void SetCurrentCameraToModel(Camera currentCamera)
         {
-            playSetting.cameraType.Value = cameraToTypes[currentCamera];
+            playSetting.Camera.Value = cameraToTypes[currentCamera];
         }
 
         private void SetCurrentCameraToView(PlaySetting.CameraType cameraType)
@@ -165,14 +165,14 @@ namespace MinecraftClone.Application.WorldScene
 
         private void MoveGaze()
         {
-            var xRotation = playSetting.rotationSpeed.Value * Input.GetAxis("Mouse Y");
-            var yRotation = playSetting.rotationSpeed.Value * Input.GetAxis("Mouse X");
+            var xRotation = playSetting.RotationSpeed.Value * Input.GetAxis("Mouse Y");
+            var yRotation = playSetting.RotationSpeed.Value * Input.GetAxis("Mouse X");
             view.MoveGaze(xRotation, yRotation);
         }
 
         private void SetVelocityScale()
         {
-            view.SetVelocityScale(player.CurrentBlock());
+            view.SetVelocityScale(player.CurrentBlock.Value);
         }
 
         private void MoveToForward()

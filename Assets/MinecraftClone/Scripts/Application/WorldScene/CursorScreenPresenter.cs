@@ -14,13 +14,13 @@ namespace MinecraftClone.Application.WorldScene
         void Start()
         {
             gameProgress = GameProgress.Get();
-            playSetting = gameProgress.CurrentWorld.PlaySetting;
+            playSetting = gameProgress.CurrentWorld.Value.PlaySetting.Value;
 
             // SetEnabled()
             Observable
                 .Merge(
-                    playSetting.cameraType.AsUnitObservable(),
-                    gameProgress.worldIsActivated.AsUnitObservable()
+                    playSetting.Camera.AsUnitObservable(),
+                    gameProgress.WorldIsActivated.AsUnitObservable()
                 )
                 .BatchFrame(0, FrameCountType.Update)
                 .Subscribe(_ => SetEnabled())
@@ -29,7 +29,7 @@ namespace MinecraftClone.Application.WorldScene
 
         private void SetEnabled()
         {
-            var enabled = playSetting.cameraType.Value == PlaySetting.CameraType.main && gameProgress.worldIsActivated.Value;
+            var enabled = playSetting.Camera.Value == PlaySetting.CameraType.main && gameProgress.WorldIsActivated.Value;
             gameObject.SetActive(enabled);
         }
     }

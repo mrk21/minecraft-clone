@@ -17,12 +17,12 @@ namespace MinecraftClone.Application.WorldScene
         {
             view = GetComponent<TargetMarkerView>();
             gameProgress = GameProgress.Get();
-            player = gameProgress.CurrentWorld.Player;
+            player = gameProgress.CurrentWorld.Value.Player.Value;
 
             // DisplayWherePlayerWillOperate
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .Subscribe(_ => DisplayWherePlayerWillOperate())
                 .AddTo(gameObject);
@@ -30,7 +30,7 @@ namespace MinecraftClone.Application.WorldScene
 
         private void DisplayWherePlayerWillOperate()
         {
-            view.DisplayWhereRayHits(player.gaze.Value, player.operationRange.Value);
+            view.DisplayWhereRayHits(player.Gaze.Value, player.OperationRange.Value);
         }
     }
 }

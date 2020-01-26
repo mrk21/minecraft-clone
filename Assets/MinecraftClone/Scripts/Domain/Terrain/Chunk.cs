@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Infrastructure;
 
@@ -85,7 +86,10 @@ namespace MinecraftClone.Domain.Terrain
                 if (x < 0 || x >= Size || z < 0 || z >= Size) return null;
                 return blocks[x, y, z].Block;
             }
-            set { blocks[x, y, z].Block = value; }
+            set
+            {
+                blocks[x, y, z].Block = value;
+            }
         }
 
         public BaseBlock this[Vector3 position]

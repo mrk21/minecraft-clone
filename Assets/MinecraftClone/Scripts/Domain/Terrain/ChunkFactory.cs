@@ -21,8 +21,8 @@ namespace MinecraftClone.Domain.Terrain
         public Chunk Create()
         {
             var chunk = new Chunk(dimension, address);
-            var heightMap = new HeightMap(dimension.Seed.Dimension, address, MaxHeight);
-            var biomeMap = new BiomeMap(dimension.Seed.Temperature, dimension.Seed.Humidity, address);
+            var heightMap = new HeightMap(dimension.Seed.Dimension.Value, address, MaxHeight);
+            var biomeMap = new BiomeMap(dimension.Seed.Temperature.Value, dimension.Seed.Humidity.Value, address);
 
             heightMap.Generate();
             biomeMap.Generate();

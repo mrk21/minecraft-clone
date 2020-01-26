@@ -16,12 +16,12 @@ namespace MinecraftClone.Application.TitleScene
         void Start()
         {
             gameProgress = GameProgress.Get();
-            world = gameProgress.CurrentWorld;
+            world = gameProgress.CurrentWorld.Value;
 
             var menuScene = SceneManager.GetSceneByName("Menu");
             SceneManager.SetActiveScene(menuScene);
 
-            view.currentSeedField.text = world.currentDimension.Value.Seed.Base.ToString();
+            view.currentSeedField.text = world.CurrentDimension.Value.Seed.Base.ToString();
 
             view.closeMenuButton
                 .OnClickAsObservable()

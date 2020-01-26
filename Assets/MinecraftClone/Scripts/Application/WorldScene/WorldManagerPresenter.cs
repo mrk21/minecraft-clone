@@ -17,13 +17,13 @@ namespace MinecraftClone.Application.WorldScene
         {
             gameProgress = GameProgress.Get();
 
-            if (!gameProgress.currentWorld.HasValue || gameProgress.currentWorld.Value == null)
+            if (gameProgress.CurrentWorld == null)
             {
                 world = gameProgress.MakeWorld(new Seed());
-                gameProgress.JoinWorld(world.Id);
+                gameProgress.JoinWorld(world.Id.Value);
             }
-            world = gameProgress.CurrentWorld;
-            player = world.Player;
+            world = gameProgress.CurrentWorld.Value;
+            player = world.Player.Value;
         }
 
         void Start()
@@ -31,7 +31,7 @@ namespace MinecraftClone.Application.WorldScene
             // GoToMenu
             Observable
                 .EveryUpdate()
-                .Where(_ => gameProgress.worldIsActivated.Value)
+                .Where(_ => gameProgress.WorldIsActivated.Value)
                 .Where(_ => Input.GetKeyDown(KeyCode.Backspace))
                 .Subscribe(_ => GoToMenu())
                 .AddTo(gameObject);
@@ -39,12 +39,12 @@ namespace MinecraftClone.Application.WorldScene
             // Deactivate
             Observable
                 .EveryUpdate()
-                .Where(_ => gameProgress.worldIsActivated.Value)
+                .Where(_ => gameProgress.WorldIsActivated.Value)
                 .Where(_ => Input.GetKeyDown(KeyCode.Escape))
                 .Subscribe(_ => Deactivate())
                 .AddTo(gameObject);
 
-            gameProgress.worldIsActivated
+            gameProgress.WorldIsActivated
                 .Where(isActivated => !isActivated)
                 .Subscribe(_ => Deactivate())
                 .AddTo(gameObject);
@@ -52,19 +52,19 @@ namespace MinecraftClone.Application.WorldScene
             // Activate
             Observable
                 .EveryUpdate()
-                .Where(_ => gameProgress.worldIsActivated.Value)
+                .Where(_ => gameProgress.WorldIsActivated.Value)
                 .Where(_ => Input.GetMouseButtonDown(0))
                 .Subscribe(_ => Activate())
                 .AddTo(gameObject);
 
-            player.isOperable
+            player.IsOperable
                 .Where(is_ => is_)
                 .Subscribe(_ => Activate())
                 .AddTo(gameObject);
 
-            gameProgress.worldIsActivated
+            gameProgress.WorldIsActivated
                 .Where(isActivated => isActivated)
-                .Where(_ => player.currentDimension.HasValue)
+                .Where(_ => player.CurrentDimension.HasValue)
                 .Subscribe(_ => Activate())
                 .AddTo(gameObject);
         }
@@ -84,13 +84,13 @@ namespace MinecraftClone.Application.WorldScene
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            player.isOperable.Value = false;
+            player.IsOperable.Value = false;
         }
 
         private void Activate()
         {
             Cursor.lockState = CursorLockMode.Locked;
-            player.isOperable.Value = true;
+            player.IsOperable.Value = true;
         }
     }
 }

@@ -1,49 +1,38 @@
-﻿using MinecraftClone.Domain.Terrain;
+﻿using UniRx;
+using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Infrastructure;
-using UniRx;
 
 namespace MinecraftClone.Domain.Store
 {
-    public class World : IEntity<string>
+    public class World : IEntity<ReactiveProperty<string>>
     {
-        public ReactiveProperty<string> id;
-        public ReactiveProperty<string> name;
-        public ReactiveProperty<Seed> seed;
-        public ReactiveProperty<PlaySetting> playSetting;
-        public ReactiveProperty<Player> player;
-        public ReactiveProperty<Dimension> currentDimension;
+        public ReactiveProperty<string> Id { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<string> Name { get; } = new ReactiveProperty<string>();
+        public ReactiveProperty<Seed> Seed { get; } = new ReactiveProperty<Seed>();
+        public IReadOnlyReactiveProperty<PlaySetting> PlaySetting { get; }
+        public IReadOnlyReactiveProperty<Player> Player { get; }
+        public IReadOnlyReactiveProperty<Dimension> CurrentDimension { get; }
 
-        public string Id
-        {
-            get { return id.Value; }
-        }
-
-        public Player Player
-        {
-            get { return player.Value; }
-        }
-
-        public PlaySetting PlaySetting
-        {
-            get { return playSetting.Value; }
-        }
+        private ReactiveProperty<PlaySetting> PlaySetting_ { get; } = new ReactiveProperty<PlaySetting>();
+        private ReactiveProperty<Player> Player_ { get; } = new ReactiveProperty<Player>();
+        private ReactiveProperty<Dimension> CurrentDimension_ { get; } = new ReactiveProperty<Dimension>();
 
         public World(Seed seed, string name)
         {
-            id = new ReactiveProperty<string>(GetHashCode().ToString());
-            this.name = new ReactiveProperty<string>(name);
-            this.seed = new ReactiveProperty<Seed>(seed);
+            PlaySetting = PlaySetting_.ToReadOnlyReactiveProperty();
+            Player = Player_.ToReadOnlyReactiveProperty();
+            CurrentDimension = CurrentDimension_.ToReadOnlyReactiveProperty();
 
-            playSetting = new ReactiveProperty<PlaySetting>();
-            player = new ReactiveProperty<Player>();
-            currentDimension = new ReactiveProperty<Dimension>();
+            Id.Value = GetHashCode().ToString();
+            Name.Value = name;
+            Seed.Value = seed;
         }
 
         public void Join()
         {
-            if (playSetting.Value == null) playSetting.Value = new PlaySetting();
-            if (player.Value == null) player.Value = new Player();
-            if (currentDimension.Value == null) currentDimension.Value = new Dimension(seed.Value);
+            if (PlaySetting_.Value == null) PlaySetting_.Value = new PlaySetting();
+            if (Player_.Value == null) Player_.Value = new Player();
+            if (CurrentDimension_.Value == null) CurrentDimension_.Value = new Dimension(Seed.Value);
         }
     }
 }

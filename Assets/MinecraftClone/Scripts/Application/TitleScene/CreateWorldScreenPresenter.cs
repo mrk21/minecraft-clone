@@ -16,11 +16,14 @@ namespace MinecraftClone.Application.TitleScene
         private CreateWorldScreenView view;
         private GameProgress gameProgress;
 
-        void Start()
+        void Awake()
         {
             view = GetComponent<CreateWorldScreenView>();
-            gameProgress = Singleton<GameProgress>.Instance;
+            gameProgress = GameProgress.Get();
+        }
 
+        void Start()
+        {
             parent.currentScreen
                 .Subscribe(OnTransitionScreen)
                 .AddTo(gameObject);
@@ -34,15 +37,6 @@ namespace MinecraftClone.Application.TitleScene
                 .OnClickAsObservable()
                 .Subscribe(_ => OnClickNewWorldButton())
                 .AddTo(gameObject);
-
-            view.worldList.onClickJoinButton
-                .Subscribe(OnClickJoinWorldButton);
-
-            view.worldList.onClickEditButton
-                .Subscribe(OnClickEditWorldButton);
-
-            view.worldList.onClickDeleteButton
-                .Subscribe(OnClickDeleteWorldButton);
 
             // edit world modal
             view.editWorldModal.saveButton
@@ -67,14 +61,14 @@ namespace MinecraftClone.Application.TitleScene
                 .AddTo(gameObject);
 
             // world list
-            gameProgress.worldList
+            gameProgress.WorldList
                 .ObserveAdd()
                 .Subscribe(item => AddItem(item.Value))
                 .AddTo(gameObject);
 
-            gameProgress.worldList
+            gameProgress.WorldList
                 .ObserveRemove()
-                .Subscribe(item => view.worldList.DeleteItem(item.Key))
+                .Subscribe(item => DeleteItem(item.Value))
                 .AddTo(gameObject);
 
             OnCloseEditModal();
@@ -84,16 +78,33 @@ namespace MinecraftClone.Application.TitleScene
 
         private void Render()
         {
-            gameProgress.worldList.Values.ToList().ForEach(AddItem);
+            gameProgress.WorldList.Values.ToList().ForEach(AddItem);
         }
 
-        private void OnUpdateWorld()
+        private void OnTransitionScreen(TitleManagerPresenter.ScreenType currentScreen)
         {
-            var modal = view.editWorldModal;
-            var world = gameProgress.worldList[modal.worldId];
-            world.name.Value = modal.worldNameField.text;
-            view.worldList.items[world.Id].worldName.text = world.name.Value;
-            view.editWorldModal.SetEnabled(false);
+            var enabled = currentScreen == TitleManagerPresenter.ScreenType.CreateWorld;
+            if (!enabled) view.createWorldModal.SetEnabled(false);
+            view.SetEnabled(enabled);
+        }
+
+        // back
+        private void OnClickBackButton()
+        {
+            parent.currentScreen.Value = TitleManagerPresenter.ScreenType.Top;
+        }
+
+        // new
+        private void OnClickNewWorldButton()
+        {
+            OnCloseEditModal();
+            view.createWorldModal.Init(worldName: "New World", worldSeed: "");
+            view.createWorldModal.SetEnabled(true);
+        }
+
+        private void OnCloseCreateModal()
+        {
+            view.createWorldModal.SetEnabled(false);
         }
 
         private void OnCreateWorld()
@@ -115,65 +126,81 @@ namespace MinecraftClone.Application.TitleScene
             OnCloseCreateModal();
         }
 
-        private void OnCloseEditModal()
+        private void AddItem(World world)
         {
-            view.editWorldModal.SetEnabled(false);
+            view.worldList.AddItem(item =>
+            {
+                world.Id
+                    .Subscribe(value => item.worldId = value)
+                    .AddTo(item.gameObject);
+
+                world.Name
+                    .Subscribe(value => item.worldName.text = value)
+                    .AddTo(item.gameObject);
+
+                world.Seed.Value.Base
+                    .Subscribe(value => item.worldSeed.text = value.ToString())
+                    .AddTo(item.gameObject);
+
+                item.joinButton
+                    .OnClickAsObservable()
+                    .Subscribe(_ => OnClickJoinWorldButton(item))
+                    .AddTo(item.gameObject);
+
+                item.editButton
+                    .OnClickAsObservable()
+                    .Subscribe(_ => OnClickEditWorldButton(item))
+                    .AddTo(item.gameObject);
+
+                item.deleteButton
+                    .OnClickAsObservable()
+                    .Subscribe(_ => OnClickDeleteWorldButton(item))
+                    .AddTo(item.gameObject);
+            });
         }
 
-        private void OnCloseCreateModal()
-        {
-            view.createWorldModal.SetEnabled(false);
-        }
-
-        private void OnTransitionScreen(TitleManagerPresenter.ScreenType currentScreen)
-        {
-            var enabled = currentScreen == TitleManagerPresenter.ScreenType.CreateWorld;
-            if (!enabled) view.createWorldModal.SetEnabled(false);
-            view.SetEnabled(enabled);
-        }
-
-        private void OnClickBackButton()
-        {
-            parent.currentScreen.Value = TitleManagerPresenter.ScreenType.Top;
-        }
-
+        // join
         private void OnClickJoinWorldButton(WorldListItemView item)
         {
             gameProgress.JoinWorld(item.worldId);
             SceneManager.LoadScene("World");
         }
 
+        // edit
         private void OnClickEditWorldButton(WorldListItemView item)
         {
             OnCloseCreateModal();
-            var world = gameProgress.worldList[item.worldId];
+            var world = gameProgress.WorldList[item.worldId];
             view.editWorldModal.Init(
-                worldId: world.Id,
-                worldName: world.name.Value,
-                worldSeed: world.seed.Value.Base.ToString()
+                worldId: world.Id.Value,
+                worldName: world.Name.Value,
+                worldSeed: world.Seed.Value.Base.ToString()
             );
             view.editWorldModal.SetEnabled(true);
         }
 
+        private void OnCloseEditModal()
+        {
+            view.editWorldModal.SetEnabled(false);
+        }
+
+        private void OnUpdateWorld()
+        {
+            var modal = view.editWorldModal;
+            var world = gameProgress.WorldList[modal.worldId];
+            world.Name.Value = modal.worldNameField.text;
+            view.editWorldModal.SetEnabled(false);
+        }
+
+        // delete
         private void OnClickDeleteWorldButton(WorldListItemView item)
         {
-            gameProgress.worldList.Remove(item.worldId);
+            gameProgress.WorldList.Remove(item.worldId);
         }
 
-        private void OnClickNewWorldButton()
+        private void DeleteItem(World world)
         {
-            OnCloseEditModal();
-            view.createWorldModal.Init(worldName: "New World", worldSeed: "");
-            view.createWorldModal.SetEnabled(true);
-        }
-
-        private void AddItem(World world)
-        {
-            view.worldList.AddItem(
-                id: world.Id,
-                name: world.name.Value,
-                seed: world.seed.Value
-            );
+            view.worldList.DeleteItem(world.Id.Value);
         }
     }
 }

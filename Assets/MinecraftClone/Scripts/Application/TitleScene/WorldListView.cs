@@ -1,4 +1,4 @@
-﻿using MinecraftClone.Domain;
+﻿using System;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,55 +10,26 @@ namespace MinecraftClone.Application.TitleScene
         [SerializeField] private RectTransform itemPrefab = null;
         private ScrollRect scrollView;
 
-        public ReactiveDictionary<string, WorldListItemView> items;
-        public Subject<WorldListItemView> onClickJoinButton;
-        public Subject<WorldListItemView> onClickEditButton;
-        public Subject<WorldListItemView> onClickDeleteButton;
+        public ReactiveDictionary<string, WorldListItemView> Items { get; }
+            = new ReactiveDictionary<string, WorldListItemView>();
 
         private void Awake()
         {
             scrollView = GetComponent<ScrollRect>();
-            items = new ReactiveDictionary<string, WorldListItemView>();
-            onClickJoinButton = new Subject<WorldListItemView>();
-            onClickEditButton = new Subject<WorldListItemView>();
-            onClickDeleteButton = new Subject<WorldListItemView>();
         }
 
-        public void AddItem(string id, string name, Seed seed)
+        public void AddItem(Action<WorldListItemView> setter)
         {
-            if (items.ContainsKey(id)) return;
-
-            var itemGameObject = GameObject.Instantiate(itemPrefab) as RectTransform;
-            itemGameObject.SetParent(scrollView.content.transform, false);
-
-            var item = itemGameObject.GetComponent<WorldListItemView>();
-
-            item.worldId = id;
-            item.worldName.text = name;
-            item.worldSeed.text = seed.Base.ToString();
-
-            item.joinButton
-                .OnClickAsObservable()
-                .Subscribe(_ => onClickJoinButton.OnNext(item))
-                .AddTo(gameObject);
-
-            item.editButton
-                .OnClickAsObservable()
-                .Subscribe(_ => onClickEditButton.OnNext(item))
-                .AddTo(gameObject);
-
-            item.deleteButton
-                .OnClickAsObservable()
-                .Subscribe(_ => onClickDeleteButton.OnNext(item))
-                .AddTo(gameObject);
-
-            items.Add(id, item);
+            var item = Instantiate(itemPrefab).GetComponent<WorldListItemView>();
+            setter(item);
+            item.GetComponent<RectTransform>().SetParent(scrollView.content.transform, false);
+            Items.Add(item.worldId, item);
         }
 
         public void DeleteItem(string id)
         {
-            Destroy(items[id].gameObject);
-            items.Remove(id);
+            Destroy(Items[id].gameObject);
+            Items.Remove(id);
         }
     }
 }

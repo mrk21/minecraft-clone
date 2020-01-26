@@ -8,60 +8,51 @@ namespace MinecraftClone.Domain.Store
     public class GameProgress
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Init()
-        {
-            var _ = Singleton<GameProgress>.Instance;
-        }
-
         public static GameProgress Get()
         {
             return Singleton<GameProgress>.Instance;
         }
 
-        public ReactiveProperty<bool> worldIsActivated;
-        public ReactiveProperty<World> currentWorld;
-        public ReactiveDictionary<string, World> worldList;
+        public ReactiveDictionary<string, World> WorldList { get; } = new ReactiveDictionary<string, World>();
+        public IReadOnlyReactiveProperty<World> CurrentWorld { get; }
+        public IReadOnlyReactiveProperty<bool> WorldIsActivated { get; }
+
+        private ReactiveProperty<World> CurrentWorld_ { get; } = new ReactiveProperty<World>();
+        private ReactiveProperty<bool> WorldIsActivated_ { get; } = new ReactiveProperty<bool>(false);
 
         public GameProgress()
         {
-            worldIsActivated = new ReactiveProperty<bool>(false);
-            worldList = new ReactiveDictionary<string, World>();
-            currentWorld = new ReactiveProperty<World>();
-
+            CurrentWorld = CurrentWorld_.ToReadOnlyReactiveProperty();
+            WorldIsActivated = WorldIsActivated_.ToReadOnlyReactiveProperty();
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
-        }
-
-        public World CurrentWorld
-        {
-            get { return currentWorld.Value; }
         }
 
         public World MakeWorld(Seed seed, string name = null)
         {
             var world = new World(
                 seed: seed,
-                name: name ?? $"New World {(worldList.Count + 1).ToString()}"
+                name: name ?? $"New World {(WorldList.Count + 1).ToString()}"
             );
-            worldList.Add(world.Id, world);
+            WorldList.Add(world.Id.Value, world);
             return world;
         }
 
         public void JoinWorld(string id)
         {
-            var world = worldList[id];
+            var world = WorldList[id];
             world.Join();
-            currentWorld.Value = world;
+            CurrentWorld_.Value = world;
         }
 
         private void OnActiveSceneChanged(Scene prev, Scene next)
         {
             if (prev.name == "World")
             {
-                worldIsActivated.Value = false;
+                WorldIsActivated_.Value = false;
             }
             else if (next.name == "World")
             {
-                worldIsActivated.Value = true;
+                WorldIsActivated_.Value = true;
             }
         }
     }

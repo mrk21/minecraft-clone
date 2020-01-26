@@ -1,40 +1,56 @@
-using System.Collections.Generic;
+using UniRx;
 
 namespace MinecraftClone.Domain
 {
     public class Seed
     {
-        private int baseSeed;
-        private int[] seeds;
+        public ReactiveProperty<int> Base { get; } = new ReactiveProperty<int>();
+        public IReadOnlyReactiveProperty<int> Dimension { get; }
+        public IReadOnlyReactiveProperty<int> Temperature { get; }
+        public IReadOnlyReactiveProperty<int> Humidity { get; }
+
+        private ReactiveProperty<int> Dimension_ { get; } = new ReactiveProperty<int>();
+        private ReactiveProperty<int> Temperature_ { get; } = new ReactiveProperty<int>();
+        private ReactiveProperty<int> Humidity_ { get; } = new ReactiveProperty<int>();
 
         public Seed()
         {
-            baseSeed = GetHashCode();
+            Dimension = Dimension_.ToReadOnlyReactiveProperty();
+            Temperature = Temperature_.ToReadOnlyReactiveProperty();
+            Humidity = Humidity_.ToReadOnlyReactiveProperty();
+
             Init();
+
+            Base.Value = GetHashCode();
         }
 
         public Seed(int baseSeed)
         {
-            this.baseSeed = baseSeed;
+            Dimension = Dimension_.ToReadOnlyReactiveProperty();
+            Temperature = Temperature_.ToReadOnlyReactiveProperty();
+            Humidity = Humidity_.ToReadOnlyReactiveProperty();
+
             Init();
+
+            Base.Value = baseSeed;
         }
 
         private void Init()
         {
-            var rand = new System.Random(baseSeed);
-            var max = (int)System.Math.Pow(2, 16) - 1;
-            seeds = new int[100];
-
-            for (var i = 0; i < seeds.Length; i++)
+            Base.Subscribe(value =>
             {
-                seeds[i] = rand.Next(0, max);
-            }
+                var rand = new System.Random(value);
+                var max = (int)System.Math.Pow(2, 16) - 1;
+                var seeds = new int[100];
+
+                for (var i = 0; i < seeds.Length; i++)
+                {
+                    seeds[i] = rand.Next(0, max);
+                }
+                Dimension_.Value = seeds[0];
+                Temperature_.Value = seeds[10];
+                Humidity_.Value = seeds[11];
+            });
         }
-
-        public int Base { get { return baseSeed; } }
-
-        public int Dimension { get { return seeds[0]; } }
-        public int Temperature { get { return seeds[10]; } }
-        public int Humidity { get { return seeds[11]; } }
     }
 }

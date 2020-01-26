@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain.Block;
-using MinecraftClone.Domain;
 
 namespace MinecraftClone.Domain.Terrain
 {
@@ -50,7 +50,7 @@ namespace MinecraftClone.Domain.Terrain
 
         public int Id
         {
-            get { return seed.Dimension; }
+            get { return seed.Dimension.Value; }
         }
 
         public BlockAccessProxy Blocks

@@ -19,11 +19,11 @@ namespace MinecraftClone.Application.WorldScene
         {
             view = GetComponent<TerrainView>();
             gameProgress = GameProgress.Get();
-            world = gameProgress.CurrentWorld;
-            player = world.Player;
+            world = gameProgress.CurrentWorld.Value;
+            player = world.Player.Value;
 
             // JoinWorld
-            world.currentDimension
+            world.CurrentDimension
                 .Where(dimension => dimension != null)
                 .Subscribe(JoinDimension)
                 .AddTo(gameObject);
@@ -31,7 +31,7 @@ namespace MinecraftClone.Application.WorldScene
             // Draw
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => !view.isDrawing.Value)
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .Subscribe(_ => Draw())
@@ -40,7 +40,7 @@ namespace MinecraftClone.Application.WorldScene
             // PutBlock
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetMouseButtonDown(1))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .Subscribe(_ => PutBlock())
@@ -49,7 +49,7 @@ namespace MinecraftClone.Application.WorldScene
             // RemoveBlock
             Observable
                 .EveryUpdate()
-                .Where(_ => player.isOperable.Value)
+                .Where(_ => player.IsOperable.Value)
                 .Where(_ => Input.GetMouseButtonDown(0))
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
                 .Subscribe(_ => RemoveBlock())
@@ -64,17 +64,17 @@ namespace MinecraftClone.Application.WorldScene
 
         private void Draw()
         {
-            view.DrawArroundChunk(player.CurrentChunk());
+            view.DrawArroundChunk(player.CurrentChunk.Value);
         }
 
         private void PutBlock()
         {
-            view.PutBlock(player.gaze.Value, player.operationRange.Value);
+            view.PutBlock(player.Gaze.Value, player.OperationRange.Value);
         }
 
         private void RemoveBlock()
         {
-            view.RemoveBlock(player.gaze.Value, player.operationRange.Value);
+            view.RemoveBlock(player.Gaze.Value, player.OperationRange.Value);
         }
     }
 }

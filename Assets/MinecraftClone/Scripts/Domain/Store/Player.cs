@@ -7,44 +7,45 @@ namespace MinecraftClone.Domain.Store
 {
     public class Player
     {
-        public ReactiveProperty<bool> isOperable;
-        public ReactiveProperty<Vector3> position;
-        public ReactiveProperty<Quaternion> rotation;
-        public ReactiveProperty<Quaternion> headRotation;
-        public ReactiveProperty<Ray> gaze;
-        public ReactiveProperty<float> operationRange;
-        public ReactiveProperty<Dimension> currentDimension;
-        
+        public ReactiveProperty<bool> IsOperable { get; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<Vector3> Position { get; } = new ReactiveProperty<Vector3>();
+        public ReactiveProperty<Quaternion> Rotation { get; } = new ReactiveProperty<Quaternion>();
+        public ReactiveProperty<Quaternion> HeadRotation { get; } = new ReactiveProperty<Quaternion>();
+        public ReactiveProperty<Ray> Gaze { get; } = new ReactiveProperty<Ray>();
+        public ReactiveProperty<float> OperationRange { get; } = new ReactiveProperty<float>(10f);
+        public IReadOnlyReactiveProperty<Dimension> CurrentDimension { get; }
+        public IReadOnlyReactiveProperty<Chunk> CurrentChunk { get; }
+        public IReadOnlyReactiveProperty<BaseBlock> CurrentBlock { get; }
+
+        private ReactiveProperty<Dimension> CurrentDimension_ { get; } = new ReactiveProperty<Dimension>();
+        private ReactiveProperty<Chunk> CurrentChunk_ { get; } = new ReactiveProperty<Chunk>();
+        private ReactiveProperty<BaseBlock> CurrentBlock_ { get; } = new ReactiveProperty<BaseBlock>();
+
         public Player()
         {
-            isOperable = new ReactiveProperty<bool>(false);
-            position = new ReactiveProperty<Vector3>();
-            rotation = new ReactiveProperty<Quaternion>();
-            headRotation = new ReactiveProperty<Quaternion>();
-            gaze = new ReactiveProperty<Ray>();
-            operationRange = new ReactiveProperty<float>(10f);
-            currentDimension = new ReactiveProperty<Dimension>();
+            CurrentDimension = CurrentDimension_.ToReadOnlyReactiveProperty();
+            CurrentChunk = CurrentChunk_.ToReadOnlyReactiveProperty();
+            CurrentBlock = CurrentBlock_.ToReadOnlyReactiveProperty();
+
+            Observable.Merge(
+                Position.AsUnitObservable(),
+                CurrentDimension.AsUnitObservable()
+            )
+                .Where(_ => Position.Value != null && CurrentDimension.Value != null)
+                .Subscribe(_ =>
+                {
+                    CurrentChunk_.Value = CurrentDimension.Value[Position.Value];
+                    CurrentBlock_.Value = CurrentDimension.Value.Blocks[Position.Value + 1.5f * Vector3.down];
+                });
         }
 
         public void JoinDimension(Dimension dimension)
         {
-            position.Value = new Vector3(60, ChunkFactory.MaxHeight, 60);
-            rotation.Value = Quaternion.identity;
-            headRotation.Value = Quaternion.AngleAxis(90.0f, Vector3.up);
-            isOperable.Value = true;
-            currentDimension.Value = dimension;
-        }
-
-        public Chunk CurrentChunk()
-        {
-            if (!currentDimension.HasValue) throw new System.Exception("User does not join dimension!");
-            return currentDimension.Value[position.Value];
-        }
-
-        public BaseBlock CurrentBlock()
-        {
-            if (!currentDimension.HasValue) throw new System.Exception("User does not join dimension!");
-            return currentDimension.Value.Blocks[position.Value + 1.5f * Vector3.down];
+            Position.Value = new Vector3(60, ChunkFactory.MaxHeight, 60);
+            Rotation.Value = Quaternion.identity;
+            HeadRotation.Value = Quaternion.AngleAxis(90.0f, Vector3.up);
+            IsOperable.Value = true;
+            CurrentDimension_.Value = dimension;
         }
     }
 }
