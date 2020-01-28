@@ -2,11 +2,11 @@
 using UnityEngine.SceneManagement;
 using UniRx;
 using MinecraftClone.Domain;
-using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain.Store;
 
 namespace MinecraftClone.Application.WorldScene
 {
+    [DefaultExecutionOrder(-1)]
     class WorldManagerPresenter : MonoBehaviour
     {
         private GameProgress gameProgress = null;
@@ -17,7 +17,7 @@ namespace MinecraftClone.Application.WorldScene
         {
             gameProgress = GameProgress.Get();
 
-            if (gameProgress.CurrentWorld == null)
+            if (gameProgress.CurrentWorld.Value == null)
             {
                 world = gameProgress.MakeWorld(new Seed());
                 gameProgress.JoinWorld(world.Id.Value);

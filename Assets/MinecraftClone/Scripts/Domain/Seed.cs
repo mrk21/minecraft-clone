@@ -19,8 +19,7 @@ namespace MinecraftClone.Domain
             Temperature = Temperature_.ToReadOnlyReactiveProperty();
             Humidity = Humidity_.ToReadOnlyReactiveProperty();
 
-            Init();
-
+            Base.Subscribe(Init);
             Base.Value = GetHashCode();
         }
 
@@ -30,27 +29,23 @@ namespace MinecraftClone.Domain
             Temperature = Temperature_.ToReadOnlyReactiveProperty();
             Humidity = Humidity_.ToReadOnlyReactiveProperty();
 
-            Init();
-
+            Base.Subscribe(Init);
             Base.Value = baseSeed;
         }
 
-        private void Init()
+        private void Init(int baseSeed)
         {
-            Base.Subscribe(value =>
-            {
-                var rand = new System.Random(value);
-                var max = (int)System.Math.Pow(2, 16) - 1;
-                var seeds = new int[100];
+            var rand = new System.Random(baseSeed);
+            var max = (int)System.Math.Pow(2, 16) - 1;
+            var seeds = new int[100];
 
-                for (var i = 0; i < seeds.Length; i++)
-                {
-                    seeds[i] = rand.Next(0, max);
-                }
-                Dimension_.Value = seeds[0];
-                Temperature_.Value = seeds[10];
-                Humidity_.Value = seeds[11];
-            });
+            for (var i = 0; i < seeds.Length; i++)
+            {
+                seeds[i] = rand.Next(0, max);
+            }
+            Dimension_.Value = seeds[0];
+            Temperature_.Value = seeds[10];
+            Humidity_.Value = seeds[11];
         }
     }
 }

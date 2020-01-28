@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 using UniRx;
 using MinecraftClone.Domain;
 using MinecraftClone.Domain.Store;
-using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Application.TitleScene
 {
