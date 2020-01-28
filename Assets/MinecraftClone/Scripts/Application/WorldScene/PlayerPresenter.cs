@@ -23,20 +23,6 @@ namespace MinecraftClone.Application.WorldScene
             gameProgress = GameProgress.Get();
             player = gameProgress.CurrentWorld.Value.Player.Value;
             playSetting = gameProgress.CurrentWorld.Value.PlaySetting.Value;
-
-            cameraToTypes = new Dictionary<Camera, PlaySetting.CameraType>
-            {
-                { view.mainCamera, PlaySetting.CameraType.main },
-                { view.subCamera1, PlaySetting.CameraType.sub1 },
-                { view.subCamera2, PlaySetting.CameraType.sub2 }
-            };
-
-            typeToCamera = new Dictionary<PlaySetting.CameraType, Camera>
-            {
-                { PlaySetting.CameraType.main, view.mainCamera },
-                { PlaySetting.CameraType.sub1, view.subCamera1 },
-                { PlaySetting.CameraType.sub2, view.subCamera2 }
-            };
         }
 
         void Start()
@@ -132,6 +118,20 @@ namespace MinecraftClone.Application.WorldScene
 
         private void Init()
         {
+            cameraToTypes = new Dictionary<Camera, PlaySetting.CameraType>
+            {
+                { view.mainCamera, PlaySetting.CameraType.main },
+                { view.subCamera1, PlaySetting.CameraType.sub1 },
+                { view.subCamera2, PlaySetting.CameraType.sub2 }
+            };
+
+            typeToCamera = new Dictionary<PlaySetting.CameraType, Camera>
+            {
+                { PlaySetting.CameraType.main, view.mainCamera },
+                { PlaySetting.CameraType.sub1, view.subCamera1 },
+                { PlaySetting.CameraType.sub2, view.subCamera2 }
+            };
+
             view.Init(
                 position: player.Position.Value,
                 rotation: player.Rotation.Value,

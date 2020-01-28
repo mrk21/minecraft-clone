@@ -1,0 +1,13 @@
+--- ForcedReset.cs.old	2018-08-04 15:18:18.000000000 +0900
++++ ForcedReset.cs	2020-01-29 01:45:09.000000000 +0900
+@@ -2,8 +2,9 @@
+ using UnityEngine;
+ using UnityEngine.SceneManagement;
+ using UnityStandardAssets.CrossPlatformInput;
++using UnityEngine.UI;
+ 
+-[RequireComponent(typeof (GUITexture))]
++[RequireComponent(typeof (Image))]
+ public class ForcedReset : MonoBehaviour
+ {
+     private void Update()

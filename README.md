@@ -4,7 +4,7 @@
 
 ## Middlewares/Tools
 
-* Unity 2019.2.17f1
+* Unity 2019.3.0f6
 * ImageMagick
 
 ## Setup
@@ -15,6 +15,16 @@ Please import the following assets from Unity Asset Store:
 
 * [Standard Assets (for Unity 2017.3) - Asset Store](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351)
 * [UniRx - Reactive Extensions for Unity - Asset Store](https://assetstore.unity.com/packages/tools/integration/unirx-reactive-extensions-for-unity-17276)
+
+#### Fix Standard Assets errors on Unity 2019.3
+
+```sh
+cp Patches/Standard\ Assets/Utility/*.patch Assets/Standard\ Assets/Utility/
+cd Assets/Standard\ Assets/Utility/
+patch -u < *.patch
+```
+
+**See:** [Unity 2019.3 で Standard Assets をインポートした際に発生する 'GUITexture' is obsolete というエラーの対処方法 - Unity Connect](https://connect.unity.com/p/standard-assets-guitexture-and-guitext-are-obsolete)
 
 ### Block texture generation
 

@@ -1,0 +1,18 @@
+--- SimpleActivatorMenu.cs.old	2018-08-04 15:18:19.000000000 +0900
++++ SimpleActivatorMenu.cs	2020-01-29 01:46:12.000000000 +0900
+@@ -1,5 +1,6 @@
+ using System;
+ using UnityEngine;
++using UnityEngine.UI;
+ 
+ namespace UnityStandardAssets.Utility
+ {
+@@ -7,7 +8,7 @@
+     {
+         // An incredibly simple menu which, when given references
+         // to gameobjects in the scene
+-        public GUIText camSwitchButton;
++        public Text camSwitchButton;
+         public GameObject[] objects;
+ 
+ 
