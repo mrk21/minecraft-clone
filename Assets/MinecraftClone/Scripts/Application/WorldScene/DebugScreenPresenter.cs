@@ -34,10 +34,10 @@ namespace MinecraftClone.Application.WorldScene
                 .AddTo(gameObject);
 
             // ToggleDebugScreen
-            Observable
-                .EveryUpdate()
+            InputManager.Get().OnKey
                 .Where(_ => gameProgress.WorldIsActivated.Value)
-                .Where(_ => Input.GetKeyDown(KeyCode.F2))
+                .Where(k => playSetting.IsInput(k, PlaySetting.InputType.ToggleDebugScreen))
+                .ThrottleFirst(TimeSpan.FromSeconds(0.2f))
                 .Subscribe(_ => ToggleDebugScreen())
                 .AddTo(gameObject);
 

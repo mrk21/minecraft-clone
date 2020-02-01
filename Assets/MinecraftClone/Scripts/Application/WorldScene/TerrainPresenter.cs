@@ -1,8 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UniRx;
-using MinecraftClone.Domain;
-using MinecraftClone.Infrastructure;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Store;
 
@@ -38,20 +36,12 @@ namespace MinecraftClone.Application.WorldScene
                 .AddTo(gameObject);
 
             // PutBlock
-            Observable
-                .EveryUpdate()
-                .Where(_ => player.IsOperable.Value)
-                .Where(_ => Input.GetMouseButtonDown(1))
-                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
+            player.OnPut
                 .Subscribe(_ => PutBlock())
                 .AddTo(gameObject);
 
             // RemoveBlock
-            Observable
-                .EveryUpdate()
-                .Where(_ => player.IsOperable.Value)
-                .Where(_ => Input.GetMouseButtonDown(0))
-                .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
+            player.OnRemove
                 .Subscribe(_ => RemoveBlock())
                 .AddTo(gameObject);
         }

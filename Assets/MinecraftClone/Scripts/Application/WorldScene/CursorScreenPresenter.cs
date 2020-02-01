@@ -29,7 +29,7 @@ namespace MinecraftClone.Application.WorldScene
 
         private void SetEnabled()
         {
-            var enabled = playSetting.Camera.Value == PlaySetting.CameraType.main && gameProgress.WorldIsActivated.Value;
+            var enabled = playSetting.Camera.Value == PlaySetting.CameraType.Main && gameProgress.WorldIsActivated.Value;
             gameObject.SetActive(enabled);
         }
     }

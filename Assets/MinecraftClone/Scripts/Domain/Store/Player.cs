@@ -17,6 +17,15 @@ namespace MinecraftClone.Domain.Store
         public IReadOnlyReactiveProperty<Chunk> CurrentChunk { get; }
         public IReadOnlyReactiveProperty<BaseBlock> CurrentBlock { get; }
 
+        public Subject<Unit> OnMoveGaze { get; } = new Subject<Unit>();
+        public Subject<Unit> OnMoveToForward { get; } = new Subject<Unit>();
+        public Subject<Unit> OnMoveToBack { get; } = new Subject<Unit>();
+        public Subject<Unit> OnMoveToLeft { get; } = new Subject<Unit>();
+        public Subject<Unit> OnMoveToRight { get; } = new Subject<Unit>();
+        public Subject<Unit> OnJump { get; } = new Subject<Unit>();
+        public Subject<Unit> OnPut { get; } = new Subject<Unit>();
+        public Subject<Unit> OnRemove { get; } = new Subject<Unit>();
+
         private ReactiveProperty<Dimension> CurrentDimension_ { get; } = new ReactiveProperty<Dimension>();
         private ReactiveProperty<Chunk> CurrentChunk_ { get; } = new ReactiveProperty<Chunk>();
         private ReactiveProperty<BaseBlock> CurrentBlock_ { get; } = new ReactiveProperty<BaseBlock>();
