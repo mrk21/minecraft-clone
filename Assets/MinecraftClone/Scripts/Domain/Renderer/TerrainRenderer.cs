@@ -9,11 +9,11 @@ namespace MinecraftClone.Domain.Renderer
         private GameObject chunkPrefab;
         private GameObject target;
 
-        public TerrainRenderer(Dimension dimension, GameObject target)
+        public TerrainRenderer(Dimension dimension, GameObject target, GameObject chunkPrefab)
         {
             this.dimension = dimension;
             this.target = target;
-            this.chunkPrefab = Resources.Load("Prefabs/Chunk") as GameObject;
+            this.chunkPrefab = chunkPrefab;
         }
 
         public void Init()

@@ -10,6 +10,7 @@ namespace MinecraftClone.Application.WorldScene
 {
     class TerrainView : MonoBehaviour
     {
+        [SerializeField] private GameObject chunkPrefab = null;
         public ReactiveProperty<bool> isDrawing;
         private TerrainRenderer terrainRenderer;
         private Dimension dimension;
@@ -22,7 +23,7 @@ namespace MinecraftClone.Application.WorldScene
         public void Init(Dimension dimension)
         {
             this.dimension = dimension;
-            terrainRenderer = new TerrainRenderer(dimension, gameObject);
+            terrainRenderer = new TerrainRenderer(dimension, gameObject, chunkPrefab);
             terrainRenderer.Init();
         }
 

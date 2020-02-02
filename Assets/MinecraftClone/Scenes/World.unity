@@ -1104,6 +1104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e196aa159884aa299162b6e6800f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chunkPrefab: {fileID: 189380, guid: d8ee94920bf7c467ca49f0ee4d986f02, type: 3}
 --- !u!4 &1251178232
 Transform:
   m_ObjectHideFlags: 0
