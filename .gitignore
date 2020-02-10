@@ -32,3 +32,6 @@ sysinfo.txt
 # Others
 .DS_Store
 /.vs/
+.envrc.local
+*.ulf
+*.alf

@@ -4,8 +4,14 @@
 
 ## Middlewares/Tools
 
-* Unity 2019.3.0f6
+* Unity: 2019.3.0f6
 * ImageMagick
+* Ruby
+
+## Assets
+
+* StandardAssets
+* UniRx: 7.1.0
 
 ## Setup
 
@@ -14,7 +20,6 @@
 Please import the following assets from Unity Asset Store:
 
 * [Standard Assets (for Unity 2017.3) - Asset Store](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351)
-* [UniRx - Reactive Extensions for Unity - Asset Store](https://assetstore.unity.com/packages/tools/integration/unirx-reactive-extensions-for-unity-17276)
 
 #### Fix Standard Assets errors on Unity 2019.3
 

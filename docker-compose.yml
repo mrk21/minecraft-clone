@@ -4,7 +4,37 @@ services:
   app:
     image: nginx
     init: true
+    depends_on:
+      - unity
     volumes:
-      - ./build:/usr/share/nginx/html
+      - .:/app
+      - ./Docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - 80:80
+      - ${DOCKER_HOST_NGINX_PORT:-80}:80
+
+  unity:
+    build:
+      context: .
+      dockerfile: Docker/unity/Dockerfile
+    init: true
+    command: bash -c 'while :; do sleep 1; done'
+    volumes:
+      - .:/app
+      - unity_logs:/app/Logs/
+      - unity_library:/app/Library/
+      - unity_temp:/app/Temp/
+      - unity_obj:/app/obj/
+    working_dir: /app
+    environment:
+      UNITY_USERNAME: ${UNITY_USERNAME}
+      UNITY_PASSWORD: ${UNITY_PASSWORD}
+
+volumes:
+  unity_logs:
+    driver: local
+  unity_library:
+    driver: local
+  unity_temp:
+    driver: local
+  unity_obj:
+    driver: local
