@@ -8,4 +8,4 @@ export DOCKER_HOST_NGINX_PORT=80
 #-------------------------------------------------------------------------------
 export UNITY_USERNAME=
 export UNITY_PASSWORD=
-# export PATH=/Applications/Unity/Hub/Editor/2019.3.0f6/Unity.app/Contents/MacOS:$PATH
+export UNITY_CMD=/Applications/Unity/Hub/Editor/2019.3.0f6/Unity.app/Contents/MacOS/Unity

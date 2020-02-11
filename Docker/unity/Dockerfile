@@ -8,6 +8,9 @@ RUN apt-get update -qq && \
 # Install Ruby
 RUN apt-get install -y ruby
 
+# Install ImageMagick
+RUN apt-get install -y imagemagick
+
 # Install openupm
 RUN npm install -g openupm-cli
 
@@ -19,7 +22,8 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
 ENV APP_HOME /app
 ENV SHELL /bin/bash
 ENV EDITOR vim
-ENV PATH $APP_HOME/bin:/opt/Unity/Editor:$PATH
+ENV UNITY_CMD /opt/Unity/Editor/Unity
+ENV PATH $APP_HOME/bin:$PATH
 RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME

@@ -1,0 +1,5 @@
+#!/bin/bash
+ROOT_DIR=$(cd $(dirname $0); pwd | xargs dirname)
+
+cd ${ROOT_DIR}/Assets/MinecraftClone/Textures
+rake

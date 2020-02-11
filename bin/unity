@@ -1,0 +1,5 @@
+#!/bin/bash
+ROOT_DIR=$(cd $(dirname $0); pwd | xargs dirname)
+
+echo ${UNITY_CMD} -quit -batchmode -nographics -logFile /dev/stdout -stackTraceLogType -projectPath=${ROOT_DIR} $*
+exec ${UNITY_CMD} -quit -batchmode -nographics -logFile /dev/stdout -stackTraceLogType -projectPath=${ROOT_DIR} $*

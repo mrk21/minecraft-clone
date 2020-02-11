@@ -2,39 +2,58 @@
 
 ![screenshot.png](./doc/screenshot.png)
 
-## Middlewares/Tools
+## Dependencies
+
+### Middlewares/Tools
 
 * Unity: 2019.3.0f6
 * ImageMagick
 * Ruby
-
-## Assets
-
-* StandardAssets
-* UniRx: 7.1.0
-
-## Setup
+* direnv
 
 ### Assets
 
-Please import the following assets from Unity Asset Store:
+* [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351)
+* [UniRx](https://assetstore.unity.com/packages/tools/integration/unirx-reactive-extensions-for-unity-17276): 7.1.0
 
-* [Standard Assets (for Unity 2017.3) - Asset Store](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351)
-
-#### Fix Standard Assets errors on Unity 2019.3
+## Setup
 
 ```sh
-cp Patches/Standard\ Assets/Utility/*.patch Assets/Standard\ Assets/Utility/
-cd Assets/Standard\ Assets/Utility/
-patch -u < *.patch
+# Set your config
+cp .envrc.local.sample .envrc.local
+vi .envrc.local
+direnv allow .
+
+# Activation
+unity -createManualActivationFile
+## Upload the manual activation file on https://license.unity3d.com/manual
+unity -manualLicenseFile Unity_v2019.x.ulf
+
+# Import Assets
+unity -executeMethod ImportAssets.Import
+apply_patch
+
+# Generate Texture
+generate_texture
 ```
 
-**See:** [Unity 2019.3 で Standard Assets をインポートした際に発生する 'GUITexture' is obsolete というエラーの対処方法 - Unity Connect](https://connect.unity.com/p/standard-assets-guitexture-and-guitext-are-obsolete)
+## Development
 
-### Block texture generation
+### Unity batch commands
 
-1. Move `Assets/MinecraftClone/Textures` directory
-2. Enter `rake` command
+```sh
+# Create *.ulf file
+unity -createManualActivationFile
+
+# Activation
+unity -manualLicenseFile Unity_v2019.x.ulf
+
+# Import assets
+unity -executeMethod ImportAssets.Import /basePath /path/to/assets
+
+# Build app
+unity -executeMethod Builder.Build /platform webgl
+```
 
 ## Documentation
 
