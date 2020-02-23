@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "Build/minecraft-clone.webgl",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

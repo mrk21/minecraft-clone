@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'pathname'
+require 'optparse'
+
+root_dir = Pathname.new(__FILE__).dirname.dirname
+
+params = {}
+opt = OptionParser.new
+opt.on('-b VAL', '--bucket=VAL')
+opt.on('-o VAL', '--output=VAL')
+opt.on('-f', '--force')
+opt.parse!(ARGV, into: params)
+
+raise '`--bucket` is required' if params[:bucket].nil?
+raise '`--output` is required' if params[:output].nil?
+
+bucket = Pathname.new(params[:bucket])
+output = Pathname.new(params[:output])
+force = !!params[:force]
+
+assets = JSON.load(root_dir.join('Packages', 'asset.json').read)
+
+assets['unitypackages'].each do |pkg|
+  puts "## #{pkg}"
+  filename = output.join(pkg)
+  filename.dirname.mkpath
+
+  if force || !filename.exist?
+    system("aws s3 cp '#{bucket.join(pkg)}' '#{filename}'")
+  else
+    puts 'already downloaded'
+  end
+end

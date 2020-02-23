@@ -1,0 +1,96 @@
+# @see actions/cache https://github.com/actions/cache
+# @see actions/upload-artifact https://github.com/actions/upload-artifact
+name: Build
+
+on: [push]
+
+# Secret Environments
+# - BASE64_ULF
+# - AWS_ACCESS_KEY_ID
+# - AWS_SECRET_ACCESS_KEY
+# - UNITY_PACKAGES_BUCKET
+# - UNITY_PACKAGES_CACHE_PREFIX
+# - FIREBASE_PROJECT_ID
+# - FIREBASE_TOKEN
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: gableroux/unity3d:2019.3.9f1-webgl
+      env:
+        UNITY_CMD: /opt/Unity/Editor/Unity
+        BASE64_ULF: ${{ secrets.BASE64_ULF }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        UNITY_PACKAGES_BUCKET: ${{ secrets.UNITY_PACKAGES_BUCKET }}
+        UNITY_PACKAGES_CACHE_PREFIX: ${{ secrets.UNITY_PACKAGES_CACHE_PREFIX }}
+        FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+    steps:
+      # Checkout
+      - uses: actions/checkout@v2
+
+      # Add PATH
+      - run: echo "::add-path::${GITHUB_WORKSPACE}/bin"
+
+      # Install middlewares/tools
+      - name: Install basic packages
+        run: |
+          apt-get update
+          apt-get install -y curl gettext
+      - name: Install Node.js
+        run: |
+          npm install -g n
+          n 12.16.3
+          apt purge -y nodejs npm
+          apt autoremove -y
+      - name: Install Ruby
+        run: apt-get install -y ruby
+      - name: Install ImageMagick
+        run: apt-get install -y imagemagick
+      - name: Install openupm
+        run: npm install -g openupm-cli
+      - name: Install aws-cli
+        run: |
+          cd /root
+          curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          ./aws/install
+      - name: Install firebase-tools
+        run: npm install -g firebase-tools
+
+      # Download Unity packages
+      - name: Cache Unity packages
+        uses: actions/cache@v1
+        with:
+          path: /root/unity-assets
+          key: minecraft-clone-unity-packages-${{ secrets.UNITY_PACKAGES_CACHE_PREFIX }}-${{ hashFiles('Packages/asset.json') }}
+      - name: Download unity packages
+        run: download-unity-packages --bucket=${UNITY_PACKAGES_BUCKET} --output=/root/unity-assets
+
+      # Build
+      - name: Expand ULF file
+        run: echo ${BASE64_ULF} | base64 -d > Unity_v2019.x.ulf
+      - name: Activation
+        run: unity -manualLicenseFile Unity_v2019.x.ulf || true
+      - name: Import Assets
+        run: unity -executeMethod ImportAssets.Import /basePath /root/unity-assets
+      - name: Apply patches
+        run: apply_patch
+      - name: Generate Textures
+        run: generate_texture
+      - name: Build
+        run: unity -executeMethod Builder.Build /platform webgl
+
+      # Upload Artifacts
+      - uses: actions/upload-artifact@v2
+        with:
+          name: minecraft-clone.webgl
+          path: Build/minecraft-clone.webgl
+
+      # Deploy to Firebase
+      - name: Make .firebaserc
+        run: make_firebaserc
+      - name: Deploy to Firebase
+        run: firebase deploy --token=${FIREBASE_TOKEN}

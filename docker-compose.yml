@@ -24,10 +24,11 @@ services:
       - unity_library:/app/Library/
       - unity_temp:/app/Temp/
       - unity_obj:/app/obj/
-    working_dir: /app
     environment:
-      UNITY_USERNAME: ${UNITY_USERNAME}
-      UNITY_PASSWORD: ${UNITY_PASSWORD}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      UNITY_PACKAGES_BUCKET: ${UNITY_PACKAGES_BUCKET}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
 
 volumes:
   unity_logs:
