@@ -25,13 +25,10 @@ RUN apt-get install -y ruby
 
 # Install Node.js 12.16.3
 # @see https://www.trifields.jp/how-to-install-node-js-on-ubuntu1804-3544
-RUN npm install -g n && \
-    n 12.16.3 && \
-    apt purge -y nodejs npm && \
-    apt autoremove -y
+RUN npm install -g n && n 12.16.3
 
 # Install ImageMagick
-RUN apt-get update -qq && apt-get install -y imagemagick
+RUN apt-get install -y imagemagick
 
 # Install openupm
 RUN npm install -g openupm-cli

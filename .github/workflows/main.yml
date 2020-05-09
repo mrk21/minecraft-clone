@@ -43,8 +43,6 @@ jobs:
         run: |
           npm install -g n
           n 12.16.3
-          apt purge -y nodejs npm
-          apt autoremove -y
       - name: Install Ruby
         run: apt-get install -y ruby
       - name: Install ImageMagick
@@ -83,14 +81,14 @@ jobs:
       - name: Build
         run: unity -executeMethod Builder.Build /platform webgl
 
-      # Upload Artifacts
-      - uses: actions/upload-artifact@v2
-        with:
-          name: minecraft-clone.webgl
-          path: Build/minecraft-clone.webgl
-
       # Deploy to Firebase
       - name: Make .firebaserc
         run: make_firebaserc
       - name: Deploy to Firebase
         run: firebase deploy --token=${FIREBASE_TOKEN}
+
+      # Upload Artifacts
+      - uses: actions/upload-artifact@v2
+        with:
+          name: minecraft-clone.webgl
+          path: Build/minecraft-clone.webgl

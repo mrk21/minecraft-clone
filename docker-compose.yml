@@ -20,6 +20,7 @@ services:
     command: bash -c 'while :; do sleep 1; done'
     volumes:
       - .:/app
+      - unity_assets:/root/unity-assets
       - unity_logs:/app/Logs/
       - unity_library:/app/Library/
       - unity_temp:/app/Temp/
@@ -32,6 +33,8 @@ services:
 
 volumes:
   unity_logs:
+    driver: local
+  unity_assets:
     driver: local
   unity_library:
     driver: local
