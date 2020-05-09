@@ -41,6 +41,7 @@ public class ImportAssets
         Import();
     }
 
+    /// <see href="https://qiita.com/kannan_xiao4/items/2d3a4e6a8c1913096f81">【Unity】 batch mode で Import Package するときにハマったこと - Qiita</see>
     public static void Import(Args args = null)
     {
         args = args ?? ArgsFromCommandLine();

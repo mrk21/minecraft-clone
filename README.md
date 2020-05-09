@@ -1,15 +1,24 @@
 # Minecraft Clone
 
+![](https://github.com/mrk21/minecraft-clone/workflows/Build/badge.svg)
+
 ![screenshot.png](./doc/screenshot.png)
 
 ## Dependencies
 
 ### Middlewares/Tools
 
-* Unity: 2019.3.0f6
+* Unity: 2019.3.9f1
 * ImageMagick
 * Ruby
 * direnv
+* Docker: >= 18.06
+* docker-compose: >= 1.25.0
+
+### Optional
+
+* gettext
+  * for envsubst
 
 ### Assets
 
@@ -42,7 +51,7 @@ generate_texture
 ### Unity batch commands
 
 ```sh
-# Create *.ulf file
+# Create activation file
 unity -createManualActivationFile
 
 # Activation
@@ -53,6 +62,13 @@ unity -executeMethod ImportAssets.Import /basePath /path/to/assets
 
 # Build app
 unity -executeMethod Builder.Build /platform webgl
+```
+
+### Deploy to Firebase
+
+```sh
+make_firebaserc
+firebase deploy
 ```
 
 ## Documentation

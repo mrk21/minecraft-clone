@@ -29,9 +29,15 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+# Firebase
+.firebase
+.firebaserc
+
 # Others
 .DS_Store
 /.vs/
 .envrc.local
+.env
 *.ulf
 *.alf
+.irb_history
