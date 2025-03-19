@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Store;
+using System.Threading.Tasks;
 
 namespace MinecraftClone.Application.WorldScene
 {
@@ -32,17 +33,17 @@ namespace MinecraftClone.Application.WorldScene
                 .Where(_ => player.IsOperable.Value)
                 .Where(_ => !view.isDrawing.Value)
                 .ThrottleFirst(TimeSpan.FromSeconds(0.1f))
-                .Subscribe(_ => Draw())
+                .Subscribe(async _ => await Draw())
                 .AddTo(gameObject);
 
             // PutBlock
             player.OnPut
-                .Subscribe(_ => PutBlock())
+                .Subscribe(async _ => await PutBlock())
                 .AddTo(gameObject);
 
             // RemoveBlock
             player.OnRemove
-                .Subscribe(_ => RemoveBlock())
+                .Subscribe(async _ => await RemoveBlock())
                 .AddTo(gameObject);
         }
 
@@ -52,19 +53,19 @@ namespace MinecraftClone.Application.WorldScene
             player.JoinDimension(dimension);
         }
 
-        private void Draw()
+        private async Task Draw()
         {
-            view.DrawArroundChunk(player.CurrentChunk.Value);
+            await view.DrawArroundChunk(player.CurrentChunk.Value);
         }
 
-        private void PutBlock()
+        private async Task PutBlock()
         {
-            view.PutBlock(player.Gaze.Value, player.OperationRange.Value);
+            await view.PutBlock(player.Gaze.Value, player.OperationRange.Value);
         }
 
-        private void RemoveBlock()
+        private async Task RemoveBlock()
         {
-            view.RemoveBlock(player.Gaze.Value, player.OperationRange.Value);
+            await view.RemoveBlock(player.Gaze.Value, player.OperationRange.Value);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MinecraftClone.Domain.Terrain;
+using System.Threading.Tasks;
 
 namespace MinecraftClone.Domain.Renderer
 {
@@ -43,38 +44,38 @@ namespace MinecraftClone.Domain.Renderer
             return dimension.IsGenerated(address) && dimension[address].GameObjects.Count > 0;
         }
 
-        public void Redraw(Vector3 position)
+        public async Task Redraw(Vector3 position)
         {
-            Redraw(ChunkAddress.FromPosition(position));
+            await Redraw(ChunkAddress.FromPosition(position));
         }
 
-        public void Redraw(ChunkAddress address)
+        public async Task Redraw(ChunkAddress address)
         {
             var chunk = dimension[address];
-            SetMesh(chunk);
+            await SetMesh(chunk);
         }
 
-        public void Draw(Vector3 position)
+        public async Task Draw(Vector3 position)
         {
-            Draw(ChunkAddress.FromPosition(position));
+            await Draw(ChunkAddress.FromPosition(position));
         }
 
-        public void Draw(ChunkAddress address)
+        public async Task Draw(ChunkAddress address)
         {
             var chunk = dimension[address];
 
             if (!IsDrawed(address))
             {
                 chunk.GameObjects["Chunk"] = CreateGameObject(chunk, chunkPrefab);
-                SetMesh(chunk);
+                await SetMesh(chunk);
                 chunk.GameObjects["Chunk"].SetActive(true);
             }
         }
 
-        private void SetMesh(Chunk chunk)
+        private async Task SetMesh(Chunk chunk)
         {
             var factory = new ChunkMeshFactory(chunk);
-            var mesh = factory.Create();
+            var mesh = await factory.Create();
             var meshCollider = chunk.GameObjects["Chunk"].GetComponent<MeshCollider>();
             var meshFilter = chunk.GameObjects["Chunk"].GetComponent<MeshFilter>();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Block;
+using System.Threading.Tasks;
 
 namespace MinecraftClone.Domain.Renderer
 {
@@ -24,62 +25,63 @@ namespace MinecraftClone.Domain.Renderer
             this.chunk = chunk;
         }
 
-        public ChunkMesh Create()
+        public async Task<ChunkMesh> Create()
         {
             var builderForRenderer = new BlockMeshBuilder(subMeshCount: 2);
             var builderForCollider = new BlockMeshBuilder(subMeshCount: 1);
 
             var textureFactory = new BlockTextureFactory();
 
-            for (int y = 0; y < Chunk.Depth; y++)
-            {
-                for (int x = 0; x < Chunk.Size; x++)
+            await Task.Run(() => {
+                for (int y = 0; y < Chunk.Depth; y++)
                 {
-                    for (int z = 0; z < Chunk.Size; z++)
+                    for (int x = 0; x < Chunk.Size; x++)
                     {
-                        var block = chunk[x, y, z];
-                        if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Void) continue;
-
-                        var position = new Vector3(x, y, z);
-                        var texture = textureFactory.Create(block);
-
-                        if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid)
+                        for (int z = 0; z < Chunk.Size; z++)
                         {
-                            builderForCollider.AddBlockMesh(position, texture, 0);
+                            var block = chunk[x, y, z];
+                            if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Void) continue;
 
-                            BuildSolidMesh(builderForCollider, x, y, z);
-                        }
-
-                        if (block.Traits.IsTransparent())
-                        {
-                            builderForRenderer.AddBlockMesh(position, texture, TransparentSubMeshIndex);
+                            var position = new Vector3(x, y, z);
+                            var texture = textureFactory.Create(block);
 
                             if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid)
                             {
-                                BuildSolidMesh(builderForRenderer, x, y, z);
-                            }
-                            else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid)
-                            {
-                                BuildFluidMesh(builderForRenderer, x, y, z);
-                            }
-                        }
-                        else
-                        {
-                            builderForRenderer.AddBlockMesh(position, texture, OpaqueSubMeshIndex);
+                                builderForCollider.AddBlockMesh(position, texture, 0);
 
-                            if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid)
-                            {
-                                BuildSolidMesh(builderForRenderer, x, y, z);
+                                BuildSolidMesh(builderForCollider, x, y, z);
                             }
-                            else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid)
+
+                            if (block.Traits.IsTransparent())
                             {
-                                BuildFluidMesh(builderForRenderer, x, y, z);
+                                builderForRenderer.AddBlockMesh(position, texture, TransparentSubMeshIndex);
+
+                                if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid)
+                                {
+                                    BuildSolidMesh(builderForRenderer, x, y, z);
+                                }
+                                else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid)
+                                {
+                                    BuildFluidMesh(builderForRenderer, x, y, z);
+                                }
+                            }
+                            else
+                            {
+                                builderForRenderer.AddBlockMesh(position, texture, OpaqueSubMeshIndex);
+
+                                if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Solid)
+                                {
+                                    BuildSolidMesh(builderForRenderer, x, y, z);
+                                }
+                                else if (block.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid)
+                                {
+                                    BuildFluidMesh(builderForRenderer, x, y, z);
+                                }
                             }
                         }
                     }
                 }
-            }
-
+            });
             var meshFilter = chunk.GameObjects["Chunk"].GetComponent<MeshFilter>();
             var meshCollider = chunk.GameObjects["Chunk"].GetComponent<MeshCollider>();
 

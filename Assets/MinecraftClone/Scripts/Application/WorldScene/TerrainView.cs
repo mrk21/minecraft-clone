@@ -5,6 +5,7 @@ using UniRx;
 using MinecraftClone.Domain.Terrain;
 using MinecraftClone.Domain.Block;
 using MinecraftClone.Domain.Renderer;
+using System.Threading.Tasks;
 
 namespace MinecraftClone.Application.WorldScene
 {
@@ -27,23 +28,24 @@ namespace MinecraftClone.Application.WorldScene
             terrainRenderer.Init();
         }
 
-        public void DrawArroundChunk(Chunk chunk)
+        public async Task DrawArroundChunk(Chunk chunk)
         {
             isDrawing.Value = true;
+            int n = 3;
 
-            for (int x = -1; x <= 1; x++)
+            for (int x = -n; x <= n; x++)
             {
-                for (int z = -1; z <= 1; z++)
+                for (int z = -n; z <= n; z++)
                 {
                     var baseAddress = chunk.Address;
                     var address = new ChunkAddress(baseAddress.X + x, baseAddress.Z + z);
-                    terrainRenderer.Draw(address);
+                    await terrainRenderer.Draw(address);
                 }
             }
             isDrawing.Value = false;
         }
 
-        public void PutBlock(Ray ray, float range)
+        public async Task PutBlock(Ray ray, float range)
         {
             if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
@@ -53,12 +55,12 @@ namespace MinecraftClone.Application.WorldScene
                 {
                     var block = new GrassBlock();
                     dimension.Blocks[position] = block;
-                    terrainRenderer.Redraw(position);
+                    await terrainRenderer.Redraw(position);
                 }
             }
         }
 
-        public void RemoveBlock(Ray ray, float range)
+        public async Task RemoveBlock(Ray ray, float range)
         {
             if (Physics.Raycast(ray, out RaycastHit hit, range))
             {
@@ -67,16 +69,22 @@ namespace MinecraftClone.Application.WorldScene
                 if (dimension.Blocks[position].Traits.IsBreakable())
                 {
                     dimension.Blocks[position].RemoveFromTerrain();
-                    terrainRenderer.Redraw(position);
+                    await terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
-                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
+                    MainThreadDispatcher.Post((_) =>
+                    {
+                        StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
+                    }, null);
                 }
                 else if (dimension.Blocks[position].Traits.IsReplaceable() && dimension.Blocks[position].Traits.IsBreakable())
                 {
                     dimension.Blocks[position].RemoveFromTerrain();
-                    terrainRenderer.Redraw(position);
+                    await terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
-                    StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
+                    MainThreadDispatcher.Post((_) =>
+                    {
+                        StartCoroutine("DrawFluid", factory.CreateFromRemovingAdjoiningBlock(dimension, position));
+                    }, null);
                 }
             }
         }
