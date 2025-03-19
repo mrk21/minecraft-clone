@@ -57,58 +57,58 @@ namespace MinecraftClone.Application.WorldScene
         {
             if (currentBlock is FluidBlock)
             {
-                myRigidbody.drag = 3f;
+                myRigidbody.linearDamping = 3f;
                 velocityScale = 0.5f;
             }
             else
             {
-                myRigidbody.drag = 0.01f;
+                myRigidbody.linearDamping = 0.01f;
                 velocityScale = 1f;
             }
         }
 
         public void MoveToForward()
         {
-            myRigidbody.velocity = transform.TransformDirection(new Vector3(
+            myRigidbody.linearVelocity = transform.TransformDirection(new Vector3(
                 5 * velocityScale,
-                transform.InverseTransformDirection(myRigidbody.velocity).y,
-                transform.InverseTransformDirection(myRigidbody.velocity).z
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).y,
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).z
             ));
         }
 
         public void MoveToBack()
         {
-            myRigidbody.velocity = transform.TransformDirection(new Vector3(
+            myRigidbody.linearVelocity = transform.TransformDirection(new Vector3(
                 -5 * velocityScale,
-                transform.InverseTransformDirection(myRigidbody.velocity).y,
-                transform.InverseTransformDirection(myRigidbody.velocity).z
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).y,
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).z
             ));
         }
 
         public void MoveToLeft()
         {
-            myRigidbody.velocity = transform.TransformDirection(new Vector3(
-                transform.InverseTransformDirection(myRigidbody.velocity).x,
-                transform.InverseTransformDirection(myRigidbody.velocity).y,
+            myRigidbody.linearVelocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).x,
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).y,
                 5 * velocityScale
             ));
         }
 
         public void MoveToRight()
         {
-            myRigidbody.velocity = transform.TransformDirection(new Vector3(
-                transform.InverseTransformDirection(myRigidbody.velocity).x,
-                transform.InverseTransformDirection(myRigidbody.velocity).y,
+            myRigidbody.linearVelocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).x,
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).y,
                 -5 * velocityScale
             ));
         }
 
         public void Jump()
         {
-            myRigidbody.velocity = transform.TransformDirection(new Vector3(
-                transform.InverseTransformDirection(myRigidbody.velocity).x,
+            myRigidbody.linearVelocity = transform.TransformDirection(new Vector3(
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).x,
                 5 * velocityScale,
-                transform.InverseTransformDirection(myRigidbody.velocity).z
+                transform.InverseTransformDirection(myRigidbody.linearVelocity).z
             ));
         }
 

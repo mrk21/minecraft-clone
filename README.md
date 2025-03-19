@@ -8,7 +8,7 @@
 
 ### Middlewares/Tools
 
-* Unity: 2019.3.9f1
+* Unity: 6000.0.37f1
 * ImageMagick
 * Ruby
 * direnv
@@ -22,10 +22,11 @@
 
 ### Assets
 
-* [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-for-unity-2017-3-32351)
 * [UniRx](https://assetstore.unity.com/packages/tools/integration/unirx-reactive-extensions-for-unity-17276): 7.1.0
 
 ## Setup
+
+Execute the following commands on WSL:
 
 ```sh
 # Set your config
@@ -36,11 +37,10 @@ direnv allow .
 # Activation
 unity -createManualActivationFile
 ## Upload the manual activation file on https://license.unity3d.com/manual
-unity -manualLicenseFile Unity_v2019.x.ulf
+unity -manualLicenseFile ${ULF_FILE}
 
 # Import Assets
 unity -executeMethod ImportAssets.Import
-apply_patch
 
 # Generate Texture
 generate_texture
@@ -55,7 +55,7 @@ generate_texture
 unity -createManualActivationFile
 
 # Activation
-unity -manualLicenseFile Unity_v2019.x.ulf
+unity -manualLicenseFile ${ULF_FILE}
 
 # Import assets
 unity -executeMethod ImportAssets.Import /basePath /path/to/assets

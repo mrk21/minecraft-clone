@@ -6,10 +6,11 @@ export DOCKER_HOST_NGINX_PORT=80
 #-------------------------------------------------------------------------------
 # Unity
 #-------------------------------------------------------------------------------
-export UNITY_CMD=/Applications/Unity/Hub/Editor/2019.3.0f6/Unity.app/Contents/MacOS/Unity
+export UNITY_CMD=/mnt/c/Program\ Files/Unity/Hub/Editor/6000.0.37f1/Editor/Unity.exe # wsl
 export UNITY_PACKAGES_BUCKET=s3://my-unity-packages
 export UNITY_PACKAGES_CACHE_PREFIX=1
-export BASE64_ULF=$(cat Unity_v2019.3.9f1.alf | base64)
+export ULF_FILE=Unity_v6000.0.37f1.alf
+export BASE64_ULF=$(cat $ULF_FILE | base64)
 
 #-------------------------------------------------------------------------------
 # AWS
