@@ -75,3 +75,4 @@ firebase deploy
 
 * [Minecraft clone design | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/3d340747-4142-4568-9d78-d0ce494ca9d7)
 * [Minecraft clone memo | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/294c5ea1-70db-40ca-a455-7f3266158789)
+* [【Unity】Unityでメモリリーク発生？原因と調査方法について – 株式会社ロジカルビート](https://logicalbeat.jp/blog/15426/)
