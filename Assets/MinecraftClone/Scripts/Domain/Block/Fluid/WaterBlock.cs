@@ -3,21 +3,39 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Block.Fluid
 {
-    class WaterBlock : FluidBlock
+    abstract class WaterBlock : FluidBlock
     {
-        public WaterBlock() : base()
+        static Info info = new() {
+            BlockId = 4,
+            Name = nameof(WaterBlock),
+            Traits = BlockTraits.FluidBlock,
+        };
+
+        static WaterBlock()
         {
-            this.blockId = 4;
+            Info.Register(info);
         }
 
-        public WaterBlock(int volume) : base(volume)
+        public static Block Create()
         {
-            this.blockId = 4;
+            return new Block
+            {
+                Id = IdGenerator.Generate(),
+                BlockId = info.BlockId,
+                Volume = MaxVolume,
+                IsStream = false
+            };
         }
 
-        public override FluidBlock CreateStream(int volume)
+        public static Block Create(int volume)
         {
-            return new WaterBlock(volume);
+            return new Block
+            {
+                Id = IdGenerator.Generate(),
+                BlockId = info.BlockId,
+                Volume = volume,
+                IsStream = true
+            };
         }
     }
 }

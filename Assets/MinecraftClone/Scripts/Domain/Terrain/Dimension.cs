@@ -17,7 +17,7 @@ namespace MinecraftClone.Domain.Terrain
                 this.dimension = dimension;
             }
 
-            public BaseBlock this[Vector3 position]
+            public Block.Block this[Vector3 position]
             {
                 get
                 {

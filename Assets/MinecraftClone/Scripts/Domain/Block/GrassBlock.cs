@@ -3,12 +3,25 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Block
 {
-    class GrassBlock : BaseBlock
+    abstract class GrassBlock : BaseBlock
     {
-        public GrassBlock()
+        static Info info = new() {
+            BlockId = 1,
+            Name = nameof(GrassBlock),
+            Traits = BlockTraits.SolidBlock,
+        };
+
+        static GrassBlock()
         {
-            this.blockId = 1;
-            this.traits = BlockTraits.SolidBlock;
+            Info.Register(info);
+        }
+
+        public static Block Create()
+        {
+            return new() {
+                Id = IdGenerator.Generate(),
+                BlockId = info.BlockId,
+            };
         }
     }
 }

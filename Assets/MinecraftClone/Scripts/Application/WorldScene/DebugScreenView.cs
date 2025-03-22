@@ -18,7 +18,7 @@ namespace MinecraftClone.Application.WorldScene
         public void Display(
             Seed currentSeed,
             Chunk currentChunk,
-            BaseBlock currentBlock,
+            Block currentBlock,
             Vector3 currentPosition
         )
         {

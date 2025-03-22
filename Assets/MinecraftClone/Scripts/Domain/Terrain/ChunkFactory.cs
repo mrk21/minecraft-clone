@@ -37,42 +37,42 @@ namespace MinecraftClone.Domain.Terrain
 
                     for (int y = 0; y <= yMaxValue; y++)
                     {
-                        BaseBlock block;
-                        if (y > WaterHeight + 10) block = new StoneBlock();
-                        else if (y > WaterHeight + 0) block = new GrassBlock();
-                        else block = new SandBlock();
+                        Block.Block block;
+                        if (y > WaterHeight + 10) block = StoneBlock.Create();
+                        else if (y > WaterHeight + 0) block = GrassBlock.Create();
+                        else block = SandBlock.Create();
                         if (y >= WaterHeight)
                         {
                             var biome = biomeMap[x, z];
                             if (biome == "desert")
                             {
-                                block = new SandBlock();
+                                block = SandBlock.Create();
                             }
                             else if (biome == "stone")
                             {
-                                block = new StoneBlock();
+                                block = StoneBlock.Create();
                             }
                             else if (biome == "grass")
                             {
-                                block = new GrassBlock();
+                                block = GrassBlock.Create();
                             }
                             else
                             {
-                                block = new GrassBlock();
+                                block = GrassBlock.Create();
                             }
                         }
                         else
                         {
-                            block = new SandBlock();
+                            block = SandBlock.Create();
                         }
                         chunk[x, y, z] = block;
                     }
 
                     for (int y = yMaxValue + 1; y < Chunk.Depth; y++)
                     {
-                        BaseBlock block;
-                        if (y < WaterHeight) block = new WaterBlock();
-                        else block = new AirBlock();
+                        Block.Block block;
+                        if (y < WaterHeight) block = WaterBlock.Create();
+                        else block = AirBlock.Create();
                         chunk[x, y, z] = block;
                     }
                 }

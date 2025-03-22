@@ -3,12 +3,25 @@ using MinecraftClone.Infrastructure;
 
 namespace MinecraftClone.Domain.Block
 {
-    class AirBlock : BaseBlock
+    abstract class AirBlock : BaseBlock
     {
-        public AirBlock()
+        static Info info = new() {
+            BlockId = 0,
+            Name = nameof(AirBlock),
+            Traits = BlockTraits.VoidBlock,
+        };
+
+        static AirBlock()
         {
-            this.blockId = 0;
-            this.traits = BlockTraits.VoidBlock;
+            Info.Register(info);
+        }
+
+        public static Block Create()
+        {
+            return new() {
+                Id = IdGenerator.Generate(),
+                BlockId = info.BlockId,
+            };
         }
     }
 }

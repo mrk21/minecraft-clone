@@ -15,7 +15,7 @@ namespace MinecraftClone.Application.WorldScene
         public ReactiveProperty<bool> isDrawing;
         private TerrainRenderer terrainRenderer;
         private Dimension dimension;
-        
+
         void Start()
         {
             isDrawing = new ReactiveProperty<bool>(false);
@@ -31,7 +31,7 @@ namespace MinecraftClone.Application.WorldScene
         public async Task DrawArroundChunk(Chunk chunk)
         {
             isDrawing.Value = true;
-            int n = 3;
+            int n = 5;
 
             for (int x = -n; x <= n; x++)
             {
@@ -53,7 +53,7 @@ namespace MinecraftClone.Application.WorldScene
 
                 if (dimension.Blocks[position].Traits.IsReplaceable())
                 {
-                    var block = new GrassBlock();
+                    var block = GrassBlock.Create();
                     dimension.Blocks[position] = block;
                     await terrainRenderer.Redraw(position);
                 }
@@ -68,7 +68,7 @@ namespace MinecraftClone.Application.WorldScene
 
                 if (dimension.Blocks[position].Traits.IsBreakable())
                 {
-                    dimension.Blocks[position].RemoveFromTerrain();
+                    dimension.Blocks[position] = AirBlock.Create();
                     await terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
                     MainThreadDispatcher.Post((_) =>
@@ -78,7 +78,7 @@ namespace MinecraftClone.Application.WorldScene
                 }
                 else if (dimension.Blocks[position].Traits.IsReplaceable() && dimension.Blocks[position].Traits.IsBreakable())
                 {
-                    dimension.Blocks[position].RemoveFromTerrain();
+                    dimension.Blocks[position] = AirBlock.Create();
                     await terrainRenderer.Redraw(position);
                     var factory = new FluidPropagatorFactory();
                     MainThreadDispatcher.Post((_) =>

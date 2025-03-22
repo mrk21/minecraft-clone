@@ -3096,7 +3096,7 @@ PrefabInstance:
     - target: {fileID: 8550508170454200148, guid: 23b9b50074a24474386f1acc5857f76e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 199.3031
+      value: 199.3455
       objectReference: {fileID: 0}
     - target: {fileID: 8550508170454200148, guid: 23b9b50074a24474386f1acc5857f76e,
         type: 3}
@@ -3106,7 +3106,7 @@ PrefabInstance:
     - target: {fileID: 8550508170454200148, guid: 23b9b50074a24474386f1acc5857f76e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -177.38676
+      value: -177.38565
       objectReference: {fileID: 0}
     - target: {fileID: 8550508170562739233, guid: 23b9b50074a24474386f1acc5857f76e,
         type: 3}
@@ -5068,8 +5068,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1733902201}
   m_HandleRect: {fileID: 1733902200}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

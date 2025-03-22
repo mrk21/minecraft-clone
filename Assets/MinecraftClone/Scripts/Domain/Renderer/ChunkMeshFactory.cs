@@ -93,7 +93,7 @@ namespace MinecraftClone.Domain.Renderer
 
         private void BuildSolidMesh(BlockMeshBuilder builder, int x, int y, int z)
         {
-            System.Func<BaseBlock, bool> isValidBlock = (block) =>
+            System.Func<Block.Block, bool> isValidBlock = (block) =>
             {
                 return block.Traits.IsTransparent();
             };
@@ -107,7 +107,7 @@ namespace MinecraftClone.Domain.Renderer
 
         private void BuildFluidMesh(BlockMeshBuilder builder, int x, int y, int z)
         {
-            System.Func<BaseBlock, bool> isValidBlock = (block) =>
+            System.Func<Block.Block, bool> isValidBlock = (block) =>
             {
                 return block.Traits.MatterType != BlockTraits.MatterTypeEnum.Fluid
                     && block.Traits.IsTransparent();

@@ -15,7 +15,7 @@ namespace MinecraftClone.Domain.Store
         public ReactiveProperty<float> OperationRange { get; } = new ReactiveProperty<float>(10f);
         public IReadOnlyReactiveProperty<Dimension> CurrentDimension { get; }
         public IReadOnlyReactiveProperty<Chunk> CurrentChunk { get; }
-        public IReadOnlyReactiveProperty<BaseBlock> CurrentBlock { get; }
+        public IReadOnlyReactiveProperty<Block.Block> CurrentBlock { get; }
 
         public Subject<Unit> OnMoveGaze { get; } = new Subject<Unit>();
         public Subject<Unit> OnMoveToForward { get; } = new Subject<Unit>();
@@ -28,7 +28,7 @@ namespace MinecraftClone.Domain.Store
 
         private ReactiveProperty<Dimension> CurrentDimension_ { get; } = new ReactiveProperty<Dimension>();
         private ReactiveProperty<Chunk> CurrentChunk_ { get; } = new ReactiveProperty<Chunk>();
-        private ReactiveProperty<BaseBlock> CurrentBlock_ { get; } = new ReactiveProperty<BaseBlock>();
+        private ReactiveProperty<Block.Block> CurrentBlock_ { get; } = new ReactiveProperty<Block.Block>();
 
         public Player()
         {

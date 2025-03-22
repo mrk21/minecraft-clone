@@ -26,7 +26,7 @@ namespace MinecraftClone.Application.WorldScene
                 .Where(dimension => dimension != null)
                 .Subscribe(JoinDimension)
                 .AddTo(gameObject);
-            
+
             // Draw
             Observable
                 .EveryUpdate()

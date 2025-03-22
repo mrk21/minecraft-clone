@@ -53,9 +53,9 @@ namespace MinecraftClone.Application.WorldScene
             transform.Rotate(0, yRotation, 0);
         }
 
-        public void SetVelocityScale(BaseBlock currentBlock)
+        public void SetVelocityScale(Block currentBlock)
         {
-            if (currentBlock is FluidBlock)
+            if (currentBlock.Traits.MatterType == BlockTraits.MatterTypeEnum.Fluid)
             {
                 myRigidbody.linearDamping = 3f;
                 velocityScale = 0.5f;

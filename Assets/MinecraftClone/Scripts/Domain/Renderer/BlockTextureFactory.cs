@@ -15,7 +15,7 @@ namespace MinecraftClone.Domain.Renderer
             this.map = new TextureMap(size: 5);
         }
 
-        public TextureItem Create(BaseBlock block)
+        public TextureItem Create(Block.Block block)
         {
             var x = block.BlockId % map.Size;
             var y = map.Size - block.BlockId / map.Size - 1;
