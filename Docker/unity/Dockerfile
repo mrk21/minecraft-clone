@@ -12,23 +12,26 @@ RUN git clone https://github.com/progrium/entrykit.git && \
 #------------------------------------------------------------------------------
 # Base
 #------------------------------------------------------------------------------
-FROM gableroux/unity3d:2019.3.9f1-webgl
+FROM unityci/editor:ubuntu-6000.0.37f1-webgl-3.1
 
 # Install basic packages
-RUN apt-get update -qq && \
-    apt-get install -y build-essential tree vim less curl unzip dnsutils net-tools procps && \
-    apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install -y gettext
+RUN apt update -qq && \
+    apt install -y build-essential tree vim less curl unzip dnsutils net-tools procps && \
+    apt install -y --no-install-recommends apt-utils && \
+    apt install -y gettext
 
 # Install Ruby
-RUN apt-get install -y ruby
+RUN apt install -y ruby
 
-# Install Node.js 12.16.3
+# Install Node.js(System)
+RUN apt install -y nodejs npm
+
+# Install Node.js 22.14.0
 # @see https://www.trifields.jp/how-to-install-node-js-on-ubuntu1804-3544
-RUN npm install -g n && n 12.16.3
+RUN npm install -g n && n 22.14.0
 
 # Install ImageMagick
-RUN apt-get install -y imagemagick
+RUN apt install -y imagemagick
 
 # Install openupm
 RUN npm install -g openupm-cli
@@ -55,7 +58,8 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections && \
 ENV APP_HOME /app
 ENV SHELL /bin/bash
 ENV EDITOR vim
-ENV UNITY_CMD /opt/Unity/Editor/Unity
+ENV UNITY_CMD /opt/unity/Editor/Unity
+ENV ULF_FILE Unity_v6000.x.ulf
 ENV PATH $APP_HOME/bin:$PATH
 RUN mkdir -p $APP_HOME
 

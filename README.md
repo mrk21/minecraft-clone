@@ -12,8 +12,8 @@
 * ImageMagick
 * Ruby
 * direnv
-* Docker: >= 18.06
-* docker-compose: >= 1.25.0
+* Docker: >= 27.3.1
+* docker-compose: >= v2.29.7-desktop.1
 
 ### Optional
 
@@ -36,6 +36,7 @@ direnv allow .
 
 # Activation
 unity -createManualActivationFile
+
 ## Upload the manual activation file on https://license.unity3d.com/manual
 unity -manualLicenseFile ${ULF_FILE}
 
@@ -54,6 +55,9 @@ generate_texture
 # Create activation file
 unity -createManualActivationFile
 
+# Create activation file(for docker/CI)
+unity -createManualActivationFile -username <email> -password <password>
+
 # Activation
 unity -manualLicenseFile ${ULF_FILE}
 
@@ -61,7 +65,20 @@ unity -manualLicenseFile ${ULF_FILE}
 unity -executeMethod ImportAssets.Import /basePath /path/to/assets
 
 # Build app
-unity -executeMethod Builder.Build /platform webgl
+unity -executeMethod Builder.BuildWebGL
+```
+
+### WebGL
+
+```sh
+# Build docker image
+docker compose build
+
+# Build WebGL app
+docker compose run -it --rm unity "unity -manualLicenseFile ${ULF_FILE} && unity -executeMethod Builder.BuildWebGL"
+
+# Boot WebGL app
+docker compose up
 ```
 
 ### Deploy to Firebase
@@ -76,3 +93,4 @@ firebase deploy
 * [Minecraft clone design | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/3d340747-4142-4568-9d78-d0ce494ca9d7)
 * [Minecraft clone memo | mrk21 Kibela](https://mrk21.kibe.la/shared/entries/294c5ea1-70db-40ca-a455-7f3266158789)
 * [【Unity】Unityでメモリリーク発生？原因と調査方法について – 株式会社ロジカルビート](https://logicalbeat.jp/blog/15426/)
+* [UnityのPersonalライセンスで.ulfファイルをダウンロードする方法(2024/6時点）](https://zenn.dev/hirosukekayaba/articles/067693ad146d18)

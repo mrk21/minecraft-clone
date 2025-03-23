@@ -16,9 +16,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: gableroux/unity3d:2019.3.9f1-webgl
+      image: unityci/editor:ubuntu-6000.0.37f1-webgl-3.1
       env:
-        UNITY_CMD: /opt/Unity/Editor/Unity
+        UNITY_CMD: /opt/unity/Editor/Unity
+        ULF_FILE: Unity_v6000.x.ulf
         BASE64_ULF: ${{ secrets.BASE64_ULF }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -26,10 +27,11 @@ jobs:
         UNITY_PACKAGES_CACHE_PREFIX: ${{ secrets.UNITY_PACKAGES_CACHE_PREFIX }}
         FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
     steps:
       # Checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       # Add PATH
       - run: echo "::add-path::${GITHUB_WORKSPACE}/bin"
@@ -60,7 +62,7 @@ jobs:
 
       # Download Unity packages
       - name: Cache Unity packages
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: /root/unity-assets
           key: minecraft-clone-unity-packages-${{ secrets.UNITY_PACKAGES_CACHE_PREFIX }}-${{ hashFiles('Packages/asset.json') }}
@@ -69,17 +71,13 @@ jobs:
 
       # Build
       - name: Expand ULF file
-        run: echo ${BASE64_ULF} | base64 -d > Unity_v2019.x.ulf
+        run: echo ${BASE64_ULF} | base64 -d > ${ULF_FILE}
       - name: Activation
-        run: unity -manualLicenseFile Unity_v2019.x.ulf || true
+        run: unity -manualLicenseFile ${ULF_FILE} || true
       - name: Import Assets
         run: unity -executeMethod ImportAssets.Import /basePath /root/unity-assets
-      - name: Apply patches
-        run: apply_patch
-      - name: Generate Textures
-        run: generate_texture
       - name: Build
-        run: unity -executeMethod Builder.Build /platform webgl
+        run: unity -executeMethod Builder.BuildWebGL
 
       # Deploy to Firebase
       - name: Make .firebaserc
@@ -88,7 +86,7 @@ jobs:
         run: firebase deploy --token=${FIREBASE_TOKEN}
 
       # Upload Artifacts
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: minecraft-clone.webgl
           path: Build/minecraft-clone.webgl

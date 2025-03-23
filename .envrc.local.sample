@@ -9,7 +9,7 @@ export DOCKER_HOST_NGINX_PORT=80
 export UNITY_CMD=/mnt/c/Program\ Files/Unity/Hub/Editor/6000.0.37f1/Editor/Unity.exe # wsl
 export UNITY_PACKAGES_BUCKET=s3://my-unity-packages
 export UNITY_PACKAGES_CACHE_PREFIX=1
-export ULF_FILE=Unity_v6000.0.37f1.alf
+export ULF_FILE=Unity_v6000.x.ulf
 export BASE64_ULF=$(cat $ULF_FILE | base64)
 
 #-------------------------------------------------------------------------------

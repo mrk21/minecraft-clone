@@ -10,12 +10,14 @@ public class Builder
     {
         { "webgl", BuildTarget.WebGL },
         { "osx", BuildTarget.StandaloneOSX },
+        { "windows", BuildTarget.StandaloneWindows64 },
     };
 
     private static Dictionary<BuildTarget, string> OutputNames { get; } = new Dictionary<BuildTarget, string>
     {
-        { BuildTarget.WebGL, "minecraft-clone.webgl" },
-        { BuildTarget.StandaloneOSX, "minecraft-clone.app" },
+        { BuildTarget.WebGL, "webgl/minecraft-clone.webgl" },
+        { BuildTarget.StandaloneOSX, "osx/minecraft-clone.app" },
+        { BuildTarget.StandaloneWindows64, "windows/minecraft-clone.exe" },
     };
 
     public class Args
@@ -32,6 +34,12 @@ public class Builder
     public static void BuildWebGL()
     {
         Build(new Args(platform: BuildTarget.WebGL));
+    }
+
+    [MenuItem("Window/BuildWindows")]
+    public static void BuildWindows()
+    {
+        Build(new Args(platform: BuildTarget.StandaloneWindows64));
     }
 
     public static void Build(Args args = null)
